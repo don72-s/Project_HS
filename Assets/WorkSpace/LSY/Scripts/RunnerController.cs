@@ -47,8 +47,8 @@ public class RunnerController : MonoBehaviourPun
         CameraController cam = Camera.main.GetComponent<CameraController>();
         cam.FollowTarget = null;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+/*        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;*/
         hpPanel.gameObject.SetActive(true);
 
     }
