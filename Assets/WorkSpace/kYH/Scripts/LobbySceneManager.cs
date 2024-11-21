@@ -33,6 +33,7 @@ public class LobbySceneManager : BaseUI
 
     [Header("Nickname Panel")]
     [SerializeField] private TMP_InputField _nicknameInput;
+    [SerializeField] private GameObject _lobbyPanel;
 
     [Header("Lobby Panel")]
     [SerializeField] private GameObject _createRoomPanel;
@@ -301,9 +302,13 @@ public class LobbySceneManager : BaseUI
         Debug.Log($"E-Mail Varified : {user.IsEmailVerified}");
         Debug.Log($"User ID : {user.UserId}");
 
+        PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
+        PhotonNetwork.();
+
         if (user.IsEmailVerified == false)
         {
             _verifyPanel.gameObject.SetActive(true);
+            SendVerificationMail();
         }
         else if (user.DisplayName == "")
         {
@@ -311,8 +316,8 @@ public class LobbySceneManager : BaseUI
         }
         else
         {
-            PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
-            PhotonNetwork.ConnectUsingSettings();
+            _nicknamePanel.gameObject.SetActive(false);
+            _lobbyPanel.SetActive(true);
         }
     }
 

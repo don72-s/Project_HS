@@ -35,6 +35,11 @@ public class BackendManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        CheckDependency();
+    }
+
     // 데이터베이스 의존성 검사 함수
     private void CheckDependency()
     {
