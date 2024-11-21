@@ -50,7 +50,7 @@ public class SpareTester : MonoBehaviourPunCallbacks {
     void SpawnPlayer() {
 
         Debug.Log("플레이어를 스폰한다!");
-        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player_kmt", Vector3.zero, Quaternion.identity);
 
     }
 

@@ -175,12 +175,9 @@ MonoBehaviour:
   moveSpeed: 5
   rotateSpeed: 300
   jumpForce: 10
-  rb: {fileID: 0}
   offset: {x: 0, y: 0.3, z: 1}
-  isJumped: 0
-  interpolation: 13
-  _muzzlePoint: {fileID: 2150775218519260641}
-  _verticalRotateRange: 60
+  muzzlePoint: {fileID: 0}
+  yRotationRange: 0
 --- !u!54 &4524439844518499467
 Rigidbody:
   m_ObjectHideFlags: 0

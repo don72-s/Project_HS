@@ -5,9 +5,7 @@ using UnityEngine;
 public class FormChanger : MonoBehaviourPunCallbacks, 
     IFormChangeable
 {
-
-    [SerializeField]
-    List<GameObject> objList = new List<GameObject>();
+    GameObject[] objArr;
 
     [SerializeField]
     ChangeUIBinder changeCanvasPrefab;
@@ -21,23 +19,26 @@ public class FormChanger : MonoBehaviourPunCallbacks,
         changeCanvas.gameObject.SetActive(false);
         changeCanvas.GetComponent<ObjectSlotMachine>().SetChangeable(this);
         curBodyObject = null;
+
+        objArr = StageData.Instance.ChangeableSO.ChangeableObjArr;
+        StageData.Instance.AddChangeableObj(this);
     }
 
 
-    [ContextMenu("to Cube")]
-    public void testA()
-    {
-        if (!photonView.IsMine)
-            return;
-        photonView.RPC("ChangeFormRpc", RpcTarget.All, 0);
+    public void StartFormChange() {
+
+        photonView.RPC("StartFormChangeRpc", RpcTarget.All);
+
     }
 
-    [ContextMenu("to Capsule")]
-    public void testB()
-    {
-        if (!photonView.IsMine)
-            return;
-        photonView.RPC("ChangeFormRpc", RpcTarget.All, 1);
+    [PunRPC]
+    void StartFormChangeRpc() {
+
+        if (photonView.IsMine)
+        {
+            changeCanvas.GetComponent<ObjectSlotMachine>().StartSlot3();
+        }
+
     }
 
     public void ChangeForm(int objIdx)
@@ -51,7 +52,7 @@ public class FormChanger : MonoBehaviourPunCallbacks,
     public void ChangeFormRpc(int destObjidx)
     {
         //TODO : 플레이어 회전값? 고정 회전값?
-        GameObject tmpObj = Instantiate(objList[destObjidx], transform);
+        GameObject tmpObj = Instantiate(objArr[destObjidx], transform);
 
         //이미 몸체가 있으면 제거
         if (curBodyObject != null)

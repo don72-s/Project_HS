@@ -10,15 +10,13 @@ using UnityEngine.UI;
 public class ObjectSlotMachine : MonoBehaviour
 {
 
-    [SerializeField]
-    GameObject[] objectArr;
-
-    IFormChangeable changeableObj = null;
+    FormChanger changeableObj = null;
 
     ChangeUIBinder changeUIBinder;
     List<Button> buttons = new List<Button>();
     List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
 
+    GameObject[] objectArr = null;
     int[] idxArr;
 
     private void Awake()
@@ -36,9 +34,16 @@ public class ObjectSlotMachine : MonoBehaviour
         texts.Add(changeUIBinder.GetUI<TextMeshProUGUI>("ObjectText3"));
     }
 
+    public void InitObjArr() {
 
-    public void SetChangeable(IFormChangeable changeable) { 
+        if(objectArr == null)
+            objectArr = StageData.Instance.ChangeableSO.ChangeableObjArr;
+
+    }
+
+    public void SetChangeable(FormChanger changeable) { 
         changeableObj = changeable;
+        InitObjArr();
     }
 
     void SetButtonsEnable(bool isEnable) {
@@ -62,6 +67,8 @@ public class ObjectSlotMachine : MonoBehaviour
             return;
         }
 
+        //ΩΩ∑‘ Ω√¿€
+        OpenWindow();
         HashSet<int> idxes = new HashSet<int>();
 
         while (idxes.Count < 3) { 
