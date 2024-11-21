@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Bullet
   - Floor
-  - StageData
   layers:
   - Default
   - TransparentFX

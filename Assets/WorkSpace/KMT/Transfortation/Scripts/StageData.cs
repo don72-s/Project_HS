@@ -26,6 +26,11 @@ public class StageData : MonoBehaviour
         changeableObjList.Add(obj);
     }
 
+    public void RemoveChangeableObj(IFormChangeable obj)
+    {
+        changeableObjList.Remove(obj);
+    }
+
     [ContextMenu("StartChange")]
     public void StartChangeFormSlot() {
 

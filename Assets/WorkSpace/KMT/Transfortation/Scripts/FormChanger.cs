@@ -27,7 +27,7 @@ public class FormChanger : MonoBehaviourPunCallbacks,
 
     public void StartFormChange() {
 
-        photonView.RPC("StartFormChangeRpc", RpcTarget.All);
+        photonView.RPC("StartFormChangeRpc", RpcTarget.AllViaServer);
 
     }
 
@@ -45,7 +45,12 @@ public class FormChanger : MonoBehaviourPunCallbacks,
     {
         if (!photonView.IsMine)
             return;
-        photonView.RPC("ChangeFormRpc", RpcTarget.All, objIdx);
+        photonView.RPC("ChangeFormRpc", RpcTarget.AllViaServer, objIdx);
+    }
+
+    private void OnDestroy()
+    {
+        StageData.Instance.RemoveChangeableObj(this);
     }
 
     [PunRPC]
