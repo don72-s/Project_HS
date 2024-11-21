@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 
-public class UIBInder : MonoBehaviour
+public class BaseUI : MonoBehaviour
 {
     private Dictionary<string, GameObject> gameObjectDic;
     private Dictionary<(string, System.Type), Component> componentDic;
