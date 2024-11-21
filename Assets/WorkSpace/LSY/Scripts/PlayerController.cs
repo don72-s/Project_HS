@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         }
     }
 
+
     private void Fire()
     {
         if (Input.GetMouseButtonDown(0))

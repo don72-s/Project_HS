@@ -175,12 +175,9 @@ MonoBehaviour:
   moveSpeed: 5
   rotateSpeed: 300
   jumpForce: 10
-  rb: {fileID: 0}
   offset: {x: 0, y: 0.3, z: 1}
-  isJumped: 0
-  interpolation: 13
-  _muzzlePoint: {fileID: 2150775218519260641}
-  _verticalRotateRange: 60
+  muzzlePoint: {fileID: 2150775218519260641}
+  yRotationRange: 60
 --- !u!54 &4524439844518499467
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -225,11 +222,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66483a7db1da3f744a8c7c5f411f79e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 60
-  _targetLayer:
+  range: 30
+  targetLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
-  _playerController: {fileID: 3129392246571992233}
+    m_Bits: 128
+  playerController: {fileID: 3129392246571992233}
+  attack: 1
 --- !u!1 &7873129250157249206
 GameObject:
   m_ObjectHideFlags: 0
