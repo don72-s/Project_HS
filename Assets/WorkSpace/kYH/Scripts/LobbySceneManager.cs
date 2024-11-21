@@ -12,15 +12,24 @@ using Photon.Pun;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
+using WebSocketSharp;
 
 public class LobbySceneManager : BaseUI
 {
     [Header("Login Panel")]
-    [SerializeField] TMP_InputField _emailInput;
-    [SerializeField] TMP_InputField _passwordInput;
-    [SerializeField] GameObject _signupPanel;
-    [SerializeField] GameObject _verifyPanel;
-    [SerializeField] GameObject _nicknamePanel;
+    [SerializeField] private TMP_InputField _emailInput;
+    [SerializeField] private TMP_InputField _passwordInput;
+    [SerializeField] private GameObject _signupPanel;
+    [SerializeField] private GameObject _verifyPanel;
+    [SerializeField] private GameObject _nicknamePanel;
+
+    [Header("Sign UP Panel")]
+    [SerializeField] private TMP_InputField _emailSignupInput;
+    [SerializeField] private TMP_InputField _passwordSignupInput;
+    [SerializeField] private TMP_InputField _passwordConfirmInput;
+
+    [Header("Nickname Panel")]
+    [SerializeField] private TMP_InputField _nicknameInput;
 
     private void Awake()
     {
@@ -45,7 +54,7 @@ public class LobbySceneManager : BaseUI
         AddEvent("StartButton", EventType.Click, StartGame);
     }
 
-    #region Lobby UI
+    #region Login UI
     public void Login(PointerEventData eventData)
     {
         string email = _emailInput.text;
@@ -108,31 +117,101 @@ public class LobbySceneManager : BaseUI
     #region Sign Up UI
     public void SignUp_02(PointerEventData eventData)
     {
+        string email = _emailSignupInput.text;
+        string password = _passwordSignupInput.text;
+        string confirm = _passwordConfirmInput.text;
 
+        if (email.IsNullOrEmpty())
+        {
+            Debug.LogWarning("유효한 이메일을 입력해주세요!!!!!!!!!!!!!");
+            // TODO : 유효한 이메일 입력 알림 팝업창 생성
+            return;
+        }
+        if (password != confirm)
+        {
+            Debug.LogWarning("정확한 비밀번호를 입력해주세요!!!!!!!!!!!!!");
+            // TODO : 정확한 비밀번호 입력 알림 팝업창 생성
+            return;
+        }
+
+        BackendManager.Auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("회원가입이 취소되었습니다.");
+                return;
+            }
+            if (task. IsFaulted)
+            {
+                Debug.LogError($"회원가입에 실패했습니다! (사유 : {task.Exception})");
+                return;
+            }
+
+            AuthResult result = task.Result;
+            Debug.Log($"회원가입이 완료됐습니다! (UID : {result.User.UserId})");
+            _signupPanel.SetActive(false);
+        });
     }
 
     public void Cancel_01(PointerEventData eventData)
     {
-
+        _signupPanel.SetActive(false);
     }
     #endregion
 
     #region Verify UI
     public void Cancel_02(PointerEventData eventData)
     {
-
+        _verifyPanel.SetActive(false);
     }
     #endregion
 
     #region Nickname UI
     public void CheckNickname(PointerEventData eventData)
     {
+        string nickname = _nicknameInput.text;
 
+        if (nickname == "")
+        {
+            Debug.LogWarning("닉네임 입력하라고!!!!!!!!!!!!!!!!");
+            return;
+        }
+
+        FirebaseUser user = BackendManager.Auth.CurrentUser;
+        if (user == null) return;
+
+        UserProfile profile = new UserProfile();
+        profile.DisplayName = nickname;
+
+        BackendManager.Auth.CurrentUser.UpdateUserProfileAsync(profile).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("닉네임 설정이 취소되었습니다.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"닉네임 설정에 실패했습니다! (사유 : {task.Exception})");
+                return;
+            }
+
+            Debug.Log("닉네임 설정이 완료되었습니다!");
+
+            Debug.Log($"Display Name : {user.DisplayName}");
+            Debug.Log($"E-Mail : {user.Email}");
+            Debug.Log($"E-Mail Varified : {user.IsEmailVerified}");
+            Debug.Log($"User ID : {user.UserId}");
+
+            PhotonNetwork.LocalPlayer.NickName = nickname;
+            PhotonNetwork.ConnectUsingSettings();
+            _nicknamePanel.SetActive(false);
+        });
     }
 
     public void Cancel_03(PointerEventData eventData)
     {
-
+        _nicknamePanel.SetActive(false);
     }
     #endregion
 
@@ -188,6 +267,61 @@ public class LobbySceneManager : BaseUI
         {
             PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
             PhotonNetwork.ConnectUsingSettings();
+        }
+    }
+
+    private void SendVerificationMail()
+    {
+        FirebaseUser user = BackendManager.Auth.CurrentUser;
+
+        user.SendEmailVerificationAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("인증 이메일 보내기가 취소됐습니다.");
+                gameObject.SetActive(false);
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"이메일 인증에 실패했습니다! (사유 : {task.Exception})");
+                gameObject.SetActive(false);
+                return;
+            }
+
+            Debug.Log("Email sent successfully.");
+            checkRoutine = StartCoroutine(CheckRoutine());
+        });
+    }
+
+    Coroutine checkRoutine;
+    IEnumerator CheckRoutine()
+    {
+        WaitForSeconds delay = new WaitForSeconds(2.0f);
+
+        while (true)
+        {
+            BackendManager.Auth.CurrentUser.ReloadAsync().ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("인증 이메일 보내기가 취소됐습니다.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError($"이메일 인증에 실패했습니다! (사유 : {task.Exception})");
+                    return;
+                }
+
+                if (BackendManager.Auth.CurrentUser.IsEmailVerified == true)
+                {
+                    Debug.Log("이메일 인증이 완료되었습니다!!!!!!!!!!!!!!!");
+                    _nicknamePanel.SetActive(true);
+                    _verifyPanel.SetActive(false);
+                }
+            });
+            yield return delay;
         }
     }
 }
