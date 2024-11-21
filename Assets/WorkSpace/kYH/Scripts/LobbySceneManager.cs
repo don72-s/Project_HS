@@ -8,9 +8,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Photon.Pun;
+using Firebase;
+using Firebase.Auth;
+using Firebase.Extensions;
 
 public class LobbySceneManager : BaseUI
 {
+    [Header("Login Panel")]
+    [SerializeField] TMP_InputField _emailInput;
+    [SerializeField] TMP_InputField _passwordInput;
+
     private void Awake()
     {
         BindAll();
@@ -36,6 +44,23 @@ public class LobbySceneManager : BaseUI
 
     public void Login(PointerEventData eventData)
     {
+        string email = _emailInput.text;
+        string password = _passwordInput.text;
+
+        if (string.IsNullOrEmpty(email))
+        {
+            // TODO : 이메일 입력하라는 안내 팝업창 생성
+            Debug.LogWarning("이메일 적으라고!!!!!!!!!!!!!!!!");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(password))
+        {
+            // TODO : 비밀번호 입력하라는 안내 팝업창 생성
+            Debug.LogWarning("비밀번호 적으라고!!!!!!!!!!!!!!!!");
+            return;
+        }
+
 
     }
 
