@@ -11,6 +11,9 @@ public class FormChanger : MonoBehaviourPunCallbacks,
     ChangeUIBinder changeCanvasPrefab;
 
     ChangeUIBinder changeCanvas;
+
+    [Header("Base body Object")]
+    [SerializeField]
     GameObject curBodyObject;
 
     private void Start()
@@ -18,7 +21,6 @@ public class FormChanger : MonoBehaviourPunCallbacks,
         changeCanvas = Instantiate(changeCanvasPrefab, transform);
         changeCanvas.gameObject.SetActive(false);
         changeCanvas.GetComponent<ObjectSlotMachine>().SetChangeable(this);
-        curBodyObject = null;
 
         objArr = StageData.Instance.ChangeableSO.ChangeableObjArr;
         StageData.Instance.AddChangeableObj(this);
