@@ -5,5 +5,5 @@ using UnityEngine;
 
 public interface IFormChangeable
 {
-    public void ChangeForm(int objIdx);
+    public void StartFormChange();
 }
