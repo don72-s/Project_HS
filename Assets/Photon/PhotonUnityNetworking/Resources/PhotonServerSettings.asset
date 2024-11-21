@@ -40,6 +40,9 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - ChangeFormRpc
+  - RPC_EndGame
+  - RPC_StartGame
+  - RPC_SetSeeker
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
