@@ -66,7 +66,6 @@ public class EventReceiver : MonoBehaviour
         OnEndDraged?.Invoke(eventData);
     }
 
-
     public void OnDrop(PointerEventData eventData)
     {
         OnDroped?.Invoke(eventData);
