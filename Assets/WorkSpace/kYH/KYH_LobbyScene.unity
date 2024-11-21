@@ -5861,7 +5861,7 @@ GameObject:
   - component: {fileID: 843275564}
   - component: {fileID: 843275563}
   m_Layer: 5
-  m_Name: QuitGameButon
+  m_Name: QuitGameButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7540,8 +7540,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1243c5259cddbcf4784073d74e4042d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _emailInput: {fileID: 0}
-  _passwordInput: {fileID: 0}
+  _emailInput: {fileID: 1603785542}
+  _passwordInput: {fileID: 1261824724}
+  _signupPanel: {fileID: 368418760}
+  _verifyPanel: {fileID: 1180519693}
+  _nicknamePanel: {fileID: 1174421462}
 --- !u!4 &1061976819
 Transform:
   m_ObjectHideFlags: 0

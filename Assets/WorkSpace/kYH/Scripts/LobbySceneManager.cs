@@ -18,6 +18,9 @@ public class LobbySceneManager : BaseUI
     [Header("Login Panel")]
     [SerializeField] TMP_InputField _emailInput;
     [SerializeField] TMP_InputField _passwordInput;
+    [SerializeField] GameObject _signupPanel;
+    [SerializeField] GameObject _verifyPanel;
+    [SerializeField] GameObject _nicknamePanel;
 
     private void Awake()
     {
@@ -42,6 +45,7 @@ public class LobbySceneManager : BaseUI
         AddEvent("StartButton", EventType.Click, StartGame);
     }
 
+    #region Lobby UI
     public void Login(PointerEventData eventData)
     {
         string email = _emailInput.text;
@@ -61,24 +65,47 @@ public class LobbySceneManager : BaseUI
             return;
         }
 
+        BackendManager.Auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogWarning("로그인 취소!!!!!!!");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                // TODO : 로그인 실패 팝업창 생성
+                Debug.LogWarning($"로그인 실패! : " + task.Exception);
+                return;
+            }
 
+            AuthResult result = task.Result;
+            Debug.Log($"로그인 성공! (이름 : {result.User.DisplayName} / UID : {result.User.UserId}");
+            CheckUserInfo();
+        });
     }
 
     public void SignUp_01(PointerEventData eventData)
     {
-
+        _signupPanel.SetActive(true);
     }
 
     public void Settings(PointerEventData eventData)
     {
-
+        // TODO : 설정 패널 활성화
     }
 
     public void QuitGame(PointerEventData eventData)
     {
-
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                Application.Quit();
+        #endif
     }
+    #endregion
 
+    #region Sign Up UI
     public void SignUp_02(PointerEventData eventData)
     {
 
@@ -88,12 +115,16 @@ public class LobbySceneManager : BaseUI
     {
 
     }
+    #endregion
 
+    #region Verify UI
     public void Cancel_02(PointerEventData eventData)
     {
 
     }
+    #endregion
 
+    #region Nickname UI
     public void CheckNickname(PointerEventData eventData)
     {
 
@@ -103,7 +134,9 @@ public class LobbySceneManager : BaseUI
     {
 
     }
+    #endregion
 
+    #region Lobby UI
     public void CreateRoom(PointerEventData eventData)
     {
 
@@ -118,7 +151,9 @@ public class LobbySceneManager : BaseUI
     {
 
     }
+    #endregion
 
+    #region Room UI
     public void BackToLobby(PointerEventData eventData)
     {
 
@@ -127,5 +162,32 @@ public class LobbySceneManager : BaseUI
     public void StartGame(PointerEventData eventData)
     {
 
+    }
+    #endregion
+
+    private void CheckUserInfo()
+    {
+        FirebaseUser user = BackendManager.Auth.CurrentUser;
+
+        if (user == null) return;
+
+        Debug.Log($"Display Name : {user.DisplayName}");
+        Debug.Log($"E-Mail : {user.Email}");
+        Debug.Log($"E-Mail Varified : {user.IsEmailVerified}");
+        Debug.Log($"User ID : {user.UserId}");
+
+        if (user.IsEmailVerified == false)
+        {
+            _verifyPanel.gameObject.SetActive(true);
+        }
+        else if (user.DisplayName == "")
+        {
+            _nicknamePanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
 }
