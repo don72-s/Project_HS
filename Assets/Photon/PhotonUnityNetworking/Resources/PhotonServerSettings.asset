@@ -40,7 +40,10 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - ChangeFormRpc
-  - StartFormChangeRpc
+  - TakeDamage
+  - TakeDamageRpc
+  - TakeDamageRPC
+  - TakeDamegeRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

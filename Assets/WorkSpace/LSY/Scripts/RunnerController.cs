@@ -1,5 +1,6 @@
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RunnerController : MonoBehaviourPun
 {
@@ -9,9 +10,13 @@ public class RunnerController : MonoBehaviourPun
     [SerializeField] float jumpForce;
 
     [Header("플레이어 카메라")]
-    [SerializeField] Vector3 offset;
     [SerializeField] private float mouseX = 5f;  
     [SerializeField] private float mouseY = 5f;
+
+    [Header("플레이어 체력")]
+    [SerializeField] public int hp;
+    [SerializeField] GameObject[] hpImages;
+    [SerializeField] GameObject hpPanel;
 
     private float interpolation; // 보간처리값
     private bool isJumped;
@@ -25,6 +30,8 @@ public class RunnerController : MonoBehaviourPun
 
     private void Start()
     {
+        hp = 3;
+
         if (photonView.IsMine == false) return;
 
         rb = gameObject.GetComponent<Rigidbody>();
@@ -35,15 +42,14 @@ public class RunnerController : MonoBehaviourPun
         networkPosition = transform.position;
         networkRotation = transform.rotation;
 
-        //Camera.main.transform.SetParent(gameObject.transform);
-        Camera.main.transform.position = gameObject.transform.position + offset;
-        //Camera.main.transform.LookAt(transform.position);
+        Camera.main.transform.LookAt(transform.position);
 
         CameraController cam = Camera.main.GetComponent<CameraController>();
         cam.FollowTarget = null;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        hpPanel.gameObject.SetActive(true);
 
     }
 
@@ -68,17 +74,37 @@ public class RunnerController : MonoBehaviourPun
         RotateCamera();
     }
 
+    [PunRPC]
+    public void TakeDamageRpc(int damage)
+    {
+        if (hp < 0)
+        {
+            Debug.Log("player die");
+            return;
+        }
+        hp -= damage;
+        Debug.Log(hp);
+        hpImages[hp].gameObject.SetActive(false);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        photonView.RPC("TakeDamageRpc", RpcTarget.AllViaServer, damage);
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
+            stream.SendNext(hp);
         }
         else if (stream.IsReading)
         {
             networkPosition = (Vector3)stream.ReceiveNext();
             networkRotation = (Quaternion)stream.ReceiveNext();
+            hp = (int)stream.ReceiveNext();
         }
     }
 
@@ -125,8 +151,7 @@ public class RunnerController : MonoBehaviourPun
         yRotation += mouseX * this.mouseX;
         xRotation -= mouseY * this.mouseY;
 
-        //Camera.main.transform.position = transform.position + offset;
         Camera.main.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 10f + Vector3.up * 3f;
+        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 10f + Vector3.up;
     }
 }
