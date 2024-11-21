@@ -1,12 +1,8 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviourPun, IPunObservable
+public class RunnerController : MonoBehaviourPun
 {
-    private Gun gun;
-
     [Header("플레이어 움직임")]
     [SerializeField] float moveSpeed;
     [SerializeField] float rotateSpeed;
@@ -14,15 +10,14 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     [Header("플레이어 카메라")]
     [SerializeField] Vector3 offset;
-
-
-    [SerializeField] public Transform muzzlePoint;
-    [SerializeField] private float yRotationRange;
+    [SerializeField] private float mouseX = 5f;  
+    [SerializeField] private float mouseY = 5f;
 
     private float interpolation; // 보간처리값
-    private bool isJumped; 
+    private bool isJumped;
     private Rigidbody rb;
     private float yRotation = 0f;
+    private float xRotation = 0f;
 
     // 네트워크 상 지연보상을 주기위한 변수
     private Vector3 networkPosition;
@@ -32,7 +27,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     {
         if (photonView.IsMine == false) return;
 
-        gun = GetComponent<Gun>();
         rb = gameObject.GetComponent<Rigidbody>();
 
         isJumped = false;
@@ -41,14 +35,16 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         networkPosition = transform.position;
         networkRotation = transform.rotation;
 
-        Camera.main.transform.SetParent(gameObject.transform);
+        //Camera.main.transform.SetParent(gameObject.transform);
         Camera.main.transform.position = gameObject.transform.position + offset;
+        //Camera.main.transform.LookAt(transform.position);
 
         CameraController cam = Camera.main.GetComponent<CameraController>();
-        cam.FollowTarget = muzzlePoint;
+        cam.FollowTarget = null;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
     }
 
     private void Update()
@@ -63,7 +59,13 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
         Jump();
         Move();
-        Fire();
+    }
+
+    private void LateUpdate()
+    {
+        if (photonView.IsMine == false) return;
+
+        RotateCamera();
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -77,15 +79,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         {
             networkPosition = (Vector3)stream.ReceiveNext();
             networkRotation = (Quaternion)stream.ReceiveNext();
-        }
-    }
-
-    private void Fire()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Debug.Log("Fire");
-            gun.Fire(muzzlePoint);
         }
     }
 
@@ -108,28 +101,10 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     public void Move()
     {
-        Vector2 rotateInput = new( rotateInput.x = Input.GetAxis("Mouse X"), rotateInput.y = Input.GetAxis("Mouse Y"));
-        SetRotation(rotateInput);
-
-        Vector3 moveInput = new( Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 moveInput = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         SetPosition(moveInput);
     }
 
-    private void SetRotation(Vector2 input)
-    {
-        if (input.x != 0)
-        {
-            transform.Rotate(Vector3.up, input.x * rotateSpeed * Time.deltaTime);
-        }
-
-        if (input.y != 0)
-        {
-            yRotation = yRotation + -input.y * rotateSpeed * Time.deltaTime;
-            yRotation = Mathf.Clamp(yRotation, -yRotationRange, yRotationRange);
-
-            Camera.main.transform.localRotation = Quaternion.Euler(yRotation, 0f, 0f);
-        }
-    }
 
     private void SetPosition(Vector3 input)
     {
@@ -137,6 +112,21 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
         Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
+
+        float rotation = input.x * rotateSpeed * Time.deltaTime;
+        transform.Rotate(0, rotation, 0);
     }
 
+    private void RotateCamera()
+    {
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+
+        yRotation += mouseX * this.mouseX;
+        xRotation -= mouseY * this.mouseY;
+
+        //Camera.main.transform.position = transform.position + offset;
+        Camera.main.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 10f + Vector3.up * 3f;
+    }
 }
