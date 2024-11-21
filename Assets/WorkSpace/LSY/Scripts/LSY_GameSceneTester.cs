@@ -60,11 +60,11 @@ public class LSY_GameSceneTester : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == 0)
         {
-            PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+            PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
         }
         else
         {
-            PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+            PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
         }
     }
 
