@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using UnityEngine;
@@ -56,7 +57,15 @@ public class LSY_GameSceneTester : MonoBehaviourPunCallbacks
     {
         Debug.Log("플레이어를 스폰한다!");
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5));
-        PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+
+        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == 0)
+        {
+            PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+        }
+        else
+        {
+            PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+        }
     }
 
 }

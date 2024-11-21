@@ -1,29 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
-    private bool _hasFollowTarget; // 타겟이 존재하는지 안하는지 확인하는 변수
-    private Transform _followTarget; // 카메라가 따라갈 타겟 트랜스폼
+    private bool hasFollowTarget; // 타겟이 존재하는지 안하는지 확인하는 변수
+    private Transform followTarget; // 카메라가 따라갈 타겟 트랜스폼
 
     [SerializeField] Camera gunCamera;
+    [SerializeField] GameObject player;
     public Transform FollowTarget
     {
-        get => _followTarget;
+        get => followTarget;
         set
         {
-            _followTarget = value;
+            followTarget = value;
 
-            if (_followTarget != null)
+            if (followTarget != null)
             {
-                _hasFollowTarget = true;
+                hasFollowTarget = true;
+                gunCamera.gameObject.SetActive(true);
+                player.gameObject.SetActive(true);
             }
             else
             {
-                _hasFollowTarget = false;
+                hasFollowTarget = false;
                 gunCamera.gameObject.SetActive(false);
+                player.gameObject.SetActive(false);
             }
         }
     }
@@ -35,8 +41,7 @@ public class CameraController : MonoBehaviour
 
     private void SetTransform()
     {
-        if (!_hasFollowTarget) return;
-        Debug.Log("aaaa");
-        _followTarget.SetPositionAndRotation(transform.position, transform.rotation);
+        if (!hasFollowTarget) return;
+        followTarget.SetPositionAndRotation(transform.position, transform.rotation);
     }
 }
