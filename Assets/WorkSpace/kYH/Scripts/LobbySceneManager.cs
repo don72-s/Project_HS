@@ -1,18 +1,21 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
 using WebSocketSharp;
+using Photon.Realtime;
+using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
 public class LobbySceneManager : BaseUI
 {
@@ -30,6 +33,18 @@ public class LobbySceneManager : BaseUI
 
     [Header("Nickname Panel")]
     [SerializeField] private TMP_InputField _nicknameInput;
+
+    [Header("Lobby Panel")]
+    [SerializeField] private GameObject _createRoomPanel;
+
+    [Header("Create Room Panel")]
+    [SerializeField] private TMP_InputField _roomNameInput;
+    [SerializeField] private TMP_InputField _maxPlayerInput;
+
+    [Header("Room Panel")]
+    [SerializeField] private GameObject _roomPanel;
+    [SerializeField] Button _startButton;
+    [SerializeField] private PlayerEntry[] _playerEntries;
 
     private void Awake()
     {
@@ -50,6 +65,8 @@ public class LobbySceneManager : BaseUI
         AddEvent("CreateRoomButton", EventType.Click, CreateRoom);
         AddEvent("RandomMatchButton", EventType.Click, MatchRandom);
         AddEvent("LogOutButton", EventType.Click, LogOut);
+        AddEvent("CreateButton", EventType.Click, MakeRoom);
+        AddEvent("CancelButton_04", EventType.Click, Cancel_04);
         AddEvent("BackToLobbyButton", EventType.Click, BackToLobby);
         AddEvent("StartButton", EventType.Click, StartGame);
     }
@@ -218,29 +235,58 @@ public class LobbySceneManager : BaseUI
     #region Lobby UI
     public void CreateRoom(PointerEventData eventData)
     {
-
+        _createRoomPanel.SetActive(true);
     }
 
     public void MatchRandom(PointerEventData eventData)
     {
-
+        string name = $"Room {Random.Range(1000, 10000)}";                              // 방 이름을 랜덤으로 설정
+        RoomOptions options = new RoomOptions() { MaxPlayers = 10 };                     // 방 최대 인원 수를 8로 설정
+        PhotonNetwork.JoinRandomOrCreateRoom(roomName: name, roomOptions: options);
     }
 
     public void LogOut(PointerEventData eventData)
     {
+        PhotonNetwork.Disconnect();
+    }
+    #endregion
 
+    #region Create Room UI
+    public void MakeRoom(PointerEventData eventData)
+    {
+        string roomName = _roomNameInput.text;
+        int maxPlayer = int.Parse(_maxPlayerInput.text);
+        maxPlayer = Mathf.Clamp(maxPlayer, 1, 10);
+
+        if (roomName == "")
+        {
+            Debug.LogWarning("방 이름 입력하라고!!!!!!!!!!!!");
+            // TODO : 방 이름을 입력하라는 팝업창 생성
+            return;
+        }
+
+        RoomOptions options = new RoomOptions();
+        options.MaxPlayers = maxPlayer;
+
+        PhotonNetwork.CreateRoom(roomName, options);
+    }
+
+    public void Cancel_04(PointerEventData eventData)
+    {
+        _createRoomPanel.SetActive(false);
     }
     #endregion
 
     #region Room UI
     public void BackToLobby(PointerEventData eventData)
     {
-
+        _roomPanel.SetActive(false);
     }
 
     public void StartGame(PointerEventData eventData)
     {
-
+        PhotonNetwork.LoadLevel("GameScene");
+        PhotonNetwork.CurrentRoom.IsOpen = false;
     }
     #endregion
 
@@ -323,5 +369,64 @@ public class LobbySceneManager : BaseUI
             });
             yield return delay;
         }
+    }
+
+    public void UpdatePlayers()
+    {
+        foreach (PlayerEntry entry in _playerEntries)
+        {
+            entry.SetEmpty();
+        }
+
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (player.GetPlayerNumber() == -1)
+                continue;
+
+            int num = player.GetPlayerNumber();
+            _playerEntries[num].SetPlayer(player);
+        }
+
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            _startButton.interactable = CheckAllReady();
+        }
+        else
+        {
+            _startButton.interactable = false;
+        }
+    }
+
+    public void EnterPlayer(Player newPlayer)
+    {
+        Debug.Log($"{newPlayer.NickName} Enter!");
+        UpdatePlayers();
+    }
+
+    public void ExitPlayer(Player otherPlayer)
+    {
+        Debug.Log($"{otherPlayer.NickName} Exit!");
+        UpdatePlayers();
+    }
+
+    public void UpdatePlayerProperty(Player targetPlayer, Hashtable properties)
+    {
+        Debug.Log($"{targetPlayer.NickName} Update!");
+    
+        if (properties.ContainsKey(CustomProperties.READY))
+        {
+            UpdatePlayers();
+        }
+    }
+
+    private bool CheckAllReady()
+    {
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (player.GetReady() == false)
+                return false;
+        }
+
+        return true;
     }
 }
