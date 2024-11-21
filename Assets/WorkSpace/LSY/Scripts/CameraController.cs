@@ -10,8 +10,6 @@ public class CameraController : MonoBehaviour
     private bool hasFollowTarget; // 타겟이 존재하는지 안하는지 확인하는 변수
     private Transform followTarget; // 카메라가 따라갈 타겟 트랜스폼
 
-    [SerializeField] Camera gunCamera;
-
     public Transform FollowTarget
     {
         get => followTarget;
@@ -22,12 +20,10 @@ public class CameraController : MonoBehaviour
             if (followTarget != null)
             {
                 hasFollowTarget = true;
-                //gunCamera.gameObject.SetActive(true);
             }
             else
             {
                 hasFollowTarget = false;
-                gunCamera.gameObject.SetActive(false);
             }
         }
     }
