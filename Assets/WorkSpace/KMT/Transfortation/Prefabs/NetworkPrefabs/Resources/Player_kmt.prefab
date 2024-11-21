@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeCanvasPrefab: {fileID: 6352731741856853285, guid: 74757e662a7e37a449246a0b7a8e751c, type: 3}
+  curBodyObject: {fileID: 0}
 --- !u!114 &9040189290700622299
 MonoBehaviour:
   m_ObjectHideFlags: 0
