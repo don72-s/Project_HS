@@ -40,6 +40,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     {
         Debug.Log("Login Success!");
         SetActivePanel(Panel.Lobby);
+        PhotonNetwork.JoinLobby();
     }
 
     // 로그아웃 시 LoginPanel로 전환
@@ -48,6 +49,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     {
         Debug.Log($"Logout! (Cause : {cause})");
         SetActivePanel(Panel.Login);
+        PhotonNetwork.LeaveLobby();
     }
 
     // 방생성 성공 로그 출력

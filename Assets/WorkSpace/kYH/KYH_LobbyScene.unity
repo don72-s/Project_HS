@@ -9702,7 +9702,7 @@ MonoBehaviour:
   _lobbyPanel: {fileID: 278748846}
   _createRoomPanel: {fileID: 1483166610}
   _roomPrefab: {fileID: 6679532598031569011, guid: a8988ee9c4573784c8d8c118af689aec, type: 3}
-  _roomTransform: {fileID: 6068696688431543252, guid: a8988ee9c4573784c8d8c118af689aec, type: 3}
+  _roomTransform: {fileID: 518659184}
   _roomNameInput: {fileID: 541605595}
   _maxPlayerInput: {fileID: 1924833663}
   _roomPanel: {fileID: 2080105904}
