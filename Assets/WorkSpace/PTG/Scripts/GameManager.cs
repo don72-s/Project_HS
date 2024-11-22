@@ -47,6 +47,11 @@ public class GameManager : MonoBehaviourPunCallbacks
                 EndGame("Runner Win");
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            TestGameStart();
+        }
     }
 
     public override void OnConnectedToMaster()
@@ -60,7 +65,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        StartCoroutine(StartDelayRoutine());
+       // StartCoroutine(StartDelayRoutine());
+        Debug.Log("Ω√¿€");
     }
 
     IEnumerator StartDelayRoutine()
@@ -83,7 +89,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void PlayerSpawn()
     {
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
     }
 
     private void SetTeams()
