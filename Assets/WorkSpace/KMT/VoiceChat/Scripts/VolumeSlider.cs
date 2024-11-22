@@ -31,7 +31,7 @@ public class VolumeSlider : MonoBehaviour
 
         audioMixer.SetFloat(
             StageData.Instance.GetPlayerMixerName(playerNum), 
-            Mathf.Lerp(-80, 20, changedValue));
+            Mathf.Lerp(-20, 20, changedValue));
 
     }
 
