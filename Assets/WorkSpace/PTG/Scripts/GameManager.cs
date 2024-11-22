@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public const string RoomName = "TestRoomPTK";
+    public const string RoomName = "TestRoomPTKd";
 
     public static GameManager Instance;
 
@@ -177,7 +177,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         //PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 복귀
     }
 
-    public void OnPlayerCatch()
+    public void OnPlayerCatch() {
+
+        photonView.RPC("OnPlayerCatchRpc", RpcTarget.MasterClient);
+
+    }
+
+    [PunRPC]
+    public void OnPlayerCatchRpc()
     {
         runnersRemaining--;
         Debug.LogWarning("남은사람 : " + runnersRemaining);
