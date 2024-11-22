@@ -10,6 +10,10 @@ public class StageData : MonoBehaviour
 
     List<IFormChangeable> changeableObjList = new List<IFormChangeable>();
 
+    readonly string[] playerMixerName = { "Volume0", "Volume1", "Volume2",
+                                          "Volume3", "Volume4", "Volume5",
+                                          "Volume6", "Volume7", "Volume8", "Volume9" };
+
     private void Awake()
     {
         if (Instance == null)
@@ -39,6 +43,17 @@ public class StageData : MonoBehaviour
         {
             runner.StartFormChange();
         }
+    }
+
+    public string GetPlayerMixerName(int playerNumber) {
+
+        if (playerNumber < 0 || playerNumber >= playerMixerName.Length) {
+            Debug.Log("믹서 이름 배열에 대응되지 않는 숫자가 입력됨");
+            return string.Empty;
+        }
+
+        return playerMixerName[playerNumber];
+
     }
 
 }

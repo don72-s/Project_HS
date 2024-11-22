@@ -153,6 +153,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9040189290700622297}
   - component: {fileID: 9040189290700622294}
+  - component: {fileID: 671488185142057416}
   - component: {fileID: 9040189290700622299}
   - component: {fileID: 9040189290700622296}
   - component: {fileID: 5106515545611408106}
@@ -194,6 +195,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   changeCanvasPrefab: {fileID: 6352731741856853285, guid: 74757e662a7e37a449246a0b7a8e751c, type: 3}
   curBodyObject: {fileID: 0}
+--- !u!114 &671488185142057416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9040189290700622295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee1424e541ae99242976226e8460f3cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeSliderPrefab: {fileID: 3994457287092720036, guid: 24f2f06c473abc342b3f29877cf673fa, type: 3}
 --- !u!114 &9040189290700622299
 MonoBehaviour:
   m_ObjectHideFlags: 0
