@@ -76,6 +76,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         TestGameStart();
     }
 
+    IEnumerator WaitPlayerSpawnCO() {
+
+        yield return new WaitForSeconds(3f);
+        StageData.Instance.StartChangeFormSlot();
+
+    }
+
     public void TestGameStart()
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
@@ -91,6 +98,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             // SetTeams(); // ∆¿ πË¡§
             photonView.RPC("RPC_StartGame", RpcTarget.All);
             photonView.RPC("PlayerSpawn", RpcTarget.AllViaServer, randomNum);
+            StartCoroutine(WaitPlayerSpawnCO());
 
         }
     }
