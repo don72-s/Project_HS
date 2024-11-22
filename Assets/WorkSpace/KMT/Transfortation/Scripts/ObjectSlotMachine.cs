@@ -11,15 +11,20 @@ public class ObjectSlotMachine : MonoBehaviour
 {
 
     [SerializeField]
-    GameObject[] objectArr;
+    int countdownSec;
 
-    IFormChangeable changeableObj = null;
+    FormChanger changeableObj = null;
 
     ChangeUIBinder changeUIBinder;
     List<Button> buttons = new List<Button>();
     List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
+    TextMeshProUGUI countdownText;
 
+    GameObject[] objectArr = null;
     int[] idxArr;
+
+    Coroutine countdownCoroutine = null;
+    WaitForSeconds countdownDelay;
 
     private void Awake()
     {
@@ -34,11 +39,22 @@ public class ObjectSlotMachine : MonoBehaviour
         texts.Add(changeUIBinder.GetUI<TextMeshProUGUI>("ObjectText1"));
         texts.Add(changeUIBinder.GetUI<TextMeshProUGUI>("ObjectText2"));
         texts.Add(changeUIBinder.GetUI<TextMeshProUGUI>("ObjectText3"));
+
+        countdownText = changeUIBinder.GetUI<TextMeshProUGUI>("CountdownText");
+
+        countdownDelay = new WaitForSeconds(1);
     }
 
+    public void InitObjArr() {
 
-    public void SetChangeable(IFormChangeable changeable) { 
+        if(objectArr == null)
+            objectArr = StageData.Instance.ChangeableSO.ChangeableObjArr;
+
+    }
+
+    public void SetChangeable(FormChanger changeable) { 
         changeableObj = changeable;
+        InitObjArr();
     }
 
     void SetButtonsEnable(bool isEnable) {
@@ -62,6 +78,8 @@ public class ObjectSlotMachine : MonoBehaviour
             return;
         }
 
+        //ΩΩ∑‘ Ω√¿€
+        OpenWindow();
         HashSet<int> idxes = new HashSet<int>();
 
         while (idxes.Count < 3) { 
@@ -79,6 +97,7 @@ public class ObjectSlotMachine : MonoBehaviour
 
         }
 
+        countdownCoroutine = StartCoroutine(CountdownCO());
         SetButtonsEnable(true);
 
     }
@@ -96,12 +115,27 @@ public class ObjectSlotMachine : MonoBehaviour
         CloseWindow();
     }
 
+    IEnumerator CountdownCO() {
+
+        for (int i = countdownSec; i >= 0; i--) {
+
+            countdownText.text = i.ToString();
+            yield return countdownDelay;
+
+        }
+
+        ChangeObjButton1();
+    }
+
     public void OpenWindow() {
         SetButtonsEnable(false);
+        countdownText.text = "";
         gameObject.SetActive(true);
     }
 
     public void CloseWindow() {
+        StopCoroutine(countdownCoroutine);
+        countdownCoroutine = null;
         gameObject.SetActive(false);
     }
 

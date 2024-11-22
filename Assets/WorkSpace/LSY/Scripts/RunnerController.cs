@@ -1,7 +1,9 @@
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
-public class RunnerController : MonoBehaviourPun
+public class RunnerController : MonoBehaviourPun, IPunObservable
 {
     [Header("플레이어 움직임")]
     [SerializeField] float moveSpeed;
@@ -9,11 +11,14 @@ public class RunnerController : MonoBehaviourPun
     [SerializeField] float jumpForce;
 
     [Header("플레이어 카메라")]
-    [SerializeField] Vector3 offset;
     [SerializeField] private float mouseX = 5f;  
     [SerializeField] private float mouseY = 5f;
 
-    private float interpolation; // 보간처리값
+    [Header("플레이어 체력")]
+    [SerializeField] public int hp;
+    [SerializeField] GameObject[] hpImages;
+    [SerializeField] GameObject hpPanel;
+
     private bool isJumped;
     private Rigidbody rb;
     private float yRotation = 0f;
@@ -21,29 +26,32 @@ public class RunnerController : MonoBehaviourPun
 
     // 네트워크 상 지연보상을 주기위한 변수
     private Vector3 networkPosition;
+    private float deltaPosition;
+
     private Quaternion networkRotation;
+    private float deltaRotation;
 
     private void Start()
     {
+        hp = 3;
+
         if (photonView.IsMine == false) return;
 
         rb = gameObject.GetComponent<Rigidbody>();
 
         isJumped = false;
-        interpolation = 13;
 
         networkPosition = transform.position;
         networkRotation = transform.rotation;
 
-        //Camera.main.transform.SetParent(gameObject.transform);
-        Camera.main.transform.position = gameObject.transform.position + offset;
-        //Camera.main.transform.LookAt(transform.position);
+        Camera.main.transform.LookAt(transform.position);
 
         CameraController cam = Camera.main.GetComponent<CameraController>();
         cam.FollowTarget = null;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        hpPanel.gameObject.SetActive(true);
 
     }
 
@@ -51,9 +59,8 @@ public class RunnerController : MonoBehaviourPun
     {
         if (photonView.IsMine == false)
         {
-            // Lerp를 이용해 현재 플레이어의 위치와 네트워크상에서 이동한 위치를 보간처리 해줘서 끊기지 않고 부드럽게 처리해줌
-            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * interpolation); // 프레임에 따라 보간속도 조절
-            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * interpolation);
+            transform.position = Vector3.MoveTowards(transform.position, networkPosition, deltaPosition * Time.deltaTime * PhotonNetwork.SerializationRate);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, networkRotation, deltaRotation * Time.deltaTime * PhotonNetwork.SerializationRate);
             return;
         }
 
@@ -68,17 +75,41 @@ public class RunnerController : MonoBehaviourPun
         RotateCamera();
     }
 
+    [PunRPC]
+    public void TakeDamageRpc(int damage)
+    {
+        if (hp < 0)
+        {
+            Debug.Log("player die");
+            return;
+        }
+        hp -= damage;
+        Debug.Log(hp);
+        hpImages[hp].gameObject.SetActive(false);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        photonView.RPC("TakeDamageRpc", RpcTarget.AllViaServer, damage);
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
+            stream.SendNext(hp);
         }
         else if (stream.IsReading)
         {
             networkPosition = (Vector3)stream.ReceiveNext();
             networkRotation = (Quaternion)stream.ReceiveNext();
+            hp = (int)stream.ReceiveNext();
+
+            deltaPosition = Vector3.Distance(transform.position, networkPosition);
+            deltaRotation = Quaternion.Angle(transform.rotation, networkRotation);
+
         }
     }
 
@@ -101,21 +132,34 @@ public class RunnerController : MonoBehaviourPun
 
     public void Move()
     {
-        Vector3 moveInput = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        SetPosition(moveInput);
+        float z = Input.GetAxis("Vertical");
+
+        SetPosition(z);
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            Rotate(-1); 
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            Rotate(1);
+        }
     }
 
-
-    private void SetPosition(Vector3 input)
+    private void SetPosition(float input)
     {
-        if (input == Vector3.zero) return;
+        if (input == 0) return;
 
-        Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
+        Vector3 moveDirection = transform.forward * input;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
+    }
 
-        float rotation = input.x * rotateSpeed * Time.deltaTime;
+    private void Rotate(int direction)
+    {
+        float rotation = direction * rotateSpeed * Time.deltaTime;
         transform.Rotate(0, rotation, 0);
     }
+
 
     private void RotateCamera()
     {
@@ -125,8 +169,9 @@ public class RunnerController : MonoBehaviourPun
         yRotation += mouseX * this.mouseX;
         xRotation -= mouseY * this.mouseY;
 
-        //Camera.main.transform.position = transform.position + offset;
+        xRotation = Mathf.Clamp(xRotation, 0, 60);
+
         Camera.main.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 10f + Vector3.up * 3f;
+        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 10f + Vector3.up;
     }
 }

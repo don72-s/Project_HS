@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a53ce2318161e6846bf75e4c5c0d5f10, type: 3}
+  m_Name: ChangeableObjs_stage1
+  m_EditorClassIdentifier: 
+  ChangeableObjArr:
+  - {fileID: 8324779444928826991, guid: f68540202f1b92447b0fa148b39e9c26, type: 3}
+  - {fileID: 90034362916899510, guid: a0edb67111379804da476b9b6247f057, type: 3}
+  - {fileID: 2635509126402371355, guid: a7d3bd273a1461640afb180ce726a92e, type: 3}
+  - {fileID: 8324779444928826991, guid: 8626654b9547731448cefde4a3d40b96, type: 3}
+  - {fileID: 8324779444928826991, guid: 2b94c39d2dd8bab4784667cb26afb857, type: 3}
+  - {fileID: 8324779444928826991, guid: b65271efbd456d84fa77fd84a3a874f1, type: 3}

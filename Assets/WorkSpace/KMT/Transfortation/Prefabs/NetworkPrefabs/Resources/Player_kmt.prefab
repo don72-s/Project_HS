@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9040189290700622299}
   - component: {fileID: 9040189290700622296}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player_kmt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,11 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22bbe03639b95bc4da25dfabf1b776c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objList:
-  - {fileID: 8324779444928826991, guid: f68540202f1b92447b0fa148b39e9c26, type: 3}
-  - {fileID: 90034362916899510, guid: a0edb67111379804da476b9b6247f057, type: 3}
-  - {fileID: 2635509126402371355, guid: a7d3bd273a1461640afb180ce726a92e, type: 3}
   changeCanvasPrefab: {fileID: 6352731741856853285, guid: 74757e662a7e37a449246a0b7a8e751c, type: 3}
+  curBodyObject: {fileID: 0}
 --- !u!114 &9040189290700622299
 MonoBehaviour:
   m_ObjectHideFlags: 0

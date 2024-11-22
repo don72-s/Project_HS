@@ -15,18 +15,22 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     [Header("플레이어 카메라")]
     [SerializeField] Vector3 offset;
 
-
+    [SerializeField] GameObject targetPointImage;
     [SerializeField] public Transform muzzlePoint;
     [SerializeField] private float yRotationRange;
 
-    private float interpolation; // 보간처리값
+    [SerializeField] Camera gunCamera;
+
     private bool isJumped; 
     private Rigidbody rb;
     private float yRotation = 0f;
 
     // 네트워크 상 지연보상을 주기위한 변수
     private Vector3 networkPosition;
+    private float deltaPosition;
+
     private Quaternion networkRotation;
+    private float deltaRotation;
 
     private void Start()
     {
@@ -36,7 +40,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         rb = gameObject.GetComponent<Rigidbody>();
 
         isJumped = false;
-        interpolation = 13;
 
         networkPosition = transform.position;
         networkRotation = transform.rotation;
@@ -49,15 +52,18 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        targetPointImage.SetActive(true);
+        gunCamera.gameObject.SetActive(true );
+
     }
 
     private void Update()
     {
         if (photonView.IsMine == false)
         {
-            // Lerp를 이용해 현재 플레이어의 위치와 네트워크상에서 이동한 위치를 보간처리 해줘서 끊기지 않고 부드럽게 처리해줌
-            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * interpolation); // 프레임에 따라 보간속도 조절
-            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * interpolation);
+            transform.position = Vector3.MoveTowards(transform.position, networkPosition, deltaPosition * Time.deltaTime * PhotonNetwork.SerializationRate);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, networkRotation, deltaRotation * Time.deltaTime * PhotonNetwork.SerializationRate);
             return;
         }
 
@@ -77,8 +83,12 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         {
             networkPosition = (Vector3)stream.ReceiveNext();
             networkRotation = (Quaternion)stream.ReceiveNext();
+
+            deltaPosition = Vector3.Distance(transform.position, networkPosition);
+            deltaRotation = Quaternion.Angle(transform.rotation, networkRotation);
         }
     }
+
 
     private void Fire()
     {
@@ -117,6 +127,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     private void SetRotation(Vector2 input)
     {
+        if (input ==  Vector2.zero) return;
+
         if (input.x != 0)
         {
             transform.Rotate(Vector3.up, input.x * rotateSpeed * Time.deltaTime);
