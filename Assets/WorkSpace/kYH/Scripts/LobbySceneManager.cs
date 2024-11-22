@@ -224,8 +224,8 @@ public class LobbySceneManager : BaseUI
             Debug.Log($"User ID : {user.UserId}");
 
             PhotonNetwork.LocalPlayer.NickName = nickname;
-            PhotonNetwork.ConnectUsingSettings();
             _nicknamePanel.SetActive(false);
+            PhotonNetwork.ConnectUsingSettings();
         });
     }
 
@@ -250,6 +250,7 @@ public class LobbySceneManager : BaseUI
 
     public void LogOut(PointerEventData eventData)
     {
+        _nicknamePanel.SetActive(false);
         PhotonNetwork.Disconnect();
     }
     #endregion
@@ -271,6 +272,7 @@ public class LobbySceneManager : BaseUI
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = maxPlayer;
 
+        _createRoomPanel.SetActive(false);
         PhotonNetwork.CreateRoom(roomName, options);
     }
 
