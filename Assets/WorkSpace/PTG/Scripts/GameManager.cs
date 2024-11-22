@@ -188,10 +188,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         runnersRemaining--;
         Debug.LogWarning("남은사람 : " + runnersRemaining);
-        // 혼자 테스트용 주석
-        //if (runnersRemaining <= 0)
-        //{
-        //    EndGame("Seekers Win");
-        //}
+        if (runnersRemaining <= 0)
+        {
+            EndGame("Seekers Win");
+        }
     }
 }
