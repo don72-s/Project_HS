@@ -47,7 +47,7 @@ public class LobbySceneManager : BaseUI
 
     [Header("Room Panel")]
     [SerializeField] private GameObject _roomPanel;
-    [SerializeField] Button _startButton;
+    [SerializeField] private Button _startButton;
 
     private void Awake()
     {
@@ -283,8 +283,6 @@ public class LobbySceneManager : BaseUI
     #region Room UI
     public void BackToLobby(PointerEventData eventData)
     {
-        //_roomPanel.SetActive(false);
-        //_createRoomPanel.SetActive(false);
         PhotonNetwork.LeaveRoom();
     }
 
@@ -370,8 +368,8 @@ public class LobbySceneManager : BaseUI
                 if (BackendManager.Auth.CurrentUser.IsEmailVerified == true)
                 {
                     Debug.Log("이메일 인증이 완료되었습니다!!!!!!!!!!!!!!!");
-                    _nicknamePanel.SetActive(true);
                     _verifyPanel.SetActive(false);
+                    _nicknamePanel.SetActive(true);
                 }
             });
             yield return delay;

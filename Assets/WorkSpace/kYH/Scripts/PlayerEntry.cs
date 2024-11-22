@@ -5,10 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
-public class PlayerEntry : MonoBehaviour
+public class PlayerEntry : BaseUI
 {
     [SerializeField] private TMP_Text _readyText;
     [SerializeField] private TMP_Text _nameText;
