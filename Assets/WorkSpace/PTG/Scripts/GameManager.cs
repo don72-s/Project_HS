@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public const string RoomName = "TestRoomPTK";
+    public const string RoomName = "TestRoomPTKd";
 
     public static GameManager Instance;
 
@@ -47,6 +48,11 @@ public class GameManager : MonoBehaviourPunCallbacks
                 EndGame("Runner Win");
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            TestGameStart();
+        }
     }
 
     public override void OnConnectedToMaster()
@@ -60,7 +66,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        StartCoroutine(StartDelayRoutine());
+       // StartCoroutine(StartDelayRoutine());
+        Debug.Log("시작");
     }
 
     IEnumerator StartDelayRoutine()
@@ -69,21 +76,47 @@ public class GameManager : MonoBehaviourPunCallbacks
         TestGameStart();
     }
 
+    IEnumerator WaitPlayerSpawnCO() {
+
+        yield return new WaitForSeconds(3f);
+        StageData.Instance.StartChangeFormSlot();
+
+    }
+
     public void TestGameStart()
     {
-        PlayerSpawn(); // 플레이어 스폰
+        List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
+
+        //PlayerSpawn(); // 플레이어 스폰
 
         if (PhotonNetwork.IsMasterClient)
         {
-            SetTeams(); // 팀 배정
+            runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
+
+            int randomNum = Random.Range(0, allPlayers.Count);
+
+            // SetTeams(); // 팀 배정
             photonView.RPC("RPC_StartGame", RpcTarget.All);
+            photonView.RPC("PlayerSpawn", RpcTarget.AllViaServer, randomNum);
+            StartCoroutine(WaitPlayerSpawnCO());
+
         }
     }
 
-    private void PlayerSpawn()
+    [PunRPC]
+    private void PlayerSpawn(int ranNumber)
     {
+
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
+        {
+            PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+        }
+        else
+        {
+            GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+            runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
+        }
     }
 
     private void SetTeams()
@@ -152,14 +185,20 @@ public class GameManager : MonoBehaviourPunCallbacks
         //PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 복귀
     }
 
-    public void OnPlayerCatch()
+    public void OnPlayerCatch() {
+
+        photonView.RPC("OnPlayerCatchRpc", RpcTarget.MasterClient);
+
+    }
+
+    [PunRPC]
+    public void OnPlayerCatchRpc()
     {
         runnersRemaining--;
-
-        // 혼자 테스트용 주석
-        //if (runnersRemaining <= 0)
-        //{
-        //    EndGame("Seekers Win");
-        //}
+        Debug.LogWarning("남은사람 : " + runnersRemaining);
+        if (runnersRemaining <= 0)
+        {
+            EndGame("Seekers Win");
+        }
     }
 }
