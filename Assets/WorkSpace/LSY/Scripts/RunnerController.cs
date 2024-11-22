@@ -1,5 +1,6 @@
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -30,6 +31,8 @@ public class RunnerController : MonoBehaviourPun, IPunObservable
 
     private Quaternion networkRotation;
     private float deltaRotation;
+
+    public UnityEvent OnDeadEvent = null;
 
     private void Start()
     {
@@ -78,9 +81,10 @@ public class RunnerController : MonoBehaviourPun, IPunObservable
     [PunRPC]
     public void TakeDamageRpc(int damage)
     {
-        if (hp < 0)
+        if (hp <= 0)
         {
             Debug.Log("player die");
+            OnDeadEvent?.Invoke();
             return;
         }
         hp -= damage;

@@ -220,6 +220,9 @@ MonoBehaviour:
   - {fileID: 1593619191719851992}
   - {fileID: 3235541820587155795}
   hpPanel: {fileID: 4453781681991178993}
+  OnDeadEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6806685630959907406
 MonoBehaviour:
   m_ObjectHideFlags: 0

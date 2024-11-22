@@ -96,7 +96,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+            GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+            runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
         }
     }
 
@@ -169,7 +170,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void OnPlayerCatch()
     {
         runnersRemaining--;
-
+        Debug.LogWarning("남은사람 : " + runnersRemaining);
         // 혼자 테스트용 주석
         //if (runnersRemaining <= 0)
         //{
