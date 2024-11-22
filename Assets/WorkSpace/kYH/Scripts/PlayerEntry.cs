@@ -10,39 +10,39 @@ using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerEntry : MonoBehaviour
 {
-    [SerializeField] TMP_Text readyText;
-    [SerializeField] TMP_Text nameText;
-    [SerializeField] Button readyButton;
+    [SerializeField] private TMP_Text _readyText;
+    [SerializeField] private TMP_Text _nameText;
+    [SerializeField] private Button _readyButton;
 
     public void SetPlayer(Player player)
     {
         if (player.IsMasterClient)
         {
-            nameText.text = $"Master\n{player.NickName}";
+            _nameText.text = $"Master\n{player.NickName}";
         }
         else
         {
-            nameText.text = player.NickName;
+            _nameText.text = player.NickName;
         }
 
-        readyButton.gameObject.SetActive(true);
-        readyButton.interactable = player == PhotonNetwork.LocalPlayer;
+        _readyButton.gameObject.SetActive(true);
+        _readyButton.interactable = player == PhotonNetwork.LocalPlayer;
 
         if (player.GetReady())
         {
-            readyText.text = "Ready";
+            _readyText.text = "Ready";
         }
         else
         {
-            readyText.text = "";
+            _readyText.text = "";
         }
     }
 
     public void SetEmpty()
     {
-        nameText.text = "";
-        readyText.text = "";
-        readyButton.gameObject.SetActive(false);
+        _nameText.text = "";
+        _readyText.text = "";
+        _readyButton.gameObject.SetActive(false);
     }
 
     public void Ready()

@@ -285,6 +285,8 @@ public class LobbySceneManager : BaseUI
     public void BackToLobby(PointerEventData eventData)
     {
         _roomPanel.SetActive(false);
+        _createRoomPanel.SetActive(false);
+        PhotonNetwork.LeaveRoom();
     }
 
     public void StartGame(PointerEventData eventData)
@@ -316,6 +318,7 @@ public class LobbySceneManager : BaseUI
         }
         else
         {
+            Debug.Log("dddddddddddddddd");
             PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
             PhotonNetwork.ConnectUsingSettings();
         }
@@ -440,10 +443,10 @@ public class LobbySceneManager : BaseUI
         UpdatePlayers();
     }
 
-    public void UpdatePlayerProperty(Player targetPlayer, Hashtable properties)
+    public void UpdatePlayerProperty(Player targetPlayer, PhotonHashtable properties)
     {
         Debug.Log($"{targetPlayer.NickName} Update!");
-    
+
         if (properties.ContainsKey(CustomProperties.READY))
         {
             UpdatePlayers();
