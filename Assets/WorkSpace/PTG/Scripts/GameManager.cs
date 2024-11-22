@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -81,7 +82,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            SetTeams(); // ∆¿ πË¡§
+           // SetTeams(); // ∆¿ πË¡§
             photonView.RPC("RPC_StartGame", RpcTarget.All);
         }
     }
@@ -89,7 +90,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void PlayerSpawn()
     {
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == 0)
+        {
+            PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+        }
+        else
+        {
+            PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+        }
     }
 
     private void SetTeams()
