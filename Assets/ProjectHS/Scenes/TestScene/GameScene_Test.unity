@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  gameDuration: 10
+  gameDuration: 30
 --- !u!4 &860988595
 Transform:
   m_ObjectHideFlags: 0

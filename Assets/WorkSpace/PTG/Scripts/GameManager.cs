@@ -78,19 +78,29 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void TestGameStart()
     {
-        PlayerSpawn(); // 플레이어 스폰
+        List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
+
+        //PlayerSpawn(); // 플레이어 스폰
 
         if (PhotonNetwork.IsMasterClient)
         {
-           // SetTeams(); // 팀 배정
+            runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
+
+            int randomNum = Random.Range(0, allPlayers.Count);
+
+            // SetTeams(); // 팀 배정
             photonView.RPC("RPC_StartGame", RpcTarget.All);
+            photonView.RPC("PlayerSpawn", RpcTarget.AllViaServer, randomNum);
+
         }
     }
 
-    private void PlayerSpawn()
+    [PunRPC]
+    private void PlayerSpawn(int ranNumber)
     {
+
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == 0)
+        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
         {
             PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
         }

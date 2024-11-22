@@ -49,6 +49,7 @@ MonoBehaviour:
   - RPC_SetSeeker
   - StartFormChangeRpc
   - TakeDamageRpc
+  - PlayerSpawn
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
