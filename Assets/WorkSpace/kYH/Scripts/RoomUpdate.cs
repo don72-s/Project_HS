@@ -14,10 +14,11 @@ public class RoomUpdate : MonoBehaviour
 
     private void OnEnable()
     {
+        Debug.Log("llllllllllllllllllllllllll");
         UpdatePlayers();
-
+        Debug.Log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
         PlayerNumbering.OnPlayerNumberingChanged += UpdatePlayers;
-
+        Debug.Log("kkkkkkkkkkkkkkkkkkkkkkkk");
         PhotonNetwork.LocalPlayer.SetReady(false);
         PhotonNetwork.LocalPlayer.SetLoad(false);
     }
@@ -31,15 +32,18 @@ public class RoomUpdate : MonoBehaviour
     {
         foreach (PlayerEntry entry in _playerEntries)
         {
+            Debug.Log("tttttttttttttttttt");
             entry.SetEmpty();
         }
 
         foreach (Player player in PhotonNetwork.PlayerList)
         {
+            Debug.Log("eeeeeeeeeeeeeeeeeeeeeeee");
             if (player.GetPlayerNumber() == -1)
                 continue;
-
+            Debug.Log("qqqqqqqqqqqqqqqqqqqqqqqqqqq");
             int num = player.GetPlayerNumber();
+            Debug.Log("uuuuuuuuuuuuuuuuuuuuuuu");
             _playerEntries[num].SetPlayer(player);
         }
 
@@ -65,7 +69,6 @@ public class RoomUpdate : MonoBehaviour
         UpdatePlayers();
     }
 
-    // 포톤 네트워크에서 해시 테이블을 사용할 때, 참조가 반드시 '포톤'전용 해시 테이블을 사용해야 한다. (시스템 제네릭 참조인 건 적용 안됨!)
     public void UpdatePlayerProperty(Player targetPlayer, Hashtable properties)
     {
         Debug.Log($"{targetPlayer.NickName} Update!");

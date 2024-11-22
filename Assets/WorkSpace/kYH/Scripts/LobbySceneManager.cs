@@ -48,7 +48,6 @@ public class LobbySceneManager : BaseUI
     [Header("Room Panel")]
     [SerializeField] private GameObject _roomPanel;
     [SerializeField] Button _startButton;
-    [SerializeField] private PlayerEntry[] _playerEntries;
 
     private void Awake()
     {
