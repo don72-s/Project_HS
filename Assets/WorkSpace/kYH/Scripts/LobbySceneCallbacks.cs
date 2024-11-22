@@ -83,7 +83,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     // 방에 입장한 플레이어의 프로퍼티를 변경
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
-        _manager.UpdatePlayerProperty(targetPlayer, changedProps);
+        //_manager.UpdatePlayerProperty(targetPlayer, changedProps);
     }
 
     //public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
@@ -137,7 +137,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         // <주의사항>
         // 1. 처음 로비 입장 시 : 모든 방 목록을 전달
         // 2. 입장 중 방 목록이 변경되는 경우 : 변경된 방 목록만 전달
-        _lobbyPanel.UpdateRoomList(roomList);
+        _manager.UpdateRoomList(roomList);
     }
 
     // 각 상태에 맞는 패널 전환 기능

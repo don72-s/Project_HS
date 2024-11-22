@@ -37,6 +37,9 @@ public class LobbySceneManager : BaseUI
 
     [Header("Lobby Panel")]
     [SerializeField] private GameObject _createRoomPanel;
+    private Dictionary<string, RoomEntry> _roomDic = new Dictionary<string, RoomEntry>();
+    [SerializeField] private RoomEntry _roomPrefab;
+    [SerializeField] private RectTransform _roomTransform;
 
     [Header("Create Room Panel")]
     [SerializeField] private TMP_InputField _roomNameInput;
@@ -302,9 +305,6 @@ public class LobbySceneManager : BaseUI
         Debug.Log($"E-Mail Varified : {user.IsEmailVerified}");
         Debug.Log($"User ID : {user.UserId}");
 
-        PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
-        PhotonNetwork.();
-
         if (user.IsEmailVerified == false)
         {
             _verifyPanel.gameObject.SetActive(true);
@@ -316,8 +316,8 @@ public class LobbySceneManager : BaseUI
         }
         else
         {
-            _nicknamePanel.gameObject.SetActive(false);
-            _lobbyPanel.SetActive(true);
+            PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
+            PhotonNetwork.ConnectUsingSettings();
         }
     }
 
@@ -373,6 +373,32 @@ public class LobbySceneManager : BaseUI
                 }
             });
             yield return delay;
+        }
+    }
+
+    public void UpdateRoomList(List<RoomInfo> roomList)
+    {
+        foreach (RoomInfo info in roomList)
+        {
+            if (info.RemovedFromList == true || info.IsVisible == false || info.IsOpen == false)
+            {
+                if (_roomDic.ContainsKey(info.Name) == false)
+                    continue;
+
+                Destroy(_roomDic[info.Name].gameObject);   
+                _roomDic.Remove(info.Name);                
+            }
+            else if (_roomDic.ContainsKey(info.Name) == false)
+            {
+                RoomEntry roomEntry = Instantiate(_roomPrefab, _roomTransform);
+                _roomDic.Add(info.Name, roomEntry);
+                roomEntry.SetRoomInfo(info);
+            }
+            else if (_roomDic.ContainsKey((string)info.Name) == true)
+            {
+                RoomEntry roomEntry = _roomDic[info.Name];
+                roomEntry.SetRoomInfo(info);
+            }
         }
     }
 
