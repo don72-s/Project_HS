@@ -1387,9 +1387,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 920109584}
-  nameText: {fileID: 1793143302}
-  readyButton: {fileID: 421251928}
+  _readyText: {fileID: 920109584}
+  _nameText: {fileID: 1793143302}
+  _readyButton: {fileID: 421251928}
 --- !u!1 &151050038
 GameObject:
   m_ObjectHideFlags: 0
@@ -1604,9 +1604,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 1275171670}
-  nameText: {fileID: 725755776}
-  readyButton: {fileID: 1810064168}
+  _readyText: {fileID: 1275171670}
+  _nameText: {fileID: 725755776}
+  _readyButton: {fileID: 1810064168}
 --- !u!1 &163242825
 GameObject:
   m_ObjectHideFlags: 0
@@ -5104,9 +5104,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 569559398}
-  nameText: {fileID: 639444929}
-  readyButton: {fileID: 97909740}
+  _readyText: {fileID: 569559398}
+  _nameText: {fileID: 639444929}
+  _readyButton: {fileID: 97909740}
 --- !u!1 &572354460
 GameObject:
   m_ObjectHideFlags: 0
@@ -6219,9 +6219,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 1269604297}
-  nameText: {fileID: 51025675}
-  readyButton: {fileID: 1129391878}
+  _readyText: {fileID: 1269604297}
+  _nameText: {fileID: 51025675}
+  _readyButton: {fileID: 1129391878}
 --- !u!1 &676595267
 GameObject:
   m_ObjectHideFlags: 0
@@ -6862,9 +6862,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 246995902}
-  nameText: {fileID: 1235763863}
-  readyButton: {fileID: 151050040}
+  _readyText: {fileID: 246995902}
+  _nameText: {fileID: 1235763863}
+  _readyButton: {fileID: 151050040}
 --- !u!1 &745957455
 GameObject:
   m_ObjectHideFlags: 0
@@ -7267,9 +7267,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 944706801}
-  nameText: {fileID: 1764755521}
-  readyButton: {fileID: 565037808}
+  _readyText: {fileID: 944706801}
+  _nameText: {fileID: 1764755521}
+  _readyButton: {fileID: 565037808}
 --- !u!1 &843275561
 GameObject:
   m_ObjectHideFlags: 0
@@ -9967,9 +9967,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 148203466}
-  nameText: {fileID: 350004936}
-  readyButton: {fileID: 992040132}
+  _readyText: {fileID: 148203466}
+  _nameText: {fileID: 350004936}
+  _readyButton: {fileID: 992040132}
 --- !u!1 &1174421462
 GameObject:
   m_ObjectHideFlags: 0
@@ -12228,9 +12228,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 1032764265}
-  nameText: {fileID: 616110207}
-  readyButton: {fileID: 745957457}
+  _readyText: {fileID: 1032764265}
+  _nameText: {fileID: 616110207}
+  _readyButton: {fileID: 745957457}
 --- !u!1 &1404038911
 GameObject:
   m_ObjectHideFlags: 0
@@ -12773,9 +12773,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 1615867807}
-  nameText: {fileID: 1626951120}
-  readyButton: {fileID: 676595269}
+  _readyText: {fileID: 1615867807}
+  _nameText: {fileID: 1626951120}
+  _readyButton: {fileID: 676595269}
 --- !u!1 &1509843791
 GameObject:
   m_ObjectHideFlags: 0
@@ -13138,9 +13138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85644a540a6e5814796ff0a770179856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyText: {fileID: 2022793988}
-  nameText: {fileID: 1932810265}
-  readyButton: {fileID: 1153040399}
+  _readyText: {fileID: 2022793988}
+  _nameText: {fileID: 1932810265}
+  _readyButton: {fileID: 1153040399}
 --- !u!1 &1548031353
 GameObject:
   m_ObjectHideFlags: 0
@@ -17622,6 +17622,7 @@ GameObject:
   - component: {fileID: 2080105905}
   - component: {fileID: 2080105907}
   - component: {fileID: 2080105906}
+  - component: {fileID: 2080105908}
   m_Layer: 5
   m_Name: RoomPanel
   m_TagString: Untagged
@@ -17688,6 +17689,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2080105904}
   m_CullTransparentMesh: 1
+--- !u!114 &2080105908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080105904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cac3a7d549cf6f48bfda4c620f06810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerEntries: []
+  _startButton: {fileID: 252410998}
+  _manager: {fileID: 1061976818}
 --- !u!1 &2133559492
 GameObject:
   m_ObjectHideFlags: 0

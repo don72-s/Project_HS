@@ -9,6 +9,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     public enum Panel { Login, Lobby, Room }      // 각 패널을 열거형으로 분류
 
     // 각 패널 클래스
+    [SerializeField] private RoomUpdate _roomUpdate;
     [SerializeField] private LobbySceneManager _manager;
     [SerializeField] private GameObject _loginPanel;
     [SerializeField] private GameObject _roomPanel;
@@ -71,19 +72,19 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     // 방에 입장 시 RoomPanel의 EnterPlayer을 입장한 플레이어에게 실행
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        _manager.EnterPlayer(newPlayer);
+        _roomUpdate.EnterPlayer(newPlayer);
     }
 
     // 방에서 퇴장 시 RoomPanel의 ExitPlayer을 퇴장한 플레이어에게 실행
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        _manager.ExitPlayer(otherPlayer);
+        _roomUpdate.ExitPlayer(otherPlayer);
     }
 
     // 방에 입장한 플레이어의 프로퍼티를 변경
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
-        _manager.UpdatePlayerProperty(targetPlayer, changedProps);
+        _roomUpdate.UpdatePlayerProperty(targetPlayer, changedProps);
     }
 
     //public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)

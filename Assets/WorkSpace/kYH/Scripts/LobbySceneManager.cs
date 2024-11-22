@@ -284,8 +284,8 @@ public class LobbySceneManager : BaseUI
     #region Room UI
     public void BackToLobby(PointerEventData eventData)
     {
-        _roomPanel.SetActive(false);
-        _createRoomPanel.SetActive(false);
+        //_roomPanel.SetActive(false);
+        //_createRoomPanel.SetActive(false);
         PhotonNetwork.LeaveRoom();
     }
 
@@ -405,62 +405,62 @@ public class LobbySceneManager : BaseUI
         }
     }
 
-    public void UpdatePlayers()
-    {
-        foreach (PlayerEntry entry in _playerEntries)
-        {
-            entry.SetEmpty();
-        }
-
-        foreach (Player player in PhotonNetwork.PlayerList)
-        {
-            if (player.GetPlayerNumber() == -1)
-                continue;
-
-            int num = player.GetPlayerNumber();
-            _playerEntries[num].SetPlayer(player);
-        }
-
-        if (PhotonNetwork.LocalPlayer.IsMasterClient)
-        {
-            _startButton.interactable = CheckAllReady();
-        }
-        else
-        {
-            _startButton.interactable = false;
-        }
-    }
-
-    public void EnterPlayer(Player newPlayer)
-    {
-        Debug.Log($"{newPlayer.NickName} Enter!");
-        UpdatePlayers();
-    }
-
-    public void ExitPlayer(Player otherPlayer)
-    {
-        Debug.Log($"{otherPlayer.NickName} Exit!");
-        UpdatePlayers();
-    }
-
-    public void UpdatePlayerProperty(Player targetPlayer, PhotonHashtable properties)
-    {
-        Debug.Log($"{targetPlayer.NickName} Update!");
-
-        if (properties.ContainsKey(CustomProperties.READY))
-        {
-            UpdatePlayers();
-        }
-    }
-
-    private bool CheckAllReady()
-    {
-        foreach (Player player in PhotonNetwork.PlayerList)
-        {
-            if (player.GetReady() == false)
-                return false;
-        }
-
-        return true;
-    }
+    //public void UpdatePlayers()
+    //{
+    //    foreach (PlayerEntry entry in _playerEntries)
+    //    {
+    //        entry.SetEmpty();
+    //    }
+    //
+    //    foreach (Player player in PhotonNetwork.PlayerList)
+    //    {
+    //        if (player.GetPlayerNumber() == -1)
+    //            continue;
+    //
+    //        int num = player.GetPlayerNumber();
+    //        _playerEntries[num].SetPlayer(player);
+    //    }
+    //
+    //    if (PhotonNetwork.LocalPlayer.IsMasterClient)
+    //    {
+    //        _startButton.interactable = CheckAllReady();
+    //    }
+    //    else
+    //    {
+    //        _startButton.interactable = false;
+    //    }
+    //}
+    //
+    //public void EnterPlayer(Player newPlayer)
+    //{
+    //    Debug.Log($"{newPlayer.NickName} Enter!");
+    //    UpdatePlayers();
+    //}
+    //
+    //public void ExitPlayer(Player otherPlayer)
+    //{
+    //    Debug.Log($"{otherPlayer.NickName} Exit!");
+    //    UpdatePlayers();
+    //}
+    //
+    //public void UpdatePlayerProperty(Player targetPlayer, PhotonHashtable properties)
+    //{
+    //    Debug.Log($"{targetPlayer.NickName} Update!");
+    //
+    //    if (properties.ContainsKey(CustomProperties.READY))
+    //    {
+    //        UpdatePlayers();
+    //    }
+    //}
+    //
+    //private bool CheckAllReady()
+    //{
+    //    foreach (Player player in PhotonNetwork.PlayerList)
+    //    {
+    //        if (player.GetReady() == false)
+    //            return false;
+    //    }
+    //
+    //    return true;
+    //}
 }
