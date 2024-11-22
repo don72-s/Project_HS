@@ -178,6 +178,6 @@ public class RunnerController : MonoBehaviourPun, IPunObservable
         xRotation = Mathf.Clamp(xRotation, 0, 60);
 
         Camera.main.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 10f + Vector3.up;
+        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 5f + Vector3.up;
     }
 }
