@@ -28,7 +28,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: 
+  DevRegion: kr
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -47,6 +47,8 @@ MonoBehaviour:
   - RPC_EndGame
   - RPC_StartGame
   - RPC_SetSeeker
+  - StartFormChangeRpc
+  - TakeDamageRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1
-  DevRegionSetOnce: 0
+  DevRegionSetOnce: 1
