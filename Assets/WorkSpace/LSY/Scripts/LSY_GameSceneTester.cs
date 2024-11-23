@@ -58,14 +58,14 @@ public class LSY_GameSceneTester : MonoBehaviourPunCallbacks
         Debug.Log("플레이어를 스폰한다!");
         Vector3 randomPos = new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3, 3));
 
-        //if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == 0)
-        //{
-        //    PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
-        //}
-        //else
-        //{
-        PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
-        //}
+        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == 0)
+        {
+            PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+        }
+        else
+        {
+            PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+        }
     }
 
 }

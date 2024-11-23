@@ -82,16 +82,18 @@ public class RunnerController : MonoBehaviourPun, IPunObservable
     public void TakeDamageRpc(int damage)
     {
         hp -= damage;
-        Debug.Log(hp);
+        hpImages[hp+1].gameObject.SetActive(false);
+
 
         if (hp <= 0)
         {
             Debug.Log("player die");
             OnDeadEvent?.Invoke();
+            hp = 0;
+            gameObject.SetActive(false);
             return;
         }
 
-        hpImages[hp].gameObject.SetActive(false);
     }
 
     public void TakeDamage(int damage)
