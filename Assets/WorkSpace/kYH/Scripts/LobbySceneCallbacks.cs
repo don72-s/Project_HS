@@ -68,7 +68,8 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Room Enter Success!");
-        SetActivePanel(Panel.Room);
+        //SetActivePanel(Panel.Room);
+        PhotonNetwork.LoadLevel("Test_RoomScene");
     }
 
     // 방에 입장 시 RoomPanel의 EnterPlayer을 입장한 플레이어에게 실행
