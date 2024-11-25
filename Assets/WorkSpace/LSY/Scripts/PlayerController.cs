@@ -34,8 +34,11 @@ public class PlayerController : PlayerControllerParent, IPunObservable
     private Quaternion networkRotation;
     private float deltaRotation;
 
-    private void Start()
+    protected override void Start()
     {
+
+        base.Start();
+
         if (photonView.IsMine == false) return;
 
         gun = GetComponent<Gun>();

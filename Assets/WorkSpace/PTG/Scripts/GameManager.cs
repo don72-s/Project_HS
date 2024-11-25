@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using Photon.Voice.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
@@ -9,7 +10,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public const string RoomName = "TestRoomPTK";
+    public const string RoomName = "TestRoomPTKq";
 
     public static GameManager Instance;
 
@@ -126,7 +127,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void PlayerSpawn(int ranNumber)
     {
-        myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(false);
+        myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
 
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
         if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
@@ -139,7 +140,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
             myIngamePlayer = runner;
         }
+
     }
+
+
 
     private void SetTeams()
     {
@@ -198,6 +202,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         resultText.gameObject.SetActive(true); // 결과 텍스트 활성화
         timeSlider.gameObject.SetActive(false); // 슬라이더 비활성화
 
+
+
         StartCoroutine(ReturnToLobby());
     }
 
@@ -208,7 +214,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         Camera.main.transform.SetParent(null);
         Camera.main.GetComponent<CameraController>().FollowTarget = null;
-        Destroy(myIngamePlayer);
+
+
+
+        PhotonNetwork.Destroy(myIngamePlayer);
         myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
         myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
 

@@ -28,7 +28,7 @@ public class RoomPlayerController : PlayerControllerParent, IPunObservable
     private Quaternion networkRotation;
     private float deltaRotation;
 
-    private void Start()
+    protected override void Start()
     {
 
         if (photonView.IsMine == false) return;
