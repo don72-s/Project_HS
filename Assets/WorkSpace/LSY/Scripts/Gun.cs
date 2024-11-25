@@ -31,7 +31,7 @@ public class Gun : MonoBehaviourPun
     private void Update()
     {
         if (photonView.IsMine == false ) return;
-        Debug.DrawRay(playerController.muzzlePoint.position, playerController.muzzlePoint.forward, Color.red);
+        Debug.DrawRay(playerController.cameraPoint.position, playerController.cameraPoint.forward, Color.red);
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -56,7 +56,7 @@ public class Gun : MonoBehaviourPun
         bullet--;
         bulletText.text = bullet.ToString();
 
-        if (Physics.Raycast(playerController.muzzlePoint.position, playerController.muzzlePoint.forward, out RaycastHit hit, range, targetLayer))
+        if (Physics.Raycast(playerController.cameraPoint.position, playerController.cameraPoint.forward, out RaycastHit hit, range, targetLayer))
         {
             Debug.Log($"{hit.transform.name} Hit!!");
             if (hit.collider.gameObject.GetComponentInParent<RunnerController>() == null) return;
