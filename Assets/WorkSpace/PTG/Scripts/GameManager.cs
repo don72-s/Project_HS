@@ -5,10 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public const string RoomName = "TestRoomPTKd";
+    public const string RoomName = "TestRoomPTK";
 
     public static GameManager Instance;
 
@@ -25,6 +26,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     // 승리 조건
     private int runnersRemaining;
 
+    public Text resultText;
+    public Slider timeSlider;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -35,6 +39,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
         PhotonNetwork.ConnectUsingSettings();
+
+        resultText.gameObject.SetActive(false); 
+        timeSlider.maxValue = gameDuration;     
+        timeSlider.value = gameDuration;        
     }
 
     private void Update()
@@ -42,6 +50,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (currentState == GameState.Playing)
         {
             timer -= Time.deltaTime;
+
+            timeSlider.value = timer;
 
             if (timer <= 0)
             {
@@ -152,6 +162,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         currentState = GameState.Playing;
         timer = gameDuration;
+        timeSlider.maxValue = gameDuration;
+        timeSlider.value = gameDuration;
+        timeSlider.gameObject.SetActive(true);
         Debug.Log("Game Start");
     }
 
@@ -168,6 +181,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         currentState = GameState.Finished;
         Debug.Log("Game Over: " + message);
+
+        resultText.text = message;
+        resultText.gameObject.SetActive(true); // 결과 텍스트 활성화
+        timeSlider.gameObject.SetActive(false); // 슬라이더 비활성화
 
         StartCoroutine(ReturnToLobby());
     }
