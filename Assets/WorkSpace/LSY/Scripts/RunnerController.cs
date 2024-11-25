@@ -4,7 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class RunnerController : MonoBehaviourPun, IPunObservable
+public class RunnerController : PlayerControllerParent, IPunObservable
 {
     [Header("플레이어 움직임")]
     [SerializeField] float moveSpeed;
