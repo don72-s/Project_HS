@@ -19,6 +19,8 @@ public class Gun : MonoBehaviourPun
     [Header("플레이어 컨트롤러")]
     [SerializeField] PlayerController playerController;
 
+    [SerializeField] Animator animator;
+
     private void Start()
     {
         attack = 1;
@@ -66,7 +68,8 @@ public class Gun : MonoBehaviourPun
     Coroutine reloadGun;
     IEnumerator ReloadGunRoutine()
     {
-        yield return new WaitForSeconds(1);
+        animator.SetTrigger("Reload");
+        yield return new WaitForSeconds(2.3f);
         bullet = MaxBullet;
         bulletText.text = bullet.ToString();
         Debug.Log("재장전 완료");

@@ -19,7 +19,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     [SerializeField] public Transform muzzlePoint;
     [SerializeField] private float yRotationRange;
 
-    [SerializeField] Animator animator;
+    [SerializeField] Animator playerAni;
+    [SerializeField] Animator gunAni;
     [SerializeField] Camera camera;
 
     [SerializeField] bool isJumped; 
@@ -96,6 +97,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Fire");
+            playerAni.SetTrigger("Aim");
             gun.Fire(muzzlePoint);
         }
     }
@@ -105,7 +107,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (Input.GetKeyDown(KeyCode.Space) && !isJumped)
         {
             isJumped = true;
-            animator.SetTrigger("Jump1");
+            playerAni.SetTrigger("Jump1");
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
@@ -129,10 +131,26 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     private void SetRotation(Vector2 input)
     {
-        if (input ==  Vector2.zero) return;
+        if (input == Vector2.zero)
+        {
+            playerAni.SetBool("RightTurn", false);
+            playerAni.SetBool("LeftTurn", false);
+            return;
+        }
+
 
         if (input.x != 0)
         {
+            if (input.x < 0)
+            {
+                playerAni.SetBool("LeftTurn", true);
+                playerAni.SetBool("RightTurn", false);
+            }
+            else if (input.x > 0)
+            {
+                playerAni.SetBool("RightTurn", true);
+                playerAni.SetBool("LeftTurn", false);
+            }
             transform.Rotate(Vector3.up, input.x * rotateSpeed * Time.deltaTime);
         }
 
@@ -147,10 +165,15 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     private void SetPosition(Vector3 input)
     {
-        if (input == Vector3.zero) {
-            animator.SetFloat("Move", -1);
-            return; } 
-        animator.SetFloat("Move", 1);
+        if (input == Vector3.zero) 
+        {
+            playerAni.SetFloat("Move", -1);
+            gunAni.SetFloat("Move", -1);
+            return; 
+        } 
+
+        playerAni.SetFloat("Move", 1);
+        gunAni.SetFloat("Move", 1);
         Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
