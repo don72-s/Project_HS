@@ -16,7 +16,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
     [SerializeField] Vector3 offset;
 
     [SerializeField] GameObject targetPointImage;
-    [SerializeField] public Transform muzzlePoint;
+    [SerializeField] public Transform cameraPoint;
     [SerializeField] private float yRotationRange;
 
     [SerializeField] Animator playerAni;
@@ -34,6 +34,9 @@ public class PlayerController : PlayerControllerParent, IPunObservable
     private Quaternion networkRotation;
     private float deltaRotation;
 
+    [SerializeField] GameObject muzzleFlash;
+    [SerializeField] Transform muzzlePoint;
+
     private void Start()
     {
         if (photonView.IsMine == false) return;
@@ -50,7 +53,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         Camera.main.transform.position = gameObject.transform.position + offset;
 
         CameraController cam = Camera.main.GetComponent<CameraController>();
-        cam.FollowTarget = muzzlePoint;
+        cam.FollowTarget = cameraPoint;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -91,15 +94,21 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         }
     }
 
-
+    GameObject holdFlash;
     private void Fire()
     {
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Fire");
-            playerAni.SetTrigger("Aim");
-            gun.Fire(muzzlePoint);
+            gun.Fire(cameraPoint);
+            RecoilMath();
+            Instantiate(muzzleFlash, muzzlePoint.transform.position, muzzlePoint.transform.rotation);
         }
+    }
+
+    public void RecoilMath()
+    {
+        gunAni.SetTrigger("Shoot");
     }
 
     public void Jump()

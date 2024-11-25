@@ -365,7 +365,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2150775218519260641}
   m_Layer: 6
-  m_Name: MuzzlePoint
+  m_Name: CameraPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -674,14 +674,16 @@ MonoBehaviour:
   moveSpeed: 3
   rotateSpeed: 300
   jumpForce: 10
-  offset: {x: 0, y: 0.7, z: 1.3}
+  offset: {x: 0, y: 0.7, z: 1.4}
   targetPointImage: {fileID: 7288165205997907696}
-  muzzlePoint: {fileID: 2150775218519260641}
+  cameraPoint: {fileID: 2150775218519260641}
   yRotationRange: 60
   playerAni: {fileID: 3202646970216831158}
   gunAni: {fileID: 4260246478326281609}
   camera: {fileID: 8335156659890032815}
   isJumped: 0
+  muzzleFlash: {fileID: 199458, guid: 487eef9aff9d0f543836d5af5ab26430, type: 3}
+  muzzlePoint: {fileID: 4260246478333214523}
 --- !u!54 &4524439844518499467
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -736,6 +738,37 @@ MonoBehaviour:
   bulletText: {fileID: 6411081886598736578}
   playerController: {fileID: 3129392246571992233}
   animator: {fileID: 4260246478326281609}
+--- !u!1 &8576790443274478107
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7200895961082665221}
+  m_Layer: 0
+  m_Name: MuzzlePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7200895961082665221
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8576790443274478107}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.014, y: -0.047, z: 0.284}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4260246478333159059}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8710156083182682576
 GameObject:
   m_ObjectHideFlags: 0
@@ -972,18 +1005,18 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: Move
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: Aim
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: LeftTurn
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: RightTurn
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
-  - SynchronizeType: 0
+  - SynchronizeType: 2
     LayerIndex: 1
 --- !u!4 &3256590948804967856 stripped
 Transform:
@@ -1369,7 +1402,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11405670, guid: d263be518b43c45958a9fabf6650fd2d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d263be518b43c45958a9fabf6650fd2d, type: 3}
 --- !u!95 &4260246478326281609 stripped
 Animator:
@@ -1379,5 +1413,10 @@ Animator:
 --- !u!4 &4260246478333159059 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 456086, guid: d263be518b43c45958a9fabf6650fd2d, type: 3}
+  m_PrefabInstance: {fileID: 4260246478333596421}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4260246478333214523 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 404542, guid: d263be518b43c45958a9fabf6650fd2d, type: 3}
   m_PrefabInstance: {fileID: 4260246478333596421}
   m_PrefabAsset: {fileID: 0}
