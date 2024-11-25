@@ -29,6 +29,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Text resultText;
     public Slider timeSlider;
 
+    //kmt added
+    GameObject myRoomPlayer;
+    GameObject myIngamePlayer;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -77,7 +81,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
 
-       PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
+        myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
 
        // StartCoroutine(StartDelayRoutine());
         Debug.Log("시작");
@@ -122,16 +126,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void PlayerSpawn(int ranNumber)
     {
+        myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(false);
 
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
         if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
         {
-            PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+            myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
         }
         else
         {//술래 스폰 코드
             GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
+            myIngamePlayer = runner;
         }
     }
 
@@ -199,6 +205,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(3f);
         Debug.Log("LeaveRoom");
+
+        Camera.main.transform.SetParent(null);
+        Camera.main.GetComponent<CameraController>().FollowTarget = null;
+        Destroy(myIngamePlayer);
+        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+        myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
+
+
         //PhotonNetwork.LeaveRoom(); // 방으로 복귀
     }
 

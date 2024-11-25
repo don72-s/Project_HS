@@ -60,6 +60,22 @@ public class RoomPlayerController : MonoBehaviourPun, IPunObservable
         Move();
     }
 
+
+    public void SetActiveTo(bool active) {
+
+        if (photonView.IsMine)
+        {
+            photonView.RPC("SetActiveToRpc", RpcTarget.All, active);
+        }
+
+    }
+
+    [PunRPC]
+    void SetActiveToRpc(bool active) { 
+        gameObject.SetActive(active);
+    }
+
+
     private void LateUpdate()
     {
         if (photonView.IsMine == false) return;

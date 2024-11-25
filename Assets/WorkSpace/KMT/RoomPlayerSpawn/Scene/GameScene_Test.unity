@@ -826,7 +826,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  gameDuration: 30
+  gameDuration: 5
   resultText: {fileID: 688578841}
   timeSlider: {fileID: 29293123}
 --- !u!4 &860988595
