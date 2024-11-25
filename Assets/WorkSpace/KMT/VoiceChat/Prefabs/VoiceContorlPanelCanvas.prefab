@@ -271,6 +271,7 @@ GameObject:
   - component: {fileID: 6367101161860282346}
   - component: {fileID: 6367101161860282345}
   - component: {fileID: 6367101161860282344}
+  - component: {fileID: 1873158954409543232}
   m_Layer: 5
   m_Name: VoiceContorlPanelCanvas
   m_TagString: Untagged
@@ -361,6 +362,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1873158954409543232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6367101161860282343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc7fa00d44da6d4cb2f196bfe60f06e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumePanel: {fileID: 6367101161342414703}
 --- !u!1 &6367101162169307274
 GameObject:
   m_ObjectHideFlags: 0

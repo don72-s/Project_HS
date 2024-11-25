@@ -34,8 +34,11 @@ public class RunnerController : PlayerControllerParent, IPunObservable
 
     public UnityEvent OnDeadEvent = null;
 
-    private void Start()
+    protected override void Start()
     {
+
+        base.Start();
+
         hp = 3;
 
         if (photonView.IsMine == false) return;

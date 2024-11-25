@@ -7,12 +7,12 @@ public class PlayerController : PlayerControllerParent, IPunObservable
 {
 
     private Gun gun;
-    [Header("ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ")]
+    [Header("í”Œë ˆì´ì–´ ì›€ì§ì„")]
     [SerializeField] float moveSpeed;
     [SerializeField] float rotateSpeed;
     [SerializeField] float jumpForce;
 
-    [Header("ÇÃ·¹ÀÌ¾î Ä«¸Ş¶ó")]
+    [Header("í”Œë ˆì´ì–´ ì¹´ë©”ë¼")]
     [SerializeField] Vector3 offset;
 
     [SerializeField] GameObject targetPointImage;
@@ -28,7 +28,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
     private Rigidbody rb;
     private float yRotation = 0f;
 
-    // ³×Æ®¿öÅ© »ó Áö¿¬º¸»óÀ» ÁÖ±âÀ§ÇÑ º¯¼ö
+    // ë„¤íŠ¸ì›Œí¬ ìƒ ì§€ì—°ë³´ìƒì„ ì£¼ê¸°ìœ„í•œ ë³€ìˆ˜
     private Vector3 networkPosition;
     private float deltaPosition;
 
@@ -39,8 +39,11 @@ public class PlayerController : PlayerControllerParent, IPunObservable
     [SerializeField] Transform muzzlePoint;
     [SerializeField] Transform runnerMuzzlePoint;
 
-    private void Start()
+    protected override void Start()
     {
+
+        base.Start();
+
         if (photonView.IsMine == false) return;
 
         gun = GetComponent<Gun>();
