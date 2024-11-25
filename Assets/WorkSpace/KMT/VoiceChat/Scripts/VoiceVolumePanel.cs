@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -35,6 +36,8 @@ public class VoiceVolumePanel : MonoBehaviour
 
     public void RemoveVoiceSlicer(VolumeSlider volumeSlider) {
         volumeSliders.Remove(volumeSlider);
+
+        //TODO : 디버그하기
         Destroy(volumeSlider.gameObject);
     }
 
