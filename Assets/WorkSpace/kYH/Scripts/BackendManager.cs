@@ -71,4 +71,18 @@ public class BackendManager : MonoBehaviour
             }
         });
     }
+
+    [Serializable]
+    public class JsonTest
+    {
+        
+
+        public UserData userData;
+    }
+
+    [Serializable]
+    public class UserData
+    {
+        
+    }
 }
