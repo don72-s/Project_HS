@@ -49,9 +49,6 @@ public class RunnerController : PlayerControllerParent, IPunObservable
 
         Camera.main.transform.LookAt(transform.position);
 
-        CameraController cam = Camera.main.GetComponent<CameraController>();
-        cam.FollowTarget = null;
-
         //Cursor.visible = false;
         //Cursor.lockState = CursorLockMode.Locked;
         hpPanel.gameObject.SetActive(true);

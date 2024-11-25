@@ -21,7 +21,8 @@ public class PlayerController : PlayerControllerParent, IPunObservable
 
     [SerializeField] Animator playerAni;
     [SerializeField] Animator gunAni;
-    [SerializeField] Camera camera;
+    [SerializeField] Camera gunCamera;
+    [SerializeField] Camera mainCamera;
 
     [SerializeField] bool isJumped; 
     private Rigidbody rb;
@@ -36,6 +37,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
 
     [SerializeField] GameObject muzzleFlash;
     [SerializeField] Transform muzzlePoint;
+    [SerializeField] Transform runnerMuzzlePoint;
 
     private void Start()
     {
@@ -49,17 +51,18 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         networkPosition = transform.position;
         networkRotation = transform.rotation;
 
-        Camera.main.transform.SetParent(gameObject.transform);
-        Camera.main.transform.position = gameObject.transform.position + offset;
+        mainCamera.transform.SetParent(gameObject.transform);
+        mainCamera.transform.position = gameObject.transform.position + offset;
 
-        CameraController cam = Camera.main.GetComponent<CameraController>();
+        CameraController cam = mainCamera.GetComponent<CameraController>();
         cam.FollowTarget = cameraPoint;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
         targetPointImage.SetActive(true);
-        camera.gameObject.SetActive(true);
+        mainCamera.gameObject.SetActive(true);
+        gunCamera.gameObject.SetActive(true);
 
     }
 
@@ -102,7 +105,8 @@ public class PlayerController : PlayerControllerParent, IPunObservable
             Debug.Log("Fire");
             gun.Fire(cameraPoint);
             RecoilMath();
-            Instantiate(muzzleFlash, muzzlePoint.transform.position, muzzlePoint.transform.rotation);
+            PhotonNetwork.Instantiate("MuzzleFlash", muzzlePoint.transform.position, muzzlePoint.transform.rotation);
+            PhotonNetwork.Instantiate("MuzzleFlash", runnerMuzzlePoint.transform.position, runnerMuzzlePoint.transform.rotation);
         }
     }
 
@@ -168,7 +172,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
             yRotation = yRotation + -input.y * rotateSpeed * Time.deltaTime;
             yRotation = Mathf.Clamp(yRotation, -yRotationRange, yRotationRange);
 
-            Camera.main.transform.localRotation = Quaternion.Euler(yRotation, 0f, 0f);
+            mainCamera.transform.localRotation = Quaternion.Euler(yRotation, 0f, 0f);
         }
     }
 
