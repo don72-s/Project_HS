@@ -76,6 +76,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+
+       PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
+
        // StartCoroutine(StartDelayRoutine());
         Debug.Log("Ω√¿€");
     }
