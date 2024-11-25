@@ -106,7 +106,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             int randomNum = Random.Range(0, allPlayers.Count);
 
             // SetTeams(); // 팀 배정
-            photonView.RPC("RPC_StartGame", RpcTarget.All);
+
+            //타이머 활성화
+            //photonView.RPC("RPC_StartGame", RpcTarget.All);
+
             photonView.RPC("PlayerSpawn", RpcTarget.AllViaServer, randomNum);
             StartCoroutine(WaitPlayerSpawnCO());
 
@@ -118,15 +121,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
 
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
+/*        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
         {
             PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
         }
         else
-        {
+        {*///술래 스폰 코드
             GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
-        }
+        //}
     }
 
     private void SetTeams()
