@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Fire");
+            animator.SetTrigger("Aim");
             gun.Fire(muzzlePoint);
         }
     }
@@ -129,10 +130,26 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     private void SetRotation(Vector2 input)
     {
-        if (input ==  Vector2.zero) return;
+        if (input == Vector2.zero)
+        {
+            animator.SetBool("RightTurn", false);
+            animator.SetBool("LeftTurn", false);
+            return;
+        }
+
 
         if (input.x != 0)
         {
+            if (input.x < 0)
+            {
+                animator.SetBool("LeftTurn", true);
+                animator.SetBool("RightTurn", false);
+            }
+            else if (input.x > 0)
+            {
+                animator.SetBool("RightTurn", true);
+                animator.SetBool("LeftTurn", false);
+            }
             transform.Rotate(Vector3.up, input.x * rotateSpeed * Time.deltaTime);
         }
 
