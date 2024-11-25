@@ -4,11 +4,12 @@ using Photon.Realtime;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
 
-public class LobbyScene : MonoBehaviourPunCallbacks
+public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
 {
     public enum Panel { Login, Lobby, Room }      // 각 패널을 열거형으로 분류
 
     // 각 패널 클래스
+    [SerializeField] private RoomUpdate _roomUpdate;
     [SerializeField] private LobbySceneManager _manager;
     [SerializeField] private GameObject _loginPanel;
     [SerializeField] private GameObject _roomPanel;
@@ -39,6 +40,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     {
         Debug.Log("Login Success!");
         SetActivePanel(Panel.Lobby);
+        PhotonNetwork.JoinLobby();
     }
 
     // 로그아웃 시 LoginPanel로 전환
@@ -47,6 +49,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     {
         Debug.Log($"Logout! (Cause : {cause})");
         SetActivePanel(Panel.Login);
+        PhotonNetwork.LeaveLobby();
     }
 
     // 방생성 성공 로그 출력
@@ -71,19 +74,19 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     // 방에 입장 시 RoomPanel의 EnterPlayer을 입장한 플레이어에게 실행
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        _manager.EnterPlayer(newPlayer);
+        _roomUpdate.EnterPlayer(newPlayer);
     }
 
     // 방에서 퇴장 시 RoomPanel의 ExitPlayer을 퇴장한 플레이어에게 실행
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        _manager.ExitPlayer(otherPlayer);
+        _roomUpdate.ExitPlayer(otherPlayer);
     }
 
     // 방에 입장한 플레이어의 프로퍼티를 변경
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
-        //_manager.UpdatePlayerProperty(targetPlayer, changedProps);
+        _roomUpdate.UpdatePlayerProperty(targetPlayer, changedProps);
     }
 
     //public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
@@ -115,18 +118,15 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         Debug.LogWarning($"Random Match Failed! (Cause : {message}");
     }
 
-    // 로비에 참가 시 LobbyPanel로 전환
     public override void OnJoinedLobby()
     {
         Debug.Log("Join Lobby Success!");
         SetActivePanel(Panel.Lobby);
     }
 
-    // 로비에서 퇴장 시 MenuPanel로 전환
     public override void OnLeftLobby()
     {
-        Debug.Log("Quit Lobby Success!");
-        SetActivePanel(Panel.Lobby);
+        SetActivePanel(Panel.Login);
     }
 
     // 방 목록 업데이트 함수
@@ -143,8 +143,8 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     // 각 상태에 맞는 패널 전환 기능
     private void SetActivePanel(Panel panel)
     {
-        _loginPanel.gameObject.SetActive(panel == Panel.Login);
-        _roomPanel.gameObject.SetActive(panel == Panel.Room);
-        _lobbyPanel.gameObject.SetActive(panel == Panel.Lobby);
+        _loginPanel.SetActive(panel == Panel.Login);
+        _roomPanel.SetActive(panel == Panel.Room);
+        _lobbyPanel.SetActive(panel == Panel.Lobby);
     }
 }

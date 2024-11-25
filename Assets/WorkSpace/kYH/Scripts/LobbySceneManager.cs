@@ -47,8 +47,7 @@ public class LobbySceneManager : BaseUI
 
     [Header("Room Panel")]
     [SerializeField] private GameObject _roomPanel;
-    [SerializeField] Button _startButton;
-    [SerializeField] private PlayerEntry[] _playerEntries;
+    [SerializeField] private Button _startButton;
 
     private void Awake()
     {
@@ -225,8 +224,8 @@ public class LobbySceneManager : BaseUI
             Debug.Log($"User ID : {user.UserId}");
 
             PhotonNetwork.LocalPlayer.NickName = nickname;
-            PhotonNetwork.ConnectUsingSettings();
             _nicknamePanel.SetActive(false);
+            PhotonNetwork.ConnectUsingSettings();
         });
     }
 
@@ -251,6 +250,7 @@ public class LobbySceneManager : BaseUI
 
     public void LogOut(PointerEventData eventData)
     {
+        _nicknamePanel.SetActive(false);
         PhotonNetwork.Disconnect();
     }
     #endregion
@@ -272,6 +272,7 @@ public class LobbySceneManager : BaseUI
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = maxPlayer;
 
+        _createRoomPanel.SetActive(false);
         PhotonNetwork.CreateRoom(roomName, options);
     }
 
@@ -284,7 +285,7 @@ public class LobbySceneManager : BaseUI
     #region Room UI
     public void BackToLobby(PointerEventData eventData)
     {
-        _roomPanel.SetActive(false);
+        PhotonNetwork.LeaveRoom();
     }
 
     public void StartGame(PointerEventData eventData)
@@ -316,6 +317,7 @@ public class LobbySceneManager : BaseUI
         }
         else
         {
+            Debug.Log("dddddddddddddddd");
             PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
             PhotonNetwork.ConnectUsingSettings();
         }
@@ -368,8 +370,8 @@ public class LobbySceneManager : BaseUI
                 if (BackendManager.Auth.CurrentUser.IsEmailVerified == true)
                 {
                     Debug.Log("이메일 인증이 완료되었습니다!!!!!!!!!!!!!!!");
-                    _nicknamePanel.SetActive(true);
                     _verifyPanel.SetActive(false);
+                    _nicknamePanel.SetActive(true);
                 }
             });
             yield return delay;
@@ -400,64 +402,5 @@ public class LobbySceneManager : BaseUI
                 roomEntry.SetRoomInfo(info);
             }
         }
-    }
-
-    public void UpdatePlayers()
-    {
-        foreach (PlayerEntry entry in _playerEntries)
-        {
-            entry.SetEmpty();
-        }
-
-        foreach (Player player in PhotonNetwork.PlayerList)
-        {
-            if (player.GetPlayerNumber() == -1)
-                continue;
-
-            int num = player.GetPlayerNumber();
-            _playerEntries[num].SetPlayer(player);
-        }
-
-        if (PhotonNetwork.LocalPlayer.IsMasterClient)
-        {
-            _startButton.interactable = CheckAllReady();
-        }
-        else
-        {
-            _startButton.interactable = false;
-        }
-    }
-
-    public void EnterPlayer(Player newPlayer)
-    {
-        Debug.Log($"{newPlayer.NickName} Enter!");
-        UpdatePlayers();
-    }
-
-    public void ExitPlayer(Player otherPlayer)
-    {
-        Debug.Log($"{otherPlayer.NickName} Exit!");
-        UpdatePlayers();
-    }
-
-    public void UpdatePlayerProperty(Player targetPlayer, Hashtable properties)
-    {
-        Debug.Log($"{targetPlayer.NickName} Update!");
-    
-        if (properties.ContainsKey(CustomProperties.READY))
-        {
-            UpdatePlayers();
-        }
-    }
-
-    private bool CheckAllReady()
-    {
-        foreach (Player player in PhotonNetwork.PlayerList)
-        {
-            if (player.GetReady() == false)
-                return false;
-        }
-
-        return true;
     }
 }
