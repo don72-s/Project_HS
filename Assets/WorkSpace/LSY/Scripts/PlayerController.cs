@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviourPun, IPunObservable
 {
-    private Gun gun;
 
+    private Gun gun;
     [Header("플레이어 움직임")]
     [SerializeField] float moveSpeed;
     [SerializeField] float rotateSpeed;
@@ -19,9 +19,10 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     [SerializeField] public Transform muzzlePoint;
     [SerializeField] private float yRotationRange;
 
-    [SerializeField] Camera gunCamera;
+    [SerializeField] Animator animator;
+    [SerializeField] Camera camera;
 
-    private bool isJumped; 
+    [SerializeField] bool isJumped; 
     private Rigidbody rb;
     private float yRotation = 0f;
 
@@ -54,7 +55,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         Cursor.lockState = CursorLockMode.Locked;
 
         targetPointImage.SetActive(true);
-        gunCamera.gameObject.SetActive(true );
+        camera.gameObject.SetActive(true);
 
     }
 
@@ -104,6 +105,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (Input.GetKeyDown(KeyCode.Space) && !isJumped)
         {
             isJumped = true;
+            animator.SetTrigger("Jump1");
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
@@ -145,8 +147,10 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     private void SetPosition(Vector3 input)
     {
-        if (input == Vector3.zero) return;
-
+        if (input == Vector3.zero) {
+            animator.SetFloat("Move", -1);
+            return; } 
+        animator.SetFloat("Move", 1);
         Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }

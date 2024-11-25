@@ -74,3 +74,4 @@ crashlytics-build.properties
 *.json
 Assets/Plugins.meta
 /Assets/Plugins
+/Assets/Imports

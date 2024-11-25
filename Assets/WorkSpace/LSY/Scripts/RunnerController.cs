@@ -82,16 +82,18 @@ public class RunnerController : MonoBehaviourPun, IPunObservable
     public void TakeDamageRpc(int damage)
     {
         hp -= damage;
-        Debug.Log(hp);
+        hpImages[hp+1].gameObject.SetActive(false);
+
 
         if (hp <= 0)
         {
             Debug.Log("player die");
             OnDeadEvent?.Invoke();
+            hp = 0;
+            gameObject.SetActive(false);
             return;
         }
 
-        hpImages[hp].gameObject.SetActive(false);
     }
 
     public void TakeDamage(int damage)
@@ -178,6 +180,6 @@ public class RunnerController : MonoBehaviourPun, IPunObservable
         xRotation = Mathf.Clamp(xRotation, 0, 60);
 
         Camera.main.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 10f + Vector3.up;
+        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 5f + Vector3.up;
     }
 }
