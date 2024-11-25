@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class RoomPlayerController : MonoBehaviourPun, IPunObservable
+public class RoomPlayerController : PlayerControllerParent, IPunObservable
 {
 
     [Header("플레이어 움직임")]
@@ -58,21 +58,6 @@ public class RoomPlayerController : MonoBehaviourPun, IPunObservable
 
         Jump();
         Move();
-    }
-
-
-    public void SetActiveTo(bool active) {
-
-        if (photonView.IsMine)
-        {
-            photonView.RPC("SetActiveToRpc", RpcTarget.All, active);
-        }
-
-    }
-
-    [PunRPC]
-    void SetActiveToRpc(bool active) { 
-        gameObject.SetActive(active);
     }
 
 

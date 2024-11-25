@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviourPun, IPunObservable
+public class PlayerController : PlayerControllerParent, IPunObservable
 {
 
     private Gun gun;
