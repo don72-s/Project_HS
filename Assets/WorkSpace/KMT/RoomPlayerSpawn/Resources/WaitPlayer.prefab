@@ -98,7 +98,6 @@ GameObject:
   - component: {fileID: 3036038489545332648}
   - component: {fileID: 923829955547174350}
   - component: {fileID: -8900543975934395258}
-  - component: {fileID: 5736238503171334719}
   m_Layer: 0
   m_Name: WaitPlayer
   m_TagString: Untagged
@@ -221,16 +220,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5736238503171334719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7893161100972668777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee1424e541ae99242976226e8460f3cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volumeSliderPrefab: {fileID: 3994457287092720036, guid: 24f2f06c473abc342b3f29877cf673fa, type: 3}

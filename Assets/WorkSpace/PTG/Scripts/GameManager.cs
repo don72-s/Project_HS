@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
@@ -30,7 +31,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Text resultText;
     public Slider timeSlider;
 
-    //kmt added
     GameObject myRoomPlayer;
     GameObject myIngamePlayer;
 
@@ -42,15 +42,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-/*        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
-        PhotonNetwork.ConnectUsingSettings();*/
+        //단위 테스트용 코드
+        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
+        PhotonNetwork.ConnectUsingSettings();
 
         resultText.gameObject.SetActive(false); 
         timeSlider.maxValue = gameDuration;     
         timeSlider.value = gameDuration;
 
-        //myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
-        StartCoroutine(WaitCO(2));
+        //StartCoroutine(WaitCO(2));
     }
 
     IEnumerator WaitCO(float waitTime) { 
@@ -80,21 +80,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             TestGameStart();
         }
+
     }
 
-/*    public override void OnConnectedToMaster()
+    public override void OnConnectedToMaster()
     {
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = 4;
         options.IsVisible = false;
 
         PhotonNetwork.JoinOrCreateRoom(RoomName, options, TypedLobby.Default);
-    }*/
+    }
 
     public override void OnJoinedRoom()
     {
 
-        //myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
+        myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
 
         // StartCoroutine(StartDelayRoutine());
         Debug.Log("시작");
@@ -113,6 +114,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
+    //TODO : 게임 중복시작 무시 예외처리 필요.
     public void TestGameStart()
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
@@ -123,9 +125,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
 
-           /* int randomNum = Random.Range(0, allPlayers.Count);*/
+            /* int randomNum = Random.Range(0, allPlayers.Count);*/
 
-             SetTeams(); // 팀 배정
+            LoadStage();
+
+            SetTeams(); // 팀 배정
 
             //타이머 활성화
             photonView.RPC("RPC_StartGame", RpcTarget.All);
@@ -134,6 +138,62 @@ public class GameManager : MonoBehaviourPunCallbacks
             StartCoroutine(WaitPlayerSpawnCO());
 
         }
+    }
+
+    private void LoadStage()
+    {
+        Coroutine waitLoadStageCoroudine = StartCoroutine(WaitLoadStageCO());
+        photonView.RPC("LoadSceneAdditive", RpcTarget.All);
+    }
+
+    int inLoadingPlayer;
+    IEnumerator WaitLoadStageCO() {
+
+        float waitTime = 0;
+        inLoadingPlayer = PhotonNetwork.PlayerList.Length;
+
+        while (waitTime < 30f || inLoadingPlayer > 0) {
+
+            yield return null;
+            waitTime += Time.deltaTime;
+
+        }
+
+        if (inLoadingPlayer == 0)
+        {
+            Debug.Log("로딩 완료!!");
+        }
+        else 
+        {
+            Debug.Log("로딩 시간 초과...");
+        }
+
+    }
+
+    [PunRPC]
+    void LoadSceneAdditive() {
+
+        AsyncOperation op = SceneManager.LoadSceneAsync("lsy_GameScene_Additive", LoadSceneMode.Additive);
+        op.completed += (_op) => { photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient); };
+
+    }
+
+    [PunRPC]
+    void UnLoadScene()
+    {
+        SceneManager.UnloadSceneAsync("lsy_GameScene_Additive");
+    }
+
+    [PunRPC]
+    void LoadSceneFinished() {
+
+        if (inLoadingPlayer <= 0) {
+            Debug.Log("뭔가 잘못됨.");
+            return;
+        }
+
+        inLoadingPlayer--;
+
     }
 
     [PunRPC]
@@ -207,6 +267,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            photonView.RPC("UnLoadScene", RpcTarget.All);
             photonView.RPC("RPC_EndGame", RpcTarget.All, message);
         }
     }

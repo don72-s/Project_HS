@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ProjectHS/Scenes/TestScene/GameScene_Test.unity
     guid: 9a82ee720e5fcaa4bad67aad1c0d7052
+  - enabled: 1
+    path: Assets/WorkSpace/KMT/LoadAdditiveScene/Scenes/lsy_GameScene_Additive.unity
+    guid: b4d3d272e38488f468be62f73e110c57
   m_configObjects: {}

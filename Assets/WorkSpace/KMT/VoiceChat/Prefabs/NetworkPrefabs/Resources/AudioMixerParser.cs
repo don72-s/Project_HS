@@ -107,15 +107,6 @@ public class AudioMixerParser : MonoBehaviourPunCallbacks
 
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log(PlayerNumberingExtensions.GetPlayerNumber(
-            GetComponentInParent<PhotonView>().Owner));
-        }
-    }
-
     private void OnDestroy()
     {
         SpeakerList.Instance.RemoveSpeaker(playerNumber);
