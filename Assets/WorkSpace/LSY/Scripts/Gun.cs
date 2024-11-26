@@ -70,7 +70,7 @@ public class Gun : MonoBehaviourPun
     Coroutine reloadRoutine;
     IEnumerator ReloadGunRoutine()
     {
-        reloadAudio.Play();
+        photonView.RPC("PlayReloadSound", RpcTarget.AllViaServer);
         animator.SetTrigger("Reload");
 
         yield return new WaitForSeconds(2.3f);
@@ -89,7 +89,7 @@ public class Gun : MonoBehaviourPun
         bulletText.text = bullet.ToString();
 
         RecoilMath();
-        shootAudio.Play();
+        photonView.RPC("PlayShootSound", RpcTarget.AllViaServer);
 
         Instantiate(muzzleFlash, muzzlePoint.transform.position, muzzlePoint.transform.rotation);
         PhotonNetwork.Instantiate("MuzzleFlash", runnerMuzzlePoint.transform.position, runnerMuzzlePoint.transform.rotation);
@@ -110,5 +110,17 @@ public class Gun : MonoBehaviourPun
     public void RecoilMath()
     {
         animator.SetTrigger("Shoot");
+    }
+
+    [PunRPC]
+    private void PlayReloadSound()
+    {
+        reloadAudio.Play();
+    }
+
+    [PunRPC]
+    private void PlayShootSound()
+    {
+        shootAudio.Play();
     }
 }

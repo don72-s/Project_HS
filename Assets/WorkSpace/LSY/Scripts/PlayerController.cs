@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class PlayerController : PlayerControllerParent, IPunObservable
 {
@@ -118,7 +119,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         {
             isJumped = true;
             playerAni.SetTrigger("Jump1");
-            jumpAudio.Play();
+            photonView.RPC("PlayJumpSound", RpcTarget.AllViaServer);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
@@ -183,11 +184,23 @@ public class PlayerController : PlayerControllerParent, IPunObservable
             return; 
         }
 
-        walkAudio.Play();
+        photonView.RPC("PlayWalkSound", RpcTarget.AllViaServer);
         playerAni.SetFloat("Move", 1);
         gunAni.SetFloat("Move", 1);
         Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
+    }
+
+    [PunRPC]
+    private void PlayJumpSound()
+    {
+        jumpAudio.Play();
+    }
+
+    [PunRPC]
+    private void PlayWalkSound()
+    {
+        walkAudio.Play();
     }
 
 }
