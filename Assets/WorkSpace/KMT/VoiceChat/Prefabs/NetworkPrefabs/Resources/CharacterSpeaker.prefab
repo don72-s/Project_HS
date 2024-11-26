@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4040692769650849799}
   - component: {fileID: 6619533728068003219}
   - component: {fileID: 5322154581314415410}
+  - component: {fileID: 9059622329985575193}
   m_Layer: 0
   m_Name: CharacterSpeaker
   m_TagString: Untagged
@@ -197,3 +198,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9059622329985575193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4040692769650849798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee1424e541ae99242976226e8460f3cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeSliderPrefab: {fileID: 3994457287092720036, guid: 24f2f06c473abc342b3f29877cf673fa, type: 3}

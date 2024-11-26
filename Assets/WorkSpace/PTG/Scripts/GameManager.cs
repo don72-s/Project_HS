@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
@@ -14,17 +15,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static GameManager Instance;
 
-    // »óÅÂ
+    // ìƒíƒœ
     public enum GameState { Waiting, Playing, Finished }
 
     public GameState currentState = GameState.Waiting;
 
-    // ½Ã°£ ¼³Á¤
+    // ì‹œê°„ ì„¤ì •
     public float gameDuration = 10f;
 
     private float timer;
 
-    // ½Â¸® Á¶°Ç
+    // ìŠ¹ë¦¬ ì¡°ê±´
     private int runnersRemaining;
 
     private Player currentSeeker;
@@ -32,7 +33,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Text resultText;
     public Slider timeSlider;
 
-    //kmt added
     GameObject myRoomPlayer;
     GameObject myIngamePlayer;
 
@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+
         /*        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
                 PhotonNetwork.ConnectUsingSettings();*/
 
@@ -51,8 +52,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
 
-        //myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
-        StartCoroutine(WaitCO(2));
+        //StartCoroutine(WaitCO(2));
     }
 
     IEnumerator WaitCO(float waitTime)
@@ -60,7 +60,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         yield return new WaitForSeconds(waitTime);
         myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
-
 
     }
 
@@ -83,6 +82,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             TestGameStart();
         }
+
     }
 
     /*    public override void OnConnectedToMaster()
@@ -94,18 +94,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             PhotonNetwork.JoinOrCreateRoom(RoomName, options, TypedLobby.Default);
         }*/
 
-    public override void OnJoinedRoom()
-    {
-
-        //myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
-
-        // StartCoroutine(StartDelayRoutine());
-        Debug.Log("½ÃÀÛ");
-    }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        base.OnPlayerLeftRoom(otherPlayer); // ±âº» µ¿ÀÛ È£Ãâ
+        base.OnPlayerLeftRoom(otherPlayer); // ê¸°ë³¸ ë™ì‘ í˜¸ì¶œ
         Debug.Log($"Player {otherPlayer.NickName} left the room.");
 
         if (currentState == GameState.Playing)
@@ -142,27 +134,81 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
+    //TODO : ê²Œì„ ì¤‘ë³µì‹œì‘ ë¬´ì‹œ ì˜ˆì™¸ì²˜ë¦¬ í•„ìš”.
     public void TestGameStart()
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-        //PlayerSpawn(); // ÇÃ·¹ÀÌ¾î ½ºÆù
-
         if (PhotonNetwork.IsMasterClient)
         {
-            runnersRemaining = allPlayers.Count - 1; // ³ª¸ÓÁö´Â ·¯³Ê
+            runnersRemaining = allPlayers.Count - 1; // ë‚˜ë¨¸ì§€ëŠ” ëŸ¬ë„ˆ
+            LoadStage();
+        }
+    }
 
-            /* int randomNum = Random.Range(0, allPlayers.Count);*/
 
-            SetTeams(); // ÆÀ ¹èÁ¤
+    private void LoadStage()
+    {
+        Coroutine waitLoadStageCoroudine = StartCoroutine(WaitLoadStageCO());
+        photonView.RPC("LoadSceneAdditive", RpcTarget.All);
+    }
 
-            //Å¸ÀÌ¸Ó È°¼ºÈ­
+    int inLoadingPlayer;
+    IEnumerator WaitLoadStageCO() {
+
+        float waitTime = 0;
+        inLoadingPlayer = PhotonNetwork.PlayerList.Length;
+        while (waitTime < 30f && inLoadingPlayer > 0) {
+
+            yield return null;
+            waitTime += Time.deltaTime;
+
+        }
+
+        if (inLoadingPlayer == 0)
+        {
+            Debug.Log("ë¡œë”© ì™„ë£Œ!!");
+
+            SetTeams(); // íŒ€ ë°°ì • ë° í”Œë ˆì´ì–´ ìŠ¤í°
+
+
+            //íƒ€ì´ë¨¸ í™œì„±í™”
             photonView.RPC("RPC_StartGame", RpcTarget.All);
 
-            //photonView.RPC("PlayerSpawn", RpcTarget.AllViaServer, randomNum);
             StartCoroutine(WaitPlayerSpawnCO());
 
         }
+        else 
+        {
+            Debug.Log("ë¡œë”© ì‹œê°„ ì´ˆê³¼...");
+        }
+
+    }
+
+    [PunRPC]
+    void LoadSceneAdditive() {
+
+        AsyncOperation op = SceneManager.LoadSceneAsync("lsy_GameScene_Additive", LoadSceneMode.Additive);
+        op.completed += (_op) => { Debug.Log("ì™„ë£Œ!");photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient);};
+
+    }
+
+    void UnLoadScene()
+    {
+        SceneManager.UnloadSceneAsync("lsy_GameScene_Additive");
+    }
+
+    [PunRPC]
+    void LoadSceneFinished() {
+
+
+        if (inLoadingPlayer <= 0) {
+            Debug.Log("ë­”ê°€ ì˜ëª»ë¨.");
+            return;
+        }
+
+        inLoadingPlayer--;
+
     }
 
     [PunRPC]
@@ -190,13 +236,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-        // ¼ú·¡ ÇÑ ¸í ·£´ı ¼±ÅÃ
+        // ìˆ ë˜ í•œ ëª… ëœë¤ ì„ íƒ
         int randomIndex = Random.Range(0, allPlayers.Count);
         currentSeeker = allPlayers[randomIndex];
 
         photonView.RPC("RPC_SetSeeker", RpcTarget.All, currentSeeker.ActorNumber);
 
-        runnersRemaining = allPlayers.Count - 1; // ³ª¸ÓÁö´Â ·¯³Ê
+        runnersRemaining = allPlayers.Count - 1; // ë‚˜ë¨¸ì§€ëŠ” ëŸ¬ë„ˆ
     }
 
     [PunRPC]
@@ -247,36 +293,32 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("Game Over: " + message);
 
         resultText.text = message;
-        resultText.gameObject.SetActive(true); // °á°ú ÅØ½ºÆ® È°¼ºÈ­
-        timeSlider.gameObject.SetActive(false); // ½½¶óÀÌ´õ ºñÈ°¼ºÈ­
-
-
+        resultText.gameObject.SetActive(true); // ê²°ê³¼ í…ìŠ¤íŠ¸ í™œì„±í™”
+        timeSlider.gameObject.SetActive(false); // ìŠ¬ë¼ì´ë” ë¹„í™œì„±í™”
 
         StartCoroutine(ReturnToLobby());
     }
 
     private IEnumerator ReturnToLobby()
     {
+
         yield return new WaitForSeconds(3f);
+        PhotonNetwork.Destroy(myIngamePlayer);
+        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+        myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
+        UnLoadScene();
+
         Debug.Log("LeaveRoom");
 
         Camera.main.transform.SetParent(null);
         Camera.main.GetComponent<CameraController>().FollowTarget = null;
 
-
-
-        PhotonNetwork.Destroy(myIngamePlayer);
-        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
-
-
-        //PhotonNetwork.LeaveRoom(); // ¹æÀ¸·Î º¹±Í
     }
 
     public override void OnLeftRoom()
     {
         Debug.Log("LeftRoom");
-        //PhotonNetwork.LoadLevel("LobbyScene"); // ·Îºñ ¾ÀÀ¸·Î º¹±Í
+        //PhotonNetwork.LoadLevel("LobbyScene"); // ë¡œë¹„ ì”¬ìœ¼ë¡œ ë³µê·€
     }
 
     public void OnPlayerCatch()
@@ -290,7 +332,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void OnPlayerCatchRpc()
     {
         runnersRemaining--;
-        Debug.LogWarning("³²Àº»ç¶÷ : " + runnersRemaining);
+        Debug.LogWarning("ë‚¨ì€ì‚¬ëŒ : " + runnersRemaining);
         if (runnersRemaining <= 0)
         {
             EndGame("Seekers Win");

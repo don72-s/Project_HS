@@ -25,7 +25,7 @@ public class PlayerControllerParent : MonoBehaviourPun
 
     private void OnDestroy()
     {
-        if (speaker != null) {
+        if (speaker != null && SpeakerList.Instance != null) {
             speaker.transform.SetParent(SpeakerList.Instance.transform);
 
             // 모든 컴포넌트의 enabled 속성 설정
