@@ -14,6 +14,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _loginPanel;
     [SerializeField] private GameObject _roomPanel;
     [SerializeField] private GameObject _lobbyPanel;
+    [SerializeField] private GameObject _dataManager;
 
     private void Start()
     {
@@ -39,6 +40,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Login Success!");
+        _dataManager.SetActive(true);
         SetActivePanel(Panel.Lobby);
         PhotonNetwork.JoinLobby();
     }

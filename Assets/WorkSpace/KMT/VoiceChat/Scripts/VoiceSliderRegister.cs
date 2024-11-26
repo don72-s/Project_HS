@@ -3,14 +3,16 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Realtime;
 
-public class VoiceSliderRegister : MonoBehaviour
+public class VoiceSliderRegister : MonoBehaviourPunCallbacks
 {
 
     [SerializeField]
     VolumeSlider volumeSliderPrefab;
 
     VolumeSlider myVolumeSlider;
+    Player ownPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -27,12 +29,16 @@ public class VoiceSliderRegister : MonoBehaviour
         myVolumeSlider.SetPlayerNum(PlayerNumberingExtensions.GetPlayerNumber(
             GetComponentInParent<PhotonView>().Owner));
 
+        ownPlayer = GetComponentInParent<PhotonView>().Owner;
+
         myVolumeSlider.SetNickname(GetComponentInParent<PhotonView>().Owner.NickName);
     }
 
-    private void OnDestroy()
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        VoiceVolumePanel.Instance.RemoveVoiceSlicer(myVolumeSlider);
+        if (otherPlayer == ownPlayer) {
+            VoiceVolumePanel.Instance.RemoveVoiceSlicer(myVolumeSlider);
+        }
     }
 
 }
