@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using TMPro;
 
 public class VolumeSlider : MonoBehaviour
 {
     [SerializeField]
     Scrollbar scrollbar;
+    [SerializeField]
+    TextMeshProUGUI text;
 
     AudioMixer audioMixer;
     int playerNum = -1;
@@ -21,6 +24,10 @@ public class VolumeSlider : MonoBehaviour
 
     public void SetPlayerNum(int playerNumber) { 
         playerNum = playerNumber;
+    }
+
+    public void SetNickname(in string playerNickName) {
+        text.text = playerNickName;
     }
 
     public void SetAudioMixer(AudioMixer mixer) {
