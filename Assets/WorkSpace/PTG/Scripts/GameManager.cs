@@ -129,16 +129,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     //TODO : 게임 중복시작 무시 예외처리 필요.
     public void TestGameStart()
     {
-
         if (PhotonNetwork.IsMasterClient)
         {
 
-        List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
+            List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
-            LoadStage();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
+                LoadStage();
+            }
         }
     }
 
