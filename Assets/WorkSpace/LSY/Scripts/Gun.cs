@@ -64,7 +64,7 @@ public class Gun : MonoBehaviourPun
             return;
         }
 
-        if (shootRoutine == null)
+        if (shootRoutine == null && reloadRoutine == null)
         {
            shootRoutine = StartCoroutine(ShootRoutine());
         }

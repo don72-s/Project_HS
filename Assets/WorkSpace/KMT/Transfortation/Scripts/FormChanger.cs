@@ -14,7 +14,7 @@ public class FormChanger : MonoBehaviourPunCallbacks,
 
     [Header("Base body Object")]
     [SerializeField]
-    GameObject curBodyObject = null;
+    public GameObject curBodyObject = null;
 
     private void Start()
     {

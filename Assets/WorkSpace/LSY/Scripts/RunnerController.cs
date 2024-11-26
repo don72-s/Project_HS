@@ -14,11 +14,14 @@ public class RunnerController : PlayerControllerParent, IPunObservable
     [Header("플레이어 카메라")]
     [SerializeField] private float mouseX = 5f;  
     [SerializeField] private float mouseY = 5f;
+    [SerializeField] Camera runnerCamera;
 
     [Header("플레이어 체력")]
     [SerializeField] public int hp;
     [SerializeField] GameObject[] hpImages;
     [SerializeField] GameObject hpPanel;
+
+    [SerializeField] FormChanger changer;
 
     private bool isJumped;
     private Rigidbody rb;
@@ -34,10 +37,14 @@ public class RunnerController : PlayerControllerParent, IPunObservable
 
     public UnityEvent OnDeadEvent = null;
 
+    private Renderer curBodyRenderer;
+
     protected override void Start()
     {
 
         base.Start();
+
+        curBodyRenderer = null;
 
         hp = 3;
 
@@ -50,7 +57,8 @@ public class RunnerController : PlayerControllerParent, IPunObservable
         networkPosition = transform.position;
         networkRotation = transform.rotation;
 
-        Camera.main.transform.LookAt(transform.position);
+        runnerCamera.transform.LookAt(transform.position);
+        runnerCamera.gameObject.SetActive(true);
 
         //Cursor.visible = false;
         //Cursor.lockState = CursorLockMode.Locked;
@@ -90,11 +98,14 @@ public class RunnerController : PlayerControllerParent, IPunObservable
             Debug.Log("player die");
             OnDeadEvent?.Invoke();
             hp = 0;
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
+            curBodyRenderer = changer.curBodyObject.GetComponent<Renderer>();
+            curBodyRenderer.enabled = false;
             return;
         }
 
     }
+
 
     public void TakeDamage(int damage)
     {
@@ -179,7 +190,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
 
         xRotation = Mathf.Clamp(xRotation, 0, 60);
 
-        Camera.main.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 5f + Vector3.up;
+        runnerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        runnerCamera.transform.position = transform.position - runnerCamera.transform.forward * 5f + Vector3.up;
     }
 }
