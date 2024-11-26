@@ -19,7 +19,8 @@ public class Gun : MonoBehaviourPun
     [SerializeField] PlayerController playerController;
 
     [Header("총 애니매이터")]
-    [SerializeField] Animator animator;
+    [SerializeField] Animator gunAni;
+    [SerializeField] Animator uiAni;
 
     [Header("Muzzle Point")]
     [SerializeField] GameObject muzzleFlash;
@@ -34,7 +35,7 @@ public class Gun : MonoBehaviourPun
     {
         attack = 1;
         bullet = MaxBullet;
-        bulletText.text = MaxBullet.ToString();
+        bulletText.text = $"{bullet} / {MaxBullet}";
     }
 
     private void Update()
@@ -57,8 +58,9 @@ public class Gun : MonoBehaviourPun
     {
         if (bullet <= 0)
         {
+            bullet = 0;
             Debug.Log("총알이 없습니다.");
-            bulletText.text = "0";
+            bulletText.text = $"{bullet} / {MaxBullet}";
             return;
         }
 
@@ -71,11 +73,11 @@ public class Gun : MonoBehaviourPun
     IEnumerator ReloadGunRoutine()
     {
         photonView.RPC("PlayReloadSound", RpcTarget.AllViaServer);
-        animator.SetTrigger("Reload");
+        gunAni.SetTrigger("Reload");
 
         yield return new WaitForSeconds(2.3f);
         bullet = MaxBullet;
-        bulletText.text = bullet.ToString();
+        bulletText.text = $"{bullet} / {MaxBullet}";
         Debug.Log("재장전 완료");
         reloadRoutine = null;
     }
@@ -86,9 +88,10 @@ public class Gun : MonoBehaviourPun
     IEnumerator ShootRoutine()
     {
         bullet--;
-        bulletText.text = bullet.ToString();
+        bulletText.text = $"{bullet} / {MaxBullet}";
 
         RecoilMath();
+        uiAni.SetTrigger("Shoot");
         photonView.RPC("PlayShootSound", RpcTarget.AllViaServer);
 
         Instantiate(muzzleFlash, muzzlePoint.transform.position, muzzlePoint.transform.rotation);
@@ -109,7 +112,7 @@ public class Gun : MonoBehaviourPun
 
     public void RecoilMath()
     {
-        animator.SetTrigger("Shoot");
+        gunAni.SetTrigger("Shoot");
     }
 
     [PunRPC]

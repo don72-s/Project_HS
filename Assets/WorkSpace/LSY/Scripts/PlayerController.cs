@@ -12,6 +12,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
     [SerializeField] float moveSpeed;
     [SerializeField] float rotateSpeed;
     [SerializeField] float jumpForce;
+    float run;
 
     [Header("플레이어 카메라")]
     [SerializeField] Vector3 offset;
@@ -52,6 +53,8 @@ public class PlayerController : PlayerControllerParent, IPunObservable
 
         isJumped = false;
 
+        run = moveSpeed * 2;
+
         networkPosition = transform.position;
         networkRotation = transform.rotation;
 
@@ -77,6 +80,17 @@ public class PlayerController : PlayerControllerParent, IPunObservable
             transform.position = Vector3.MoveTowards(transform.position, networkPosition, deltaPosition * Time.deltaTime * PhotonNetwork.SerializationRate);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, networkRotation, deltaRotation * Time.deltaTime * PhotonNetwork.SerializationRate);
             return;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            moveSpeed = run;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            moveSpeed = run / 2;
         }
 
         Jump();
@@ -187,6 +201,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         photonView.RPC("PlayWalkSound", RpcTarget.AllViaServer);
         playerAni.SetFloat("Move", 1);
         gunAni.SetFloat("Move", 1);
+
         Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
