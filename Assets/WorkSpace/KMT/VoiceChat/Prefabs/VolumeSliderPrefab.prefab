@@ -219,6 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollbar: {fileID: 361805749357167173}
+  text: {fileID: 361805751357785887}
 --- !u!1 &361805750782945699
 GameObject:
   m_ObjectHideFlags: 0

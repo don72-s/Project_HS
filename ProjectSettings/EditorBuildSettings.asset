@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/WorkSpace/kYH/Test_RoomScene.unity
     guid: 8fac6fc9da8438a4db6053f23637677e
+  - enabled: 1
+    path: Assets/ProjectHS/Scenes/TestScene/GameScene_Test.unity
+    guid: 9a82ee720e5fcaa4bad67aad1c0d7052
   m_configObjects: {}

@@ -26,6 +26,8 @@ public class VoiceSliderRegister : MonoBehaviour
 
         myVolumeSlider.SetPlayerNum(PlayerNumberingExtensions.GetPlayerNumber(
             GetComponentInParent<PhotonView>().Owner));
+
+        myVolumeSlider.SetNickname(GetComponentInParent<PhotonView>().Owner.NickName);
     }
 
     private void OnDestroy()

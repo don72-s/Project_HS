@@ -80,6 +80,8 @@ public class ObjectSlotMachine : MonoBehaviour
 
         //ΩΩ∑‘ Ω√¿€
         OpenWindow();
+        MouseLocker.Instance.MouseRealease();
+
         HashSet<int> idxes = new HashSet<int>();
 
         while (idxes.Count < 3) { 
@@ -104,14 +106,17 @@ public class ObjectSlotMachine : MonoBehaviour
 
     public void ChangeObjButton1() {
         changeableObj.ChangeForm(idxArr[0]);
+        MouseLocker.Instance.MouseLock();
         CloseWindow();
     }
     public void ChangeObjButton2() {
         changeableObj.ChangeForm(idxArr[1]);
+        MouseLocker.Instance.MouseLock();
         CloseWindow();
     }
     public void ChangeObjButton3() {
         changeableObj.ChangeForm(idxArr[2]);
+        MouseLocker.Instance.MouseLock();
         CloseWindow();
     }
 

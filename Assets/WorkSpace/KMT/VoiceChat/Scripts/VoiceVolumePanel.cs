@@ -49,10 +49,12 @@ public class VoiceVolumePanel : MonoBehaviour
     }
 
     public void RemoveVoiceSlicer(VolumeSlider volumeSlider) {
-        volumeSliders.Remove(volumeSlider);
 
-        //TODO : 디버그하기
-        Destroy(volumeSlider.gameObject);
+        if (volumeSliders.Remove(volumeSlider) && volumeSlider != null)
+        {
+            Destroy(volumeSlider.gameObject);
+        }
+
     }
 
 }
