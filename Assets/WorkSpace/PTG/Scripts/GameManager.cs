@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public const string RoomName = "TestRoomPTKq";
+    public const string RoomName = "TestRoomPTK";
 
     public static GameManager Instance;
 
@@ -20,12 +20,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameState currentState = GameState.Waiting;
 
     // 시간 설정
-    public float gameDuration = 10f; 
+    public float gameDuration = 10f;
 
     private float timer;
 
     // 승리 조건
     private int runnersRemaining;
+
+    private Player currentSeeker;
 
     public Text resultText;
     public Slider timeSlider;
@@ -42,19 +44,20 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-/*        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
-        PhotonNetwork.ConnectUsingSettings();*/
+        /*        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
+                PhotonNetwork.ConnectUsingSettings();*/
 
-        resultText.gameObject.SetActive(false); 
-        timeSlider.maxValue = gameDuration;     
+        resultText.gameObject.SetActive(false);
+        timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
 
         //myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
         StartCoroutine(WaitCO(2));
     }
 
-    IEnumerator WaitCO(float waitTime) { 
-    
+    IEnumerator WaitCO(float waitTime)
+    {
+
         yield return new WaitForSeconds(waitTime);
         myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
 
@@ -82,14 +85,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-/*    public override void OnConnectedToMaster()
-    {
-        RoomOptions options = new RoomOptions();
-        options.MaxPlayers = 4;
-        options.IsVisible = false;
+    /*    public override void OnConnectedToMaster()
+        {
+            RoomOptions options = new RoomOptions();
+            options.MaxPlayers = 4;
+            options.IsVisible = false;
 
-        PhotonNetwork.JoinOrCreateRoom(RoomName, options, TypedLobby.Default);
-    }*/
+            PhotonNetwork.JoinOrCreateRoom(RoomName, options, TypedLobby.Default);
+        }*/
 
     public override void OnJoinedRoom()
     {
@@ -100,13 +103,39 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("시작");
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer); // 기본 동작 호출
+        Debug.Log($"Player {otherPlayer.NickName} left the room.");
+
+        if (currentState == GameState.Playing)
+        {
+            if (otherPlayer == currentSeeker)
+            {
+                Debug.Log("Seeker has left the game Runners win");
+                EndGame("Runners Win Seeker Left");
+            }
+            else
+            {
+                runnersRemaining--;
+                Debug.Log($"Runners remaining: {runnersRemaining}");
+
+                if (runnersRemaining <= 0)
+                {
+                    EndGame("Seeker Win");
+                }
+            }
+        }
+    }
+
     IEnumerator StartDelayRoutine()
     {
         yield return new WaitForSeconds(1f);
         TestGameStart();
     }
 
-    IEnumerator WaitPlayerSpawnCO() {
+    IEnumerator WaitPlayerSpawnCO()
+    {
 
         yield return new WaitForSeconds(3f);
         StageData.Instance.StartChangeFormSlot();
@@ -123,9 +152,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
 
-           /* int randomNum = Random.Range(0, allPlayers.Count);*/
+            /* int randomNum = Random.Range(0, allPlayers.Count);*/
 
-             SetTeams(); // 팀 배정
+            SetTeams(); // 팀 배정
 
             //타이머 활성화
             photonView.RPC("RPC_StartGame", RpcTarget.All);
@@ -163,9 +192,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         // 술래 한 명 랜덤 선택
         int randomIndex = Random.Range(0, allPlayers.Count);
-        Player seeker = allPlayers[randomIndex];
+        currentSeeker = allPlayers[randomIndex];
 
-        photonView.RPC("RPC_SetSeeker", RpcTarget.All, seeker.ActorNumber);
+        photonView.RPC("RPC_SetSeeker", RpcTarget.All, currentSeeker.ActorNumber);
 
         runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
     }
@@ -173,12 +202,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_SetSeeker(int seekerActorNumber)
     {
-        Player seeker = PhotonNetwork.CurrentRoom.GetPlayer(seekerActorNumber);
+        currentSeeker = PhotonNetwork.CurrentRoom.GetPlayer(seekerActorNumber);
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
 
         myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
 
-        if (PhotonNetwork.LocalPlayer == seeker)
+        if (PhotonNetwork.LocalPlayer == currentSeeker)
         {
             Debug.Log("You are Seeker");
             myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
@@ -250,7 +279,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         //PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 복귀
     }
 
-    public void OnPlayerCatch() {
+    public void OnPlayerCatch()
+    {
 
         photonView.RPC("OnPlayerCatchRpc", RpcTarget.MasterClient);
 
