@@ -1,5 +1,6 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
+using Photon.Realtime;
 using Photon.Voice.Unity;
 using System.Collections;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class AudioMixerParser : MonoBehaviourPunCallbacks
 
     AudioSource audioSource;
 
+    Player ownPlayer;
     int playerNumber;
 
     private void Awake()
@@ -20,46 +22,6 @@ public class AudioMixerParser : MonoBehaviourPunCallbacks
         audioSource = GetComponent<AudioSource>();
     }
 
-/*    public override void OnJoinedRoom()
-    {
-        Debug.Log("dd");
-
-
-        playerNumber = PlayerNumberingExtensions.GetPlayerNumber(
-            GetComponentInParent<PhotonView>().Owner);
-
-        string mixerPath = $"Master/Player{playerNumber}";
-        string mixerName = $"Player{playerNumber}";
-
-        AudioMixerGroup[] groups = audioMixer.FindMatchingGroups(mixerPath);
-        AudioMixerGroup mixer = null;
-
-        Debug.Log(mixerPath);
-
-
-        if (groups == null)
-            return;
-
-        foreach (AudioMixerGroup group in groups)
-        {
-            if (group.name == mixerName)
-            {
-                mixer = group;
-                break;
-            }
-
-        }
-
-        if (mixer == null)
-        {
-            Debug.Log("믹서가 없음");
-            return;
-        }
-
-        audioSource.outputAudioMixerGroup = mixer;
-        SpeakerList.Instance.SetSpeaker(GetComponent<Speaker>(), playerNumber);
-
-    }*/
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +35,7 @@ public class AudioMixerParser : MonoBehaviourPunCallbacks
 
         playerNumber = PlayerNumberingExtensions.GetPlayerNumber(
             GetComponentInParent<PhotonView>().Owner);
+        ownPlayer = GetComponentInParent<PhotonView>().Owner;
 
         string mixerPath = $"Master/Player{playerNumber}";
         string mixerName = $"Player{playerNumber}";
@@ -107,9 +70,14 @@ public class AudioMixerParser : MonoBehaviourPunCallbacks
 
     }
 
-    private void OnDestroy()
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        SpeakerList.Instance.RemoveSpeaker(playerNumber);
+        if (otherPlayer == ownPlayer)
+        {
+            Debug.Log("가써..." + otherPlayer.NickName);
+            SpeakerList.Instance.RemoveSpeaker(playerNumber);
+            Destroy(gameObject);
+        }
     }
 
     IEnumerator WaitNumberingCO() {

@@ -20,6 +20,11 @@ public class MouseLocker : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        MouseLock();
+    }
+
     /// <summary>
     /// 마우스 잠금 해제와 카운트 추가.
     /// </summary>

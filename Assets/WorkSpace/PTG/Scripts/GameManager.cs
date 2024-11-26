@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(waitTime);
         myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
 
-
     }
 
     private void Update()
@@ -94,18 +93,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-
         myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
-
-        // StartCoroutine(StartDelayRoutine());
         Debug.Log("시작");
+
     }
 
-    IEnumerator StartDelayRoutine()
-    {
-        yield return new WaitForSeconds(1f);
-        TestGameStart();
-    }
 
     IEnumerator WaitPlayerSpawnCO() {
 
@@ -119,24 +111,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-        //PlayerSpawn(); // 플레이어 스폰
-
         if (PhotonNetwork.IsMasterClient)
         {
             runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
-
-            /* int randomNum = Random.Range(0, allPlayers.Count);*/
-
             LoadStage();
-
-            SetTeams(); // 팀 배정
-
-            //타이머 활성화
-            photonView.RPC("RPC_StartGame", RpcTarget.All);
-
-            //photonView.RPC("PlayerSpawn", RpcTarget.AllViaServer, randomNum);
-            StartCoroutine(WaitPlayerSpawnCO());
-
         }
     }
 
@@ -151,8 +129,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         float waitTime = 0;
         inLoadingPlayer = PhotonNetwork.PlayerList.Length;
-
-        while (waitTime < 30f || inLoadingPlayer > 0) {
+        while (waitTime < 30f && inLoadingPlayer > 0) {
 
             yield return null;
             waitTime += Time.deltaTime;
@@ -162,6 +139,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (inLoadingPlayer == 0)
         {
             Debug.Log("로딩 완료!!");
+
+            SetTeams(); // 팀 배정 및 플레이어 스폰
+
+            //타이머 활성화
+            photonView.RPC("RPC_StartGame", RpcTarget.All);
+
+            StartCoroutine(WaitPlayerSpawnCO());
+
         }
         else 
         {
@@ -174,11 +159,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     void LoadSceneAdditive() {
 
         AsyncOperation op = SceneManager.LoadSceneAsync("lsy_GameScene_Additive", LoadSceneMode.Additive);
-        op.completed += (_op) => { photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient); };
+        op.completed += (_op) => { Debug.Log("완료!");photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient);};
 
     }
 
-    [PunRPC]
     void UnLoadScene()
     {
         SceneManager.UnloadSceneAsync("lsy_GameScene_Additive");
@@ -186,6 +170,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [PunRPC]
     void LoadSceneFinished() {
+
 
         if (inLoadingPlayer <= 0) {
             Debug.Log("뭔가 잘못됨.");
@@ -267,7 +252,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("UnLoadScene", RpcTarget.All);
             photonView.RPC("RPC_EndGame", RpcTarget.All, message);
         }
     }
@@ -282,27 +266,23 @@ public class GameManager : MonoBehaviourPunCallbacks
         resultText.gameObject.SetActive(true); // 결과 텍스트 활성화
         timeSlider.gameObject.SetActive(false); // 슬라이더 비활성화
 
-
-
         StartCoroutine(ReturnToLobby());
     }
 
     private IEnumerator ReturnToLobby()
     {
+
         yield return new WaitForSeconds(3f);
+        PhotonNetwork.Destroy(myIngamePlayer);
+        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+        myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
+        UnLoadScene();
+
         Debug.Log("LeaveRoom");
 
         Camera.main.transform.SetParent(null);
         Camera.main.GetComponent<CameraController>().FollowTarget = null;
 
-
-
-        PhotonNetwork.Destroy(myIngamePlayer);
-        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
-
-
-        //PhotonNetwork.LeaveRoom(); // 방으로 복귀
     }
 
     public override void OnLeftRoom()
