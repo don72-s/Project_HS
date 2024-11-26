@@ -11,22 +11,24 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public const string RoomName = "TestRoomPTKq";
+    public const string RoomName = "TestRoomPTK";
 
     public static GameManager Instance;
 
-    // »óÅÂ
+    // ìƒíƒœ
     public enum GameState { Waiting, Playing, Finished }
 
     public GameState currentState = GameState.Waiting;
 
-    // ½Ã°£ ¼³Á¤
-    public float gameDuration = 10f; 
+    // ì‹œê°„ ì„¤ì •
+    public float gameDuration = 10f;
 
     private float timer;
 
-    // ½Â¸® Á¶°Ç
+    // ìŠ¹ë¦¬ ì¡°ê±´
     private int runnersRemaining;
+
+    private Player currentSeeker;
 
     public Text resultText;
     public Slider timeSlider;
@@ -42,19 +44,20 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        //´ÜÀ§ Å×½ºÆ®¿ë ÄÚµå
-        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
-        PhotonNetwork.ConnectUsingSettings();
 
-        resultText.gameObject.SetActive(false); 
-        timeSlider.maxValue = gameDuration;     
+        /*        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
+                PhotonNetwork.ConnectUsingSettings();*/
+
+        resultText.gameObject.SetActive(false);
+        timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
 
         //StartCoroutine(WaitCO(2));
     }
 
-    IEnumerator WaitCO(float waitTime) { 
-    
+    IEnumerator WaitCO(float waitTime)
+    {
+
         yield return new WaitForSeconds(waitTime);
         myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
 
@@ -82,41 +85,67 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
-    public override void OnConnectedToMaster()
-    {
-        RoomOptions options = new RoomOptions();
-        options.MaxPlayers = 4;
-        options.IsVisible = false;
+    /*    public override void OnConnectedToMaster()
+        {
+            RoomOptions options = new RoomOptions();
+            options.MaxPlayers = 4;
+            options.IsVisible = false;
 
-        PhotonNetwork.JoinOrCreateRoom(RoomName, options, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(RoomName, options, TypedLobby.Default);
+        }*/
+
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer); // ê¸°ë³¸ ë™ì‘ í˜¸ì¶œ
+        Debug.Log($"Player {otherPlayer.NickName} left the room.");
+
+        if (currentState == GameState.Playing)
+        {
+            if (otherPlayer == currentSeeker)
+            {
+                Debug.Log("Seeker has left the game Runners win");
+                EndGame("Runners Win Seeker Left");
+            }
+            else
+            {
+                runnersRemaining--;
+                Debug.Log($"Runners remaining: {runnersRemaining}");
+
+                if (runnersRemaining <= 0)
+                {
+                    EndGame("Seeker Win");
+                }
+            }
+        }
     }
 
-    public override void OnJoinedRoom()
+    IEnumerator StartDelayRoutine()
     {
-        myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
-        Debug.Log("½ÃÀÛ");
-
+        yield return new WaitForSeconds(1f);
+        TestGameStart();
     }
 
-
-    IEnumerator WaitPlayerSpawnCO() {
+    IEnumerator WaitPlayerSpawnCO()
+    {
 
         yield return new WaitForSeconds(3f);
         StageData.Instance.StartChangeFormSlot();
 
     }
 
-    //TODO : °ÔÀÓ Áßº¹½ÃÀÛ ¹«½Ã ¿¹¿ÜÃ³¸® ÇÊ¿ä.
+    //TODO : ê²Œì„ ì¤‘ë³µì‹œì‘ ë¬´ì‹œ ì˜ˆì™¸ì²˜ë¦¬ í•„ìš”.
     public void TestGameStart()
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
         if (PhotonNetwork.IsMasterClient)
         {
-            runnersRemaining = allPlayers.Count - 1; // ³ª¸ÓÁö´Â ·¯³Ê
+            runnersRemaining = allPlayers.Count - 1; // ë‚˜ë¨¸ì§€ëŠ” ëŸ¬ë„ˆ
             LoadStage();
         }
     }
+
 
     private void LoadStage()
     {
@@ -138,11 +167,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (inLoadingPlayer == 0)
         {
-            Debug.Log("·Îµù ¿Ï·á!!");
+            Debug.Log("ë¡œë”© ì™„ë£Œ!!");
 
-            SetTeams(); // ÆÀ ¹èÁ¤ ¹× ÇÃ·¹ÀÌ¾î ½ºÆù
+            SetTeams(); // íŒ€ ë°°ì • ë° í”Œë ˆì´ì–´ ìŠ¤í°
 
-            //Å¸ÀÌ¸Ó È°¼ºÈ­
+
+            //íƒ€ì´ë¨¸ í™œì„±í™”
             photonView.RPC("RPC_StartGame", RpcTarget.All);
 
             StartCoroutine(WaitPlayerSpawnCO());
@@ -150,7 +180,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else 
         {
-            Debug.Log("·Îµù ½Ã°£ ÃÊ°ú...");
+            Debug.Log("ë¡œë”© ì‹œê°„ ì´ˆê³¼...");
         }
 
     }
@@ -159,7 +189,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void LoadSceneAdditive() {
 
         AsyncOperation op = SceneManager.LoadSceneAsync("lsy_GameScene_Additive", LoadSceneMode.Additive);
-        op.completed += (_op) => { Debug.Log("¿Ï·á!");photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient);};
+        op.completed += (_op) => { Debug.Log("ì™„ë£Œ!");photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient);};
 
     }
 
@@ -173,7 +203,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         if (inLoadingPlayer <= 0) {
-            Debug.Log("¹º°¡ Àß¸øµÊ.");
+            Debug.Log("ë­”ê°€ ì˜ëª»ë¨.");
             return;
         }
 
@@ -206,24 +236,24 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-        // ¼ú·¡ ÇÑ ¸í ·£´ı ¼±ÅÃ
+        // ìˆ ë˜ í•œ ëª… ëœë¤ ì„ íƒ
         int randomIndex = Random.Range(0, allPlayers.Count);
-        Player seeker = allPlayers[randomIndex];
+        currentSeeker = allPlayers[randomIndex];
 
-        photonView.RPC("RPC_SetSeeker", RpcTarget.All, seeker.ActorNumber);
+        photonView.RPC("RPC_SetSeeker", RpcTarget.All, currentSeeker.ActorNumber);
 
-        runnersRemaining = allPlayers.Count - 1; // ³ª¸ÓÁö´Â ·¯³Ê
+        runnersRemaining = allPlayers.Count - 1; // ë‚˜ë¨¸ì§€ëŠ” ëŸ¬ë„ˆ
     }
 
     [PunRPC]
     private void RPC_SetSeeker(int seekerActorNumber)
     {
-        Player seeker = PhotonNetwork.CurrentRoom.GetPlayer(seekerActorNumber);
+        currentSeeker = PhotonNetwork.CurrentRoom.GetPlayer(seekerActorNumber);
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
 
         myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
 
-        if (PhotonNetwork.LocalPlayer == seeker)
+        if (PhotonNetwork.LocalPlayer == currentSeeker)
         {
             Debug.Log("You are Seeker");
             myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
@@ -263,8 +293,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("Game Over: " + message);
 
         resultText.text = message;
-        resultText.gameObject.SetActive(true); // °á°ú ÅØ½ºÆ® È°¼ºÈ­
-        timeSlider.gameObject.SetActive(false); // ½½¶óÀÌ´õ ºñÈ°¼ºÈ­
+        resultText.gameObject.SetActive(true); // ê²°ê³¼ í…ìŠ¤íŠ¸ í™œì„±í™”
+        timeSlider.gameObject.SetActive(false); // ìŠ¬ë¼ì´ë” ë¹„í™œì„±í™”
 
         StartCoroutine(ReturnToLobby());
     }
@@ -288,10 +318,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         Debug.Log("LeftRoom");
-        //PhotonNetwork.LoadLevel("LobbyScene"); // ·Îºñ ¾ÀÀ¸·Î º¹±Í
+        //PhotonNetwork.LoadLevel("LobbyScene"); // ë¡œë¹„ ì”¬ìœ¼ë¡œ ë³µê·€
     }
 
-    public void OnPlayerCatch() {
+    public void OnPlayerCatch()
+    {
 
         photonView.RPC("OnPlayerCatchRpc", RpcTarget.MasterClient);
 
@@ -301,7 +332,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void OnPlayerCatchRpc()
     {
         runnersRemaining--;
-        Debug.LogWarning("³²Àº»ç¶÷ : " + runnersRemaining);
+        Debug.LogWarning("ë‚¨ì€ì‚¬ëŒ : " + runnersRemaining);
         if (runnersRemaining <= 0)
         {
             EndGame("Seekers Win");
