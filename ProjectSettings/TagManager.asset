@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Bullet
   - Floor
+  - Weapon
+  - SecondCamera
+  - BulletSpawn
+  - LevelPart
+  - Dummie
   layers:
   - Default
   - TransparentFX
@@ -15,7 +20,7 @@ TagManager:
   - UI
   - Player
   - Runner
-  - 
+  - MuzzleFlash
   - 
   - 
   - 

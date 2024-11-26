@@ -14,16 +14,20 @@ public class PlayerController : PlayerControllerParent, IPunObservable
 
     [Header("플레이어 카메라")]
     [SerializeField] Vector3 offset;
-
-    [SerializeField] GameObject targetPointImage;
-    [SerializeField] public Transform cameraPoint;
     [SerializeField] private float yRotationRange;
-
-    [SerializeField] Animator playerAni;
-    [SerializeField] Animator gunAni;
     [SerializeField] Camera gunCamera;
     [SerializeField] Camera mainCamera;
 
+    [Header("애니매이터")]
+    [SerializeField] Animator playerAni;
+    [SerializeField] Animator gunAni;
+
+    [Header("오디오")]
+    [SerializeField] AudioSource walkAudio;
+    [SerializeField] AudioSource jumpAudio;
+
+    [SerializeField] GameObject targetPointImage;
+    [SerializeField] public Transform cameraPoint;
     [SerializeField] bool isJumped; 
     private Rigidbody rb;
     private float yRotation = 0f;
@@ -34,10 +38,6 @@ public class PlayerController : PlayerControllerParent, IPunObservable
 
     private Quaternion networkRotation;
     private float deltaRotation;
-
-    [SerializeField] GameObject muzzleFlash;
-    [SerializeField] Transform muzzlePoint;
-    [SerializeField] Transform runnerMuzzlePoint;
 
     protected override void Start()
     {
@@ -106,17 +106,11 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Fire");
-            gun.Fire(cameraPoint);
-            RecoilMath();
-            PhotonNetwork.Instantiate("MuzzleFlash", muzzlePoint.transform.position, muzzlePoint.transform.rotation);
-            PhotonNetwork.Instantiate("MuzzleFlash", runnerMuzzlePoint.transform.position, runnerMuzzlePoint.transform.rotation);
+            gun.Fire();
+          
         }
     }
 
-    public void RecoilMath()
-    {
-        gunAni.SetTrigger("Shoot");
-    }
 
     public void Jump()
     {
@@ -124,6 +118,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         {
             isJumped = true;
             playerAni.SetTrigger("Jump1");
+            jumpAudio.Play();
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
@@ -186,8 +181,9 @@ public class PlayerController : PlayerControllerParent, IPunObservable
             playerAni.SetFloat("Move", -1);
             gunAni.SetFloat("Move", -1);
             return; 
-        } 
+        }
 
+        walkAudio.Play();
         playerAni.SetFloat("Move", 1);
         gunAni.SetFloat("Move", 1);
         Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
