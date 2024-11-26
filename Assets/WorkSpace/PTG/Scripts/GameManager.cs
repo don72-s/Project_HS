@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
 
+
         /*        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
                 PhotonNetwork.ConnectUsingSettings();*/
 
@@ -52,20 +53,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
 
-        //StartCoroutine(WaitCO(2));
+
+        StartCoroutine(WaitCO(2));
+
     }
 
     IEnumerator WaitCO(float waitTime)
     {
-
         yield return new WaitForSeconds(waitTime);
         myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
-
     }
 
     private void Update()
     {
-
         if (currentState == GameState.Playing)
         {
             timer -= Time.deltaTime;
@@ -83,17 +83,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             TestGameStart();
         }
 
-    }
-
-    /*    public override void OnConnectedToMaster()
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            RoomOptions options = new RoomOptions();
-            options.MaxPlayers = 4;
-            options.IsVisible = false;
-
-            PhotonNetwork.JoinOrCreateRoom(RoomName, options, TypedLobby.Default);
-        }*/
-
+            Debug.Log(runnersRemaining);
+        }
+    }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
@@ -128,15 +122,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     IEnumerator WaitPlayerSpawnCO()
     {
-
         yield return new WaitForSeconds(3f);
         StageData.Instance.StartChangeFormSlot();
-
     }
 
     //TODO : 게임 중복시작 무시 예외처리 필요.
     public void TestGameStart()
     {
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
         if (PhotonNetwork.IsMasterClient)
@@ -169,7 +165,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("로딩 완료!!");
 
-            SetTeams(); // 팀 배정 및 플레이어 스폰
+            SetTeamsAndSpwan(); // 팀 배정 및 플레이어 스폰
 
 
             //타이머 활성화
@@ -227,12 +223,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
             myIngamePlayer = runner;
         }
-
     }
 
-
-
-    private void SetTeams()
+    private void SetTeamsAndSpwan()
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
@@ -293,6 +286,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("Game Over: " + message);
 
         resultText.text = message;
+
         resultText.gameObject.SetActive(true); // 결과 텍스트 활성화
         timeSlider.gameObject.SetActive(false); // 슬라이더 비활성화
 
@@ -303,6 +297,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
 
         yield return new WaitForSeconds(3f);
+        
+        resultText.gameObject.SetActive(false);
+
         PhotonNetwork.Destroy(myIngamePlayer);
         myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
         myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
@@ -323,9 +320,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void OnPlayerCatch()
     {
-
         photonView.RPC("OnPlayerCatchRpc", RpcTarget.MasterClient);
-
     }
 
     [PunRPC]
