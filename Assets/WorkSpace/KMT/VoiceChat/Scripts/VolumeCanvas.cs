@@ -9,15 +9,20 @@ public class VolumeCanvas : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.V))
         {
+
+            if (MouseLocker.Instance == null)
+                return;
 
             if (volumePanel.gameObject.activeSelf)
             {
+                MouseLocker.Instance.MouseLock();
                 volumePanel.CloseWindow();
             }
             else
             {
+                MouseLocker.Instance.MouseRealease();
                 volumePanel.OpenWindow();
             }
 
