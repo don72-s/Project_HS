@@ -14,13 +14,13 @@ public class PlayerControllerParent : MonoBehaviourPun
     /// </summary>
     protected virtual void Start()
     {
-        //speaker = SpeakerList.Instance.GetSpeaker(PlayerNumberingExtensions.GetPlayerNumber(
-        //    GetComponent<PhotonView>().Owner));
+        speaker = SpeakerList.Instance.GetSpeaker(PlayerNumberingExtensions.GetPlayerNumber(
+            GetComponent<PhotonView>().Owner));
 
-        //speaker.transform.SetParent(transform);
-        //speaker.transform.localPosition = Vector3.zero;
-        //speaker.GetComponent<AudioSource>().spatialBlend = 1;
-        //speaker.RestartPlayback();
+        speaker.transform.SetParent(transform);
+        speaker.transform.localPosition = Vector3.zero;
+        speaker.GetComponent<AudioSource>().spatialBlend = 1;
+        speaker.RestartPlayback();
     }
 
     private void OnDestroy()
