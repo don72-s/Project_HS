@@ -42,16 +42,28 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
-        PhotonNetwork.ConnectUsingSettings();
+/*        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
+        PhotonNetwork.ConnectUsingSettings();*/
 
         resultText.gameObject.SetActive(false); 
         timeSlider.maxValue = gameDuration;     
-        timeSlider.value = gameDuration;        
+        timeSlider.value = gameDuration;
+
+        //myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
+        StartCoroutine(WaitCO(2));
+    }
+
+    IEnumerator WaitCO(float waitTime) { 
+    
+        yield return new WaitForSeconds(waitTime);
+        myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
+
+
     }
 
     private void Update()
     {
+
         if (currentState == GameState.Playing)
         {
             timer -= Time.deltaTime;
@@ -70,21 +82,21 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnConnectedToMaster()
+/*    public override void OnConnectedToMaster()
     {
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = 4;
         options.IsVisible = false;
 
         PhotonNetwork.JoinOrCreateRoom(RoomName, options, TypedLobby.Default);
-    }
+    }*/
 
     public override void OnJoinedRoom()
     {
 
-        myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
+        //myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
 
-       // StartCoroutine(StartDelayRoutine());
+        // StartCoroutine(StartDelayRoutine());
         Debug.Log("Ω√¿€");
     }
 
