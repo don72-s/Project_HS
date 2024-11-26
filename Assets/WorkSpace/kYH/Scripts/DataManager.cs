@@ -7,7 +7,6 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Realtime;
 using System;
-using static BackendManager;
 
 public class DataManager : MonoBehaviour
 {
@@ -23,14 +22,21 @@ public class DataManager : MonoBehaviour
     [SerializeField] private int _exp;
     public int EXP { get { return _exp; } set { _exp = value; } }
 
+    [SerializeField] private int _maxExp;
+    public int MaxEXP { get { return _maxExp; } set { _maxExp = value; } }
+
     private DatabaseReference _userDataRef;
     private DatabaseReference _levelRef;
+    private DatabaseReference _expRef;
+    private DatabaseReference _maxExpRef;
 
     private void OnEnable()
     {
         string uid = BackendManager.Auth.CurrentUser.UserId;
         _userDataRef = BackendManager.Database.RootReference.Child("Userdata").Child(uid);
-        _levelRef = _userDataRef.Child("level");
+        _levelRef = _userDataRef.Child("Level");
+        _expRef = _userDataRef.Child("EXP");
+        _maxExpRef = _userDataRef.Child("MaxEXP");
 
         _userDataRef.GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -56,42 +62,40 @@ public class DataManager : MonoBehaviour
             {
                 // 초기값으로 세팅
                 UserData userData = new UserData();
-                //userData.name = BackendManager.Auth.CurrentUser.DisplayName;
-                //userData.email = BackendManager.Auth.CurrentUser.Email;
-                //userData.level = 1;
-
-                //userData.list.Add("First");
-                //userData.list.Add("Second");
-                //userData.list.Add("Third");
+                userData._email = BackendManager.Auth.CurrentUser.Email;
+                userData._name = BackendManager.Auth.CurrentUser.DisplayName;
+                userData._level = 1;
+                userData._exp = 0;
+                userData._maxExp = 100;
 
                 string json = JsonUtility.ToJson(userData);
                 _userDataRef.SetRawJsonValueAsync(json);
             }
             else
             {
-                //// 읽어 온 값으로 세팅
-                //string json = snapshot.GetRawJsonValue();
-                //Debug.Log(json);
-                //
-                //UserData userData = JsonUtility.FromJson<UserData>(json);
-                //Debug.Log(userData.name);
-                //Debug.Log(userData.email);
-                //Debug.Log(userData.level);
-                //Debug.Log(userData.list[0]);
-                //Debug.Log(userData.list[1]);
-                //Debug.Log(userData.list[2]);
-
-                //level = int.Parse(snapshot.Child("level").Value.ToString());
-                //Debug.Log(level);
+                // 읽어 온 값으로 세팅
+                string json = snapshot.GetRawJsonValue();
+                Debug.Log(json);
+                
+                UserData userData = JsonUtility.FromJson<UserData>(json);
+                Debug.Log(userData._email);
+                Debug.Log(userData._name);
+                Debug.Log(userData._level);
+                Debug.Log(userData._exp);
+                Debug.Log(userData._maxExp);
             }
         });
 
         _levelRef.ValueChanged += LevelRef_ValueChanged;
+        _expRef.ValueChanged += EXPRef_ValueChanged;
+        _expRef.ValueChanged += MaxEXPRef_ValueChanged;
     }
 
     private void OnDisable()
     {
         _levelRef.ValueChanged -= LevelRef_ValueChanged;
+        _expRef.ValueChanged -= EXPRef_ValueChanged;
+        _expRef.ValueChanged -= MaxEXPRef_ValueChanged;
     }
 
     private void LevelRef_ValueChanged(object sender, ValueChangedEventArgs e)
@@ -99,4 +103,26 @@ public class DataManager : MonoBehaviour
         Debug.Log($"값 변경 이벤트 확인 : {e.Snapshot.Value.ToString()}");
         _level = int.Parse(e.Snapshot.Value.ToString());
     }
+
+    private void EXPRef_ValueChanged(object sender, ValueChangedEventArgs e)
+    {
+        Debug.Log($"값 변경 이벤트 확인 : {e.Snapshot.Value.ToString()}");
+        _exp = int.Parse(e.Snapshot.Value.ToString());
+    }
+
+    private void MaxEXPRef_ValueChanged(object sender, ValueChangedEventArgs e)
+    {
+        Debug.Log($"값 변경 이벤트 확인 : {e.Snapshot.Value.ToString()}");
+        _maxExp = int.Parse(e.Snapshot.Value.ToString());
+    }
+}
+
+[Serializable]
+public class UserData
+{
+    public string _email;
+    public string _name;
+    public int _level;
+    public int _exp;
+    public int _maxExp;
 }
