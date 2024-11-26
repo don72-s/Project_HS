@@ -303,16 +303,15 @@ public class LobbySceneManager : BaseUI
 
         Debug.Log($"Display Name : {user.DisplayName}");
         Debug.Log($"E-Mail : {user.Email}");
-        //Debug.Log($"E-Mail Varified : {user.IsEmailVerified}");
+        Debug.Log($"E-Mail Varified : {user.IsEmailVerified}");
         Debug.Log($"User ID : {user.UserId}");
 
-        /*if (user.IsEmailVerified == false)
+        if (user.IsEmailVerified == false)
         {
             _verifyPanel.gameObject.SetActive(true);
             SendVerificationMail();
-        }*/
-        //else if (user.DisplayName == "")
-        if (user.DisplayName == "")
+        }
+        else if (user.DisplayName == "")
         {
             _nicknamePanel.gameObject.SetActive(true);
         }
@@ -324,7 +323,7 @@ public class LobbySceneManager : BaseUI
         }
     }
 
-    /*private void SendVerificationMail()
+    private void SendVerificationMail()
     {
         FirebaseUser user = BackendManager.Auth.CurrentUser;
 
@@ -377,7 +376,7 @@ public class LobbySceneManager : BaseUI
             });
             yield return delay;
         }
-    }*/
+    }
 
     public void UpdateRoomList(List<RoomInfo> roomList)
     {
