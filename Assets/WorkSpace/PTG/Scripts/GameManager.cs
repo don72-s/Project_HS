@@ -123,14 +123,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
 
-            int randomNum = Random.Range(0, allPlayers.Count);
+           /* int randomNum = Random.Range(0, allPlayers.Count);*/
 
-            // SetTeams(); // 팀 배정
+             SetTeams(); // 팀 배정
 
             //타이머 활성화
             photonView.RPC("RPC_StartGame", RpcTarget.All);
 
-            photonView.RPC("PlayerSpawn", RpcTarget.AllViaServer, randomNum);
+            //photonView.RPC("PlayerSpawn", RpcTarget.AllViaServer, randomNum);
             StartCoroutine(WaitPlayerSpawnCO());
 
         }
@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
         }
         else
-        {//술래 스폰 코드
+        {
             GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
             myIngamePlayer = runner;
@@ -174,14 +174,21 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void RPC_SetSeeker(int seekerActorNumber)
     {
         Player seeker = PhotonNetwork.CurrentRoom.GetPlayer(seekerActorNumber);
+        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+
+        myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
 
         if (PhotonNetwork.LocalPlayer == seeker)
         {
             Debug.Log("You are Seeker");
+            myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
         }
         else
         {
             Debug.Log("You are Runner");
+            GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+            runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
+            myIngamePlayer = runner;
         }
     }
 
