@@ -25,6 +25,7 @@ public class LobbySceneManager : BaseUI
     [SerializeField] private GameObject _signupPanel;
     [SerializeField] private GameObject _verifyPanel;
     [SerializeField] private GameObject _nicknamePanel;
+    [SerializeField] private DataManager _dataManager;
 
     [Header("Sign UP Panel")]
     [SerializeField] private TMP_InputField _emailSignupInput;
@@ -317,9 +318,8 @@ public class LobbySceneManager : BaseUI
         }
         else
         {
-            Debug.Log("dddddddddddddddd");
-            PhotonNetwork.LocalPlayer.NickName = user.DisplayName;
-            PhotonNetwork.ConnectUsingSettings();
+            Debug.Log("데이터 매니저 나와 주세요.");
+            DataManager.Instance.CheckLogin();
         }
     }
 
