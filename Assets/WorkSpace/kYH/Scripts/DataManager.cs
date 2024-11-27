@@ -7,6 +7,7 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Realtime;
 using System;
+using Photon.Pun;
 
 public class DataManager : MonoBehaviour
 {
@@ -22,7 +23,10 @@ public class DataManager : MonoBehaviour
     [SerializeField] private int _maxExp;
     public int MaxEXP { get { return _maxExp; } set { _maxExp = value; } }
 
+    private bool _isOnline;
+
     private DatabaseReference _userDataRef;
+    private DatabaseReference _onlineRef;
     private DatabaseReference _levelRef;
     private DatabaseReference _expRef;
     private DatabaseReference _curExpRef;
@@ -33,6 +37,7 @@ public class DataManager : MonoBehaviour
         string uid = BackendManager.Auth.CurrentUser.UserId;
         _userDataRef = BackendManager.Database.RootReference.Child("UserData").Child(uid);
         _levelRef = _userDataRef.Child("_level");
+        _onlineRef = _userDataRef.Child("_isOnline");
         _curExpRef = _userDataRef.Child("_curExp");
         _maxExpRef = _userDataRef.Child("_maxExp");
 
@@ -60,6 +65,7 @@ public class DataManager : MonoBehaviour
                 UserData userData = new UserData();
                 userData._email = BackendManager.Auth.CurrentUser.Email;
                 userData._name = BackendManager.Auth.CurrentUser.DisplayName;
+                userData._isOnline = true;
                 userData._level = 1;
                 userData._curExp = 0;
                 userData._maxExp = 100;
@@ -74,24 +80,69 @@ public class DataManager : MonoBehaviour
                 Debug.Log(json);
                 
                 UserData userData = JsonUtility.FromJson<UserData>(json);
+
+                /*// 코루틴 넣을 부분
+                // TODO : n초 대기 코루틴 구현 필요
+                if (userData._isOnline == false)
+                {
+                    Debug.LogWarning("안된다고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    BackendManager.Auth.SignOut();
+                    return;
+                }
+
+                _onlineRef.ValueChanged += (object sender, ValueChangedEventArgs e) => 
+                {
+                    Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    _onlineRef.SetValueAsync(false);
+                };
+
                 Debug.Log(userData._email);
                 Debug.Log(userData._name);
+                Debug.Log(userData._isOnline);
                 Debug.Log(userData._level);
                 Debug.Log(userData._curExp);
                 Debug.Log(userData._maxExp);
+                // 코루틴 넣을 부분 끝*/
             }
         });
 
         _levelRef.ValueChanged += LevelRef_ValueChanged;
-        _curExpRef.ValueChanged += CurEXPRef_ValueChanged;
-        _maxExpRef.ValueChanged += MaxEXPRef_ValueChanged;
+        /*_curExpRef.ValueChanged += CurEXPRef_ValueChanged;
+        _maxExpRef.ValueChanged += MaxEXPRef_ValueChanged;*/
     }
 
     private void OnDisable()
     {
         _levelRef.ValueChanged -= LevelRef_ValueChanged;
-        _curExpRef.ValueChanged -= CurEXPRef_ValueChanged;
-        _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;
+        /*_curExpRef.ValueChanged -= CurEXPRef_ValueChanged;
+        _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
+    }
+
+    IEnumerator WaitingRoutine(UserData userData)
+    {
+        
+
+        yield return new WaitForSeconds(3f);
+
+        if (userData._isOnline == false)
+        {
+            Debug.LogWarning("안된다고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            BackendManager.Auth.SignOut();
+            yield break;
+        }
+
+        _onlineRef.ValueChanged += (object sender, ValueChangedEventArgs e) =>
+        {
+            Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            _onlineRef.SetValueAsync(false);
+        };
+
+        Debug.Log(userData._email);
+        Debug.Log(userData._name);
+        Debug.Log(userData._isOnline);
+        Debug.Log(userData._level);
+        Debug.Log(userData._curExp);
+        Debug.Log(userData._maxExp);
     }
 
     private void LevelRef_ValueChanged(object sender, ValueChangedEventArgs e)
@@ -100,7 +151,7 @@ public class DataManager : MonoBehaviour
         _level = int.Parse(e.Snapshot.Value.ToString());
     }
 
-    private void CurEXPRef_ValueChanged(object sender, ValueChangedEventArgs e)
+    /*private void CurEXPRef_ValueChanged(object sender, ValueChangedEventArgs e)
     {
         Debug.Log($"값 변경 이벤트 확인 : {e.Snapshot.Value.ToString()}");
         _curExp = int.Parse(e.Snapshot.Value.ToString());
@@ -110,7 +161,7 @@ public class DataManager : MonoBehaviour
     {
         Debug.Log($"값 변경 이벤트 확인 : {e.Snapshot.Value.ToString()}");
         _maxExp = int.Parse(e.Snapshot.Value.ToString());
-    }
+    }*/
 
     public void LevelUp()
     {
@@ -121,10 +172,10 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public void CurEXPUp()
+    /*public void CurEXPUp()
     {
         _curExpRef.SetValueAsync(_curExp + _exp);
-    }
+    }*/
 }
 
 [Serializable]
@@ -132,6 +183,7 @@ public class UserData
 {
     public string _email;
     public string _name;
+    public bool _isOnline;
     public int _level;
     public int _curExp;
     public int _maxExp;
