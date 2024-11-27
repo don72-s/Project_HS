@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -39,32 +40,36 @@ public class RunnerController : PlayerControllerParent, IPunObservable
 
     private Renderer curBodyRenderer;
 
-    protected override void Start()
+    public LayerMask collisionLayer;
+
+protected override void Start()
+{
+    base.Start();
+
+    hp = 3;
+
+    // 자신의 플레이어일 경우만 카메라 활성화
+    if (photonView.IsMine)
     {
-
-        base.Start();
-
-        curBodyRenderer = null;
-
-        hp = 3;
-
-        if (photonView.IsMine == false) return;
-
         rb = gameObject.GetComponent<Rigidbody>();
-
         isJumped = false;
 
         networkPosition = transform.position;
         networkRotation = transform.rotation;
 
-        runnerCamera.transform.LookAt(transform.position);
+        // 카메라 활성화 (플레이어 자신의 카메라만 활성화)
         runnerCamera.gameObject.SetActive(true);
+        runnerCamera.transform.LookAt(transform.position);
 
-        //Cursor.visible = false;
-        //Cursor.lockState = CursorLockMode.Locked;
         hpPanel.gameObject.SetActive(true);
-
     }
+    else
+    {
+        // 다른 플레이어의 카메라는 비활성화
+        runnerCamera.gameObject.SetActive(false);
+    }
+}
+
 
     private void Update()
     {
@@ -170,8 +175,9 @@ public class RunnerController : PlayerControllerParent, IPunObservable
         if (input == 0) return;
 
         Vector3 moveDirection = transform.forward * input;
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
     }
+
 
     private void Rotate(int direction)
     {
@@ -191,6 +197,38 @@ public class RunnerController : PlayerControllerParent, IPunObservable
         xRotation = Mathf.Clamp(xRotation, 0, 60);
 
         runnerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        runnerCamera.transform.position = transform.position - runnerCamera.transform.forward * 5f + Vector3.up;
+
+        // 카메라 위치
+        Vector3 targetPosition = transform.position - runnerCamera.transform.forward * 2f + Vector3.up;
+
+        // 카메라와 플레이어 사이의 벡터값
+        Vector3 rayDir = targetPosition - transform.position;
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position + new Vector3(0, 0.3f, 0), rayDir, out hit, 3f, collisionLayer))
+        {
+            runnerCamera.transform.position = hit.point - rayDir.normalized * 0.3f;
+            Debug.Log(hit.collider.name);
+        }
+        else
+        {
+            runnerCamera.transform.position = targetPosition;
+        }
     }
+
+/*    private void RotateCamera()
+    {
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+
+        yRotation += mouseX * this.mouseX;
+        xRotation -= mouseY * this.mouseY;
+
+        xRotation = Mathf.Clamp(xRotation, 0, 60);
+
+        runnerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        runnerCamera.transform.position = transform.position - runnerCamera.transform.forward * 2f + Vector3.up;
+    }*/
+
 }
