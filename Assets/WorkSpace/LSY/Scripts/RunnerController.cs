@@ -92,13 +92,12 @@ public class RunnerController : PlayerControllerParent, IPunObservable
         hp -= damage;
         hpImages[hp+1].gameObject.SetActive(false);
 
-
-        if (hp == 0)
+        //TODO : 시체샷 처리 + HP 인덱스 에러 수정 필요
+        if (hp <= 0)
         {
             Debug.Log("player die");
             OnDeadEvent?.Invoke();
             PhotonNetwork.LocalPlayer.SetAlive(false);
-            Debug.Log("플레이어 상태 갱신 : " + false);
             hp = 0;
             //gameObject.SetActive(false);
             curBodyRenderer = changer.curBodyObject.GetComponent<Renderer>();
