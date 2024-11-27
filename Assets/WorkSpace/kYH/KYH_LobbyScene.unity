@@ -7018,7 +7018,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &726119413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9743,6 +9743,7 @@ MonoBehaviour:
   _signupPanel: {fileID: 368418760}
   _verifyPanel: {fileID: 1180519693}
   _nicknamePanel: {fileID: 1174421462}
+  _dataManager: {fileID: 726119413}
   _emailSignupInput: {fileID: 1707463163}
   _passwordSignupInput: {fileID: 91916770}
   _passwordConfirmInput: {fileID: 363087487}
