@@ -44,18 +44,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-
-
-        /*        PhotonNetwork.LocalPlayer.NickName = $"Player {Random.Range(1000, 10000)}";
-                PhotonNetwork.ConnectUsingSettings();*/
-
         resultText.gameObject.SetActive(false);
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
 
-
         StartCoroutine(WaitCO(2));
-
     }
 
     IEnumerator WaitCO(float waitTime)
@@ -78,10 +71,13 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (currentState == GameState.Waiting)
         {
-            TestGameStart();
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                TestGameStart();
+            }
+        } 
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -91,7 +87,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        base.OnPlayerLeftRoom(otherPlayer); // 기본 동작 호출
+        base.OnPlayerLeftRoom(otherPlayer);
+
         Debug.Log($"Player {otherPlayer.NickName} left the room.");
 
         if (currentState == GameState.Playing)
@@ -103,8 +100,17 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                runnersRemaining--;
-                Debug.Log($"Runners remaining: {runnersRemaining}");
+
+                if (otherPlayer.GetAlive() == false)
+                {
+                    photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
+                    Debug.Log("죽은사람 탈주");
+                }
+                else 
+                { 
+                    photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
+                    Debug.Log("산 사람 탈주");
+                }
 
                 if (runnersRemaining <= 0)
                 {
@@ -126,22 +132,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         StageData.Instance.StartChangeFormSlot();
     }
 
-    //TODO : 게임 중복시작 무시 예외처리 필요.
+    //TODO : 게임 중복시작 무시 예외처리 필요. 임시 해결
     public void TestGameStart()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-
             List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-            if (PhotonNetwork.IsMasterClient)
-            {
-                runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
-                LoadStage();
-            }
+            runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
+            photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
+
+            LoadStage();
         }
     }
-
 
     private void LoadStage()
     {
@@ -158,7 +161,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             yield return null;
             waitTime += Time.deltaTime;
-
         }
 
         if (inLoadingPlayer == 0)
@@ -167,26 +169,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             SetTeamsAndSpwan(); // 팀 배정 및 플레이어 스폰
 
-
             //타이머 활성화
             photonView.RPC("RPC_StartGame", RpcTarget.All);
 
             StartCoroutine(WaitPlayerSpawnCO());
-
         }
         else 
         {
             Debug.Log("로딩 시간 초과...");
         }
-
     }
 
     [PunRPC]
     void LoadSceneAdditive() {
-
         AsyncOperation op = SceneManager.LoadSceneAsync("lsy_GameScene_Additive", LoadSceneMode.Additive);
         op.completed += (_op) => { Debug.Log("완료!");photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient);};
-
     }
 
     void UnLoadScene()
@@ -197,14 +194,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void LoadSceneFinished() {
 
-
         if (inLoadingPlayer <= 0) {
             Debug.Log("뭔가 잘못됨.");
             return;
         }
-
         inLoadingPlayer--;
-
     }
 
     [PunRPC]
@@ -287,8 +281,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         resultText.text = message;
 
-        resultText.gameObject.SetActive(true); // 결과 텍스트 활성화
-        timeSlider.gameObject.SetActive(false); // 슬라이더 비활성화
+        resultText.gameObject.SetActive(true);
+        timeSlider.gameObject.SetActive(false);
 
         StartCoroutine(ReturnToLobby());
     }
@@ -297,7 +291,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
 
         yield return new WaitForSeconds(3f);
-        
+
+        currentState = GameState.Waiting;
+
         resultText.gameObject.SetActive(false);
 
         PhotonNetwork.Destroy(myIngamePlayer);
@@ -309,6 +305,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         Camera.main.transform.SetParent(null);
         Camera.main.GetComponent<CameraController>().FollowTarget = null;
+
+        PhotonNetwork.LocalPlayer.SetAlive(true);
 
     }
 
@@ -326,11 +324,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void OnPlayerCatchRpc()
     {
-        runnersRemaining--;
-        Debug.LogWarning("남은사람 : " + runnersRemaining);
-        if (runnersRemaining <= 0)
+        if (PhotonNetwork.IsMasterClient)
         {
-            EndGame("Seekers Win");
-        }
+            photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
+            
+            if (runnersRemaining <= 0)
+            {
+                EndGame("Seekers Win");
+            }
+        }   
+    }
+
+    [PunRPC]
+    private void UpdateRunnersRemaining(int Runners)
+    {
+        runnersRemaining = Runners;
+
+        Debug.LogWarning("Remaining runners : " + runnersRemaining);
     }
 }

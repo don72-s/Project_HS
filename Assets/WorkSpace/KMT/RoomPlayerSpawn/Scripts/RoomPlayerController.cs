@@ -45,6 +45,8 @@ public class RoomPlayerController : PlayerControllerParent, IPunObservable
         CameraController cam = Camera.main.GetComponent<CameraController>();
         cam.FollowTarget = null;
 
+        PhotonNetwork.LocalPlayer.SetAlive(true);
+
     }
 
     private void Update()
