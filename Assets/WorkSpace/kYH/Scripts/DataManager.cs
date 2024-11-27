@@ -49,8 +49,13 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    /// <summary>
+    /// 중복 로그인 여부를 체크하여 로그인 여부를 판단하는 함수.
+    /// </summary>
+    public void CheckLogin()
     {
+        _onlineRef.ValueChanged -= IsOnlineHasChanged;
+
         string uid = BackendManager.Auth.CurrentUser.UserId;
         _userDataRef = BackendManager.Database.RootReference.Child("UserData").Child(uid);
         _levelRef = _userDataRef.Child("_level");
