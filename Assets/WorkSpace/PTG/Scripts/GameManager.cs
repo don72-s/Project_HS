@@ -1,10 +1,8 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
-using Photon.Voice.Unity;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -77,7 +75,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 TestGameStart();
             }
-        } 
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -106,8 +104,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                     photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
                     Debug.Log("죽은사람 탈주");
                 }
-                else 
-                { 
+                else
+                {
                     photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
                     Debug.Log("산 사람 탈주");
                 }
@@ -153,11 +151,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     int inLoadingPlayer;
-    IEnumerator WaitLoadStageCO() {
+    IEnumerator WaitLoadStageCO()
+    {
 
         float waitTime = 0;
         inLoadingPlayer = PhotonNetwork.PlayerList.Length;
-        while (waitTime < 30f && inLoadingPlayer > 0) {
+        while (waitTime < 30f && inLoadingPlayer > 0)
+        {
 
             yield return null;
             waitTime += Time.deltaTime;
@@ -174,16 +174,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             StartCoroutine(WaitPlayerSpawnCO());
         }
-        else 
+        else
         {
             Debug.Log("로딩 시간 초과...");
         }
     }
 
     [PunRPC]
-    void LoadSceneAdditive() {
+    void LoadSceneAdditive()
+    {
         AsyncOperation op = SceneManager.LoadSceneAsync("lsy_GameScene_Additive", LoadSceneMode.Additive);
-        op.completed += (_op) => { Debug.Log("완료!");photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient);};
+        op.completed += (_op) => { Debug.Log("완료!"); photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient); };
     }
 
     void UnLoadScene()
@@ -192,9 +193,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void LoadSceneFinished() {
+    void LoadSceneFinished()
+    {
 
-        if (inLoadingPlayer <= 0) {
+        if (inLoadingPlayer <= 0)
+        {
             Debug.Log("뭔가 잘못됨.");
             return;
         }
@@ -327,12 +330,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
-            
+
             if (runnersRemaining <= 0)
             {
                 EndGame("Seekers Win");
             }
-        }   
+        }
     }
 
     [PunRPC]
