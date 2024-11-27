@@ -319,7 +319,7 @@ public class LobbySceneManager : BaseUI
         else
         {
             Debug.Log("데이터 매니저 나와 주세요.");
-            _dataManager.CheckLogin();
+            DataManager.Instance.CheckLogin();
         }
     }
 

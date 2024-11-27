@@ -54,14 +54,14 @@ public class DataManager : MonoBehaviour
     /// </summary>
     public void CheckLogin()
     {
-        _onlineRef.ValueChanged -= IsOnlineHasChanged;
-
         string uid = BackendManager.Auth.CurrentUser.UserId;
         _userDataRef = BackendManager.Database.RootReference.Child("UserData").Child(uid);
         _levelRef = _userDataRef.Child("_level");
         _onlineRef = _userDataRef.Child("_isOnline");
         _curExpRef = _userDataRef.Child("_curExp");
         _maxExpRef = _userDataRef.Child("_maxExp");
+
+        _onlineRef.ValueChanged -= IsOnlineHasChanged;
 
         _userDataRef.GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -110,6 +110,7 @@ public class DataManager : MonoBehaviour
                 
                 UserData userData = JsonUtility.FromJson<UserData>(json);
 
+                Debug.Log("코루틴 시작");
                 StartCoroutine(WaitingRoutine(_onlineRef));
             }
         });
@@ -136,13 +137,11 @@ public class DataManager : MonoBehaviour
 
         onlineRef.GetValueAsync().ContinueWithOnMainThread(t => {
 
-            bool isOnline = false;
 
             Debug.Log(t.Result.Value);
-            isOnline = (bool)t.Result.Value;
-            Debug.Log("Adsadsfasdfasdfasddasdfasdff");
+            Debug.Log("가져온값...");
 
-            if (isOnline == true)
+            if ((bool)t.Result.Value == true)
             {
                 Debug.LogWarning("안된다고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 BackendManager.Auth.SignOut();
@@ -160,12 +159,6 @@ public class DataManager : MonoBehaviour
     }
 
     void IsOnlineHasChanged(object sender, ValueChangedEventArgs e) {
-
-        if (lastOnlineState == (bool)e.Snapshot.Value)
-        {
-            Debug.Log("같은거 바뀌는 이벤트임.");
-            return;
-        }
 
         Debug.Log("다른 값으로 바뀜");
 
