@@ -52,4 +52,27 @@ public static class CustomProperties
             return false;
         }
     }
+
+    public const string ALIVE = "alive";
+
+    public static void SetAlive(this Player player, bool alive)
+    {
+        customProperty.Clear();
+        customProperty[ALIVE] = alive;
+        player.SetCustomProperties(customProperty);
+    }
+
+    public static bool GetAlive(this Player player)
+    {
+        PhotonHashtable customProperty = player.CustomProperties;
+        if (customProperty.ContainsKey(ALIVE))
+        {
+            return (bool)customProperty[ALIVE];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 }

@@ -100,7 +100,17 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
+
+                if (otherPlayer.GetAlive() == false)
+                {
+                    photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
+                    Debug.Log("죽은사람 탈주");
+                }
+                else 
+                { 
+                    photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
+                    Debug.Log("산 사람 탈주");
+                }
 
                 if (runnersRemaining <= 0)
                 {
@@ -295,6 +305,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         Camera.main.transform.SetParent(null);
         Camera.main.GetComponent<CameraController>().FollowTarget = null;
+
+        PhotonNetwork.LocalPlayer.SetAlive(true);
 
     }
 
