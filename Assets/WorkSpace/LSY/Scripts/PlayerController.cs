@@ -193,14 +193,14 @@ public class PlayerController : PlayerControllerParent, IPunObservable
     {
         if (input == Vector3.zero) 
         {
-            playerAni.SetFloat("Move", -1);
-            gunAni.SetFloat("Move", -1);
+            playerAni.SetBool("Move", false);
+            gunAni.SetBool("Move", false);
             return; 
         }
 
         photonView.RPC("PlayWalkSound", RpcTarget.AllViaServer);
-        playerAni.SetFloat("Move", 1);
-        gunAni.SetFloat("Move", 1);
+        playerAni.SetBool("Move", true);
+        gunAni.SetBool("Move", true);
 
         Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
