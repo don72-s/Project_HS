@@ -32,6 +32,9 @@ public class DataManager : MonoBehaviour
     private DatabaseReference _curExpRef;
     private DatabaseReference _maxExpRef;
 
+
+    bool lastOnlineState = false;
+
     private void OnEnable()
     {
         string uid = BackendManager.Auth.CurrentUser.UserId;
@@ -70,6 +73,27 @@ public class DataManager : MonoBehaviour
                 userData._curExp = 0;
                 userData._maxExp = 100;
 
+                lastOnlineState = true;
+
+                _onlineRef.ValueChanged += (object sender, ValueChangedEventArgs e) =>
+                {
+                    if (lastOnlineState == (bool)e.Snapshot.Value)
+                    {
+                        Debug.Log("같은거 바뀌는 이벤트임.");
+                        return;
+                    }
+
+                    Debug.Log("다른 값으로 바뀜");
+
+                    lastOnlineState = (bool)e.Snapshot.Value;
+
+                    if (!(bool)e.Snapshot.Value)
+                    {
+                        Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        _onlineRef.SetValueAsync(true);
+                    }
+                };
+
                 string json = JsonUtility.ToJson(userData);
                 _userDataRef.SetRawJsonValueAsync(json);
             }
@@ -81,28 +105,7 @@ public class DataManager : MonoBehaviour
                 
                 UserData userData = JsonUtility.FromJson<UserData>(json);
 
-                /*// 코루틴 넣을 부분
-                // TODO : n초 대기 코루틴 구현 필요
-                if (userData._isOnline == false)
-                {
-                    Debug.LogWarning("안된다고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    BackendManager.Auth.SignOut();
-                    return;
-                }
-
-                _onlineRef.ValueChanged += (object sender, ValueChangedEventArgs e) => 
-                {
-                    Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    _onlineRef.SetValueAsync(false);
-                };
-
-                Debug.Log(userData._email);
-                Debug.Log(userData._name);
-                Debug.Log(userData._isOnline);
-                Debug.Log(userData._level);
-                Debug.Log(userData._curExp);
-                Debug.Log(userData._maxExp);
-                // 코루틴 넣을 부분 끝*/
+                StartCoroutine(WaitingRoutine(_onlineRef));
             }
         });
 
@@ -118,31 +121,50 @@ public class DataManager : MonoBehaviour
         _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
     }
 
-    IEnumerator WaitingRoutine(UserData userData)
+    IEnumerator WaitingRoutine(DatabaseReference onlineRef)
     {
-        
+        onlineRef.SetValueAsync(false);
 
         yield return new WaitForSeconds(3f);
 
-        if (userData._isOnline == false)
-        {
-            Debug.LogWarning("안된다고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            BackendManager.Auth.SignOut();
-            yield break;
-        }
 
-        _onlineRef.ValueChanged += (object sender, ValueChangedEventArgs e) =>
-        {
-            Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            _onlineRef.SetValueAsync(false);
-        };
+        onlineRef.GetValueAsync().ContinueWithOnMainThread(t => {
 
-        Debug.Log(userData._email);
-        Debug.Log(userData._name);
-        Debug.Log(userData._isOnline);
-        Debug.Log(userData._level);
-        Debug.Log(userData._curExp);
-        Debug.Log(userData._maxExp);
+            bool isOnline = false;
+
+            Debug.Log(t.Result.Value);
+            isOnline = (bool)t.Result.Value;
+            Debug.Log("Adsadsfasdfasdfasddasdfasdff");
+
+            if (isOnline == true)
+            {
+                Debug.LogWarning("안된다고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                BackendManager.Auth.SignOut();
+                return;
+            }
+
+            _onlineRef.ValueChanged += (object sender, ValueChangedEventArgs e) =>
+            {
+                if (lastOnlineState == (bool)e.Snapshot.Value)
+                {
+                    Debug.Log("같은거 바뀌는 이벤트임.");
+                    return;
+                }
+
+                Debug.Log("다른 값으로 바뀜");
+
+                lastOnlineState = (bool)e.Snapshot.Value;
+
+                if (!(bool)e.Snapshot.Value)
+                {
+                    Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    _onlineRef.SetValueAsync(true);
+                }
+            };
+
+        });
+
+     
     }
 
     private void LevelRef_ValueChanged(object sender, ValueChangedEventArgs e)
