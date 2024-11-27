@@ -75,24 +75,7 @@ public class DataManager : MonoBehaviour
 
                 lastOnlineState = true;
 
-                _onlineRef.ValueChanged += (object sender, ValueChangedEventArgs e) =>
-                {
-                    if (lastOnlineState == (bool)e.Snapshot.Value)
-                    {
-                        Debug.Log("같은거 바뀌는 이벤트임.");
-                        return;
-                    }
-
-                    Debug.Log("다른 값으로 바뀜");
-
-                    lastOnlineState = (bool)e.Snapshot.Value;
-
-                    if (!(bool)e.Snapshot.Value)
-                    {
-                        Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                        _onlineRef.SetValueAsync(true);
-                    }
-                };
+                _onlineRef.ValueChanged += IsOnlineHasChanged;
 
                 string json = JsonUtility.ToJson(userData);
                 _userDataRef.SetRawJsonValueAsync(json);
@@ -117,6 +100,7 @@ public class DataManager : MonoBehaviour
     private void OnDisable()
     {
         _levelRef.ValueChanged -= LevelRef_ValueChanged;
+        _onlineRef.ValueChanged -= IsOnlineHasChanged;
         /*_curExpRef.ValueChanged -= CurEXPRef_ValueChanged;
         _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
     }
@@ -143,28 +127,31 @@ public class DataManager : MonoBehaviour
                 return;
             }
 
-            _onlineRef.ValueChanged += (object sender, ValueChangedEventArgs e) =>
-            {
-                if (lastOnlineState == (bool)e.Snapshot.Value)
-                {
-                    Debug.Log("같은거 바뀌는 이벤트임.");
-                    return;
-                }
-
-                Debug.Log("다른 값으로 바뀜");
-
-                lastOnlineState = (bool)e.Snapshot.Value;
-
-                if (!(bool)e.Snapshot.Value)
-                {
-                    Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    _onlineRef.SetValueAsync(true);
-                }
-            };
+            _onlineRef.ValueChanged += IsOnlineHasChanged;
 
         });
 
      
+    }
+
+    void IsOnlineHasChanged(object sender, ValueChangedEventArgs e) {
+
+        if (lastOnlineState == (bool)e.Snapshot.Value)
+        {
+            Debug.Log("같은거 바뀌는 이벤트임.");
+            return;
+        }
+
+        Debug.Log("다른 값으로 바뀜");
+
+        lastOnlineState = (bool)e.Snapshot.Value;
+
+        if (!(bool)e.Snapshot.Value)
+        {
+            Debug.LogWarning("다른사람이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            _onlineRef.SetValueAsync(true);
+        }
+
     }
 
     private void LevelRef_ValueChanged(object sender, ValueChangedEventArgs e)
