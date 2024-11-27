@@ -100,8 +100,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                UpdateRunnersRemaining(runnersRemaining - 1);
-                Debug.Log($"Runners remaining: {runnersRemaining}");
+                photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
 
                 if (runnersRemaining <= 0)
                 {
@@ -131,7 +130,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
             runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
-            UpdateRunnersRemaining(runnersRemaining);
+            photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
 
             LoadStage();
         }
@@ -313,29 +312,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void OnPlayerCatchRpc()
     {
-        UpdateRunnersRemaining(runnersRemaining - 1);
-
-        Debug.LogWarning("Remaining runners : " + runnersRemaining);
-        if (runnersRemaining <= 0)
+        if (PhotonNetwork.IsMasterClient)
         {
-            EndGame("Seekers Win");
-        }
+            photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
+            
+            if (runnersRemaining <= 0)
+            {
+                EndGame("Seekers Win");
+            }
+        }   
     }
 
     [PunRPC]
-    private void AlertRunnersRemaining(int Runners)
-    {
-        runnersRemaining = Runners;
-        Debug.Log($"Runners remaining: {runnersRemaining}");
-    }
-
     private void UpdateRunnersRemaining(int Runners)
     {
         runnersRemaining = Runners;
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            photonView.RPC("AlertRunnersRemaining", RpcTarget.All, runnersRemaining);
-        }
+        Debug.LogWarning("Remaining runners : " + runnersRemaining);
     }
 }
