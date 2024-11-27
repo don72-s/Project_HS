@@ -106,17 +106,14 @@ public class ObjectSlotMachine : MonoBehaviour
 
     public void ChangeObjButton1() {
         changeableObj.ChangeForm(idxArr[0]);
-        MouseLocker.Instance.MouseLock();
         CloseWindow();
     }
     public void ChangeObjButton2() {
         changeableObj.ChangeForm(idxArr[1]);
-        MouseLocker.Instance.MouseLock();
         CloseWindow();
     }
     public void ChangeObjButton3() {
         changeableObj.ChangeForm(idxArr[2]);
-        MouseLocker.Instance.MouseLock();
         CloseWindow();
     }
 
@@ -142,6 +139,11 @@ public class ObjectSlotMachine : MonoBehaviour
         StopCoroutine(countdownCoroutine);
         countdownCoroutine = null;
         gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        MouseLocker.Instance.MouseLock();
     }
 
 }
