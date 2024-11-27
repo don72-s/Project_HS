@@ -35,6 +35,20 @@ public class DataManager : MonoBehaviour
 
     bool lastOnlineState = false;
 
+    public static DataManager Instance { get; private set; } = null;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else {
+            Destroy(gameObject);
+        }
+    }
+
     private void OnEnable()
     {
         string uid = BackendManager.Auth.CurrentUser.UserId;
@@ -79,6 +93,9 @@ public class DataManager : MonoBehaviour
 
                 string json = JsonUtility.ToJson(userData);
                 _userDataRef.SetRawJsonValueAsync(json);
+
+                PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.DisplayName;
+                PhotonNetwork.ConnectUsingSettings();
             }
             else
             {
@@ -128,6 +145,9 @@ public class DataManager : MonoBehaviour
             }
 
             _onlineRef.ValueChanged += IsOnlineHasChanged;
+
+            PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.DisplayName;
+            PhotonNetwork.ConnectUsingSettings();
 
         });
 
