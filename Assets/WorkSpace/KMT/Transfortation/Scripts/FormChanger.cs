@@ -53,8 +53,12 @@ public class FormChanger : MonoBehaviourPunCallbacks,
         StageData.Instance.RemoveChangeableObj(this);
         isAlive = false;
 
-        if (photonView.IsMine) {
+        if (photonView.IsMine)
+        {
             ghostObj.SetActive(true);
+        }
+        else {
+            gameObject.SetActive(false);
         }
 
         if (curBodyObject != null)
