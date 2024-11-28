@@ -202,8 +202,8 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         playerAni.SetBool("Move", true);
         gunAni.SetBool("Move", true);
 
-        Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        Vector3 moveDirection = transform.forward * input.z;
+        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
     }
 
     [PunRPC]

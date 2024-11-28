@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/WorkSpace/KMT/LoadAdditiveScene/Scenes/lsy_GameScene_Additive.unity
     guid: b4d3d272e38488f468be62f73e110c57
+  - enabled: 1
+    path: Assets/WorkSpace/LSY/lsy_GameScene_Clone.unity
+    guid: 9eac57f63b44a624b88a6b332fbf107d
+  - enabled: 1
+    path: Assets/WorkSpace/KMT/SeekerBind/Scenes/GameScene_Seeker_Blind.unity
+    guid: 66d7a3ca300d49448984ac1c1b5e7484
   m_configObjects: {}
