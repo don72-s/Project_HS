@@ -39,6 +39,9 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     // 로그인 성공 시 MenuPanel로 전환
     public override void OnConnectedToMaster()
     {
+        if (PhotonNetwork.AuthValues.UserId == FriendChecker.CheckName)
+            return;
+
         Debug.Log("Login Success!");
         _dataManager.SetActive(true);
         SetActivePanel(Panel.Lobby);

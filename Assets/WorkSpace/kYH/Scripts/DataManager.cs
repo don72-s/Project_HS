@@ -49,6 +49,15 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    public void CheckLoginPhotonFriend() {
+
+        PhotonNetwork.AuthValues = new AuthenticationValues();
+        PhotonNetwork.AuthValues.UserId = FriendChecker.CheckName;
+        PhotonNetwork.NickName = BackendManager.Auth.CurrentUser.UserId;
+        PhotonNetwork.ConnectUsingSettings();
+
+    }
+
     /// <summary>
     /// 중복 로그인 여부를 체크하여 로그인 여부를 판단하는 함수.
     /// </summary>
