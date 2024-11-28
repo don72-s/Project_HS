@@ -23,10 +23,12 @@ public static class CustomProperties
         PhotonHashtable customProperty = player.CustomProperties;
         if (customProperty.ContainsKey(READY))
         {
+            Debug.Log("제발 되라 좀!!!!!!!!!!!!!!!!!");
             return (bool)customProperty[READY];
         }
         else
         {
+            Debug.Log("왜 안되냐고!!!!!!!!!!!!!!!!!");
             return false;
         }
     }

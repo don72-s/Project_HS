@@ -46,10 +46,6 @@ public class LobbySceneManager : BaseUI
     [SerializeField] private TMP_InputField _roomNameInput;
     [SerializeField] private TMP_InputField _maxPlayerInput;
 
-    [Header("Room Panel")]
-    [SerializeField] private GameObject _roomPanel;
-    [SerializeField] private Button _startButton;
-
     private void Awake()
     {
         BindAll();
@@ -71,8 +67,6 @@ public class LobbySceneManager : BaseUI
         AddEvent("LogOutButton", EventType.Click, LogOut);
         AddEvent("CreateButton", EventType.Click, MakeRoom);
         AddEvent("CancelButton_04", EventType.Click, Cancel_04);
-        AddEvent("BackToLobbyButton", EventType.Click, BackToLobby);
-        AddEvent("StartButton", EventType.Click, StartGame);
     }
 
     #region Login UI
@@ -283,7 +277,7 @@ public class LobbySceneManager : BaseUI
     }
     #endregion
 
-    #region Room UI
+    /*#region Room UI
     public void BackToLobby(PointerEventData eventData)
     {
         PhotonNetwork.LeaveRoom();
@@ -294,7 +288,7 @@ public class LobbySceneManager : BaseUI
         PhotonNetwork.LoadLevel("GameScene");
         PhotonNetwork.CurrentRoom.IsOpen = false;
     }
-    #endregion
+    #endregion*/
 
     private void CheckUserInfo()
     {
