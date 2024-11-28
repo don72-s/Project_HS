@@ -7245,6 +7245,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
+--- !u!114 &1627490623 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
+  m_PrefabInstance: {fileID: 1627490622}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70ce0313294799c42839a117ee34fb2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1631559390
 GameObject:
   m_ObjectHideFlags: 0
@@ -8886,6 +8897,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2063862190}
   - component: {fileID: 2063862189}
+  - component: {fileID: 2063862191}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -8907,6 +8919,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roomManager: {fileID: 2063862188}
   _startButton: {fileID: 1103698867}
+  _gameManager: {fileID: 1627490623}
 --- !u!4 &2063862190
 Transform:
   m_ObjectHideFlags: 0
@@ -8923,6 +8936,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2063862191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2063862188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734ce2309b41bbd46b75dca06d318e32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _roomUpdate: {fileID: 1112506917}
 --- !u!1 &2078065099
 GameObject:
   m_ObjectHideFlags: 0

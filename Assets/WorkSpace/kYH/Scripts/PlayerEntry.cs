@@ -14,10 +14,11 @@ public class PlayerEntry : BaseUI
     [SerializeField] private TMP_Text _readyText;
     [SerializeField] private TMP_Text _nameText;
     [SerializeField] private Button _readyButton;
+    private bool _isCheck;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F5))
+        if (_isCheck && Input.GetKeyDown(KeyCode.F5))
         {
             Debug.Log("ทนต๐!!!!!!!!!!!!!!!!!!!!!!");
             bool ready = PhotonNetwork.LocalPlayer.GetReady();
@@ -47,6 +48,10 @@ public class PlayerEntry : BaseUI
             _nameText.text = player.NickName;
         }
 
+        if (PhotonNetwork.LocalPlayer.NickName == _nameText.text)
+        {
+            _isCheck = true;
+        }
         _readyButton.gameObject.SetActive(true);
         _readyButton.interactable = player == PhotonNetwork.LocalPlayer;
 
