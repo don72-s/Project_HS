@@ -49,6 +49,12 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    public static void Create() {
+
+        Instantiate(Resources.Load<DataManager>("Singletons/DataManager"));
+
+    }
+
     /// <summary>
     /// 중복 로그인 여부를 체크하여 로그인 여부를 판단하는 함수.
     /// </summary>
@@ -61,7 +67,7 @@ public class DataManager : MonoBehaviour
         _curExpRef = _userDataRef.Child("_curExp");
         _maxExpRef = _userDataRef.Child("_maxExp");
 
-        _onlineRef.ValueChanged -= IsOnlineHasChanged;
+        //_onlineRef.ValueChanged -= IsOnlineHasChanged;
 
         _userDataRef.GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -111,7 +117,8 @@ public class DataManager : MonoBehaviour
                 UserData userData = JsonUtility.FromJson<UserData>(json);
 
                 Debug.Log("코루틴 시작");
-                StartCoroutine(WaitingRoutine(_onlineRef));
+                CheckMultipleLogin();
+                //StartCoroutine(WaitingRoutine(_onlineRef));
             }
         });
 
@@ -126,6 +133,14 @@ public class DataManager : MonoBehaviour
         //_onlineRef.ValueChanged -= IsOnlineHasChanged;
         /*_curExpRef.ValueChanged -= CurEXPRef_ValueChanged;
         _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
+    }
+
+    void CheckMultipleLogin()
+    {
+        PhotonNetwork.AuthValues = new AuthenticationValues();
+        PhotonNetwork.AuthValues.UserId = FriendCheck.CheckName;
+        PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.UserId;
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     IEnumerator WaitingRoutine(DatabaseReference onlineRef)

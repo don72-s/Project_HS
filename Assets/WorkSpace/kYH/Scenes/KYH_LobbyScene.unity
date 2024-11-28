@@ -7002,54 +7002,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 725755774}
   m_CullTransparentMesh: 1
---- !u!1 &726119412
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 726119414}
-  - component: {fileID: 726119413}
-  m_Layer: 0
-  m_Name: DataManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &726119413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 726119412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4328d43529d60945b0c72cc047cea74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _level: 0
-  _exp: 0
-  _curExp: 0
-  _maxExp: 0
---- !u!4 &726119414
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 726119412}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 963.1583, y: 539.15674, z: 3.3938622}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &735166452
 GameObject:
   m_ObjectHideFlags: 0
@@ -9743,7 +9695,7 @@ MonoBehaviour:
   _signupPanel: {fileID: 368418760}
   _verifyPanel: {fileID: 1180519693}
   _nicknamePanel: {fileID: 1174421462}
-  _dataManager: {fileID: 726119413}
+  _dataManager: {fileID: 0}
   _emailSignupInput: {fileID: 1707463163}
   _passwordSignupInput: {fileID: 91916770}
   _passwordConfirmInput: {fileID: 363087487}
@@ -9754,8 +9706,6 @@ MonoBehaviour:
   _roomTransform: {fileID: 518659184}
   _roomNameInput: {fileID: 541605595}
   _maxPlayerInput: {fileID: 1924833663}
-  _roomPanel: {fileID: 2080105904}
-  _startButton: {fileID: 252410998}
 --- !u!4 &1061976819
 Transform:
   m_ObjectHideFlags: 0
@@ -9789,7 +9739,6 @@ MonoBehaviour:
   _loginPanel: {fileID: 648869382}
   _roomPanel: {fileID: 2080105904}
   _lobbyPanel: {fileID: 278748846}
-  _dataManager: {fileID: 726119412}
 --- !u!1 &1063211109
 GameObject:
   m_ObjectHideFlags: 0

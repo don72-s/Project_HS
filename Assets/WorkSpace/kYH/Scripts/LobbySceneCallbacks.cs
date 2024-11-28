@@ -38,6 +38,14 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     // 로그인 성공 시 MenuPanel로 전환
     public override void OnConnectedToMaster()
     {
+        Debug.Log("<color=yellow>메인방면 연결 콜백</color>");
+
+        if (PhotonNetwork.AuthValues.UserId == FriendCheck.CheckName) 
+        {
+            Debug.Log("테스트 시도용 접속입니다.<color=red>[main callback]</color>");
+            return;
+        }
+
         Debug.Log("Login Success!");
         SetActivePanel(Panel.Lobby);
         PhotonNetwork.JoinLobby();
@@ -47,6 +55,15 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     // 로그로 로그아웃 사유 표시
     public override void OnDisconnected(DisconnectCause cause)
     {
+
+        Debug.Log("<color=yellow>메인방면 연결 해제 콜백</color>");
+
+        if (PhotonNetwork.AuthValues.UserId == FriendCheck.CheckName)
+        {
+            Debug.Log("테스트 시도용 접속 해제입니다.<color=red>[main logout callback]</color>");
+            return;
+        }
+
         Debug.Log($"Logout! (Cause : {cause})");
         SetActivePanel(Panel.Login);
         PhotonNetwork.LeaveLobby();
