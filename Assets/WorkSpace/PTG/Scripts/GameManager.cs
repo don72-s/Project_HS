@@ -367,6 +367,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         Debug.Log("LeftRoom");
+        SceneManager.LoadSceneAsync("KYH_LobbyScene");
+        PhotonNetwork.JoinLobby();
         //PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 복귀
     }
 

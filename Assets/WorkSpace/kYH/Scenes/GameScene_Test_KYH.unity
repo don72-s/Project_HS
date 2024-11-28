@@ -8924,6 +8924,7 @@ MonoBehaviour:
   _roomManager: {fileID: 2063862188}
   _startButton: {fileID: 1103698867}
   _gameManager: {fileID: 1627490623}
+  voice: {fileID: 1543667916}
 --- !u!4 &2063862190
 Transform:
   m_ObjectHideFlags: 0

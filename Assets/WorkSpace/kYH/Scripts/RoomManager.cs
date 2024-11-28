@@ -16,12 +16,16 @@ using Firebase.Extensions;
 using WebSocketSharp;
 using Photon.Realtime;
 using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
+using UnityEngine.SceneManagement;
 
 public class RoomManager : BaseUI
 {
     [SerializeField] private GameObject _roomManager;
     [SerializeField] private Button _startButton;
     [SerializeField] private GameManager _gameManager;
+
+    [SerializeField]
+    GameObject voice;
 
     private void Awake()
     {
@@ -36,6 +40,9 @@ public class RoomManager : BaseUI
 
     public void BackToLobby(PointerEventData eventData)
     {
+        if (voice != null)
+            Destroy(voice);
+
         PhotonNetwork.LeaveRoom();
     }
 

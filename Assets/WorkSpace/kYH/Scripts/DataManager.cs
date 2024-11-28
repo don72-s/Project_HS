@@ -123,7 +123,7 @@ public class DataManager : MonoBehaviour
     private void OnDisable()
     {
         //_levelRef.ValueChanged -= LevelRef_ValueChanged;
-        _onlineRef.ValueChanged -= IsOnlineHasChanged;
+        //_onlineRef.ValueChanged -= IsOnlineHasChanged;
         /*_curExpRef.ValueChanged -= CurEXPRef_ValueChanged;
         _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
     }
