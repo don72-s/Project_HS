@@ -75,17 +75,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel("GameScene_Test_KYH");
     }
 
-    // 방에 입장 시 RoomPanel의 EnterPlayer을 입장한 플레이어에게 실행
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        _roomUpdate.EnterPlayer(newPlayer);
-    }
-
-    // 방에서 퇴장 시 RoomPanel의 ExitPlayer을 퇴장한 플레이어에게 실행
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        _roomUpdate.ExitPlayer(otherPlayer);
-    }
+    
 
     // 방에 입장한 플레이어의 프로퍼티를 변경
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)

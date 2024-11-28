@@ -21,7 +21,7 @@ public class RoomManager : BaseUI
 {
     [SerializeField] private GameObject _roomManager;
     [SerializeField] private Button _startButton;
-    private GameManager _gameManager;
+    [SerializeField] private GameManager _gameManager;
 
     private void Awake()
     {
