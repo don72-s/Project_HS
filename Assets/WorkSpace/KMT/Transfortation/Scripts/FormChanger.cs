@@ -43,7 +43,6 @@ public class FormChanger : MonoBehaviourPunCallbacks,
 
     void OnDead() {
 
-        ghostObj.SetActive(true);
         photonView.RPC("OnDeadRpc", RpcTarget.All);
 
     }
@@ -53,6 +52,10 @@ public class FormChanger : MonoBehaviourPunCallbacks,
 
         StageData.Instance.RemoveChangeableObj(this);
         isAlive = false;
+
+        if (photonView.IsMine) {
+            ghostObj.SetActive(true);
+        }
 
         if (curBodyObject != null)
         {
