@@ -419,7 +419,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             GameObject seeker = myIngamePlayer;
 
-            seeker.GetComponent<Renderer>().enabled = false;
             seeker.GetComponent<PlayerController>().enabled = false;
 
             blind.gameObject.SetActive(true);
@@ -432,7 +431,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(freezeDuration);
 
-        seeker.GetComponent<Renderer>().enabled = true;
         seeker.GetComponent<PlayerController>().enabled = true;
 
         blind.gameObject.SetActive(false);
