@@ -1358,6 +1358,10 @@ PrefabInstance:
       propertyPath: timeSlider
       value: 
       objectReference: {fileID: 29293123}
+    - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
+      propertyPath: ghostPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 958745142335686053, guid: e60c0c8a3a7389b4caa0f50ca418470a, type: 3}
     - target: {fileID: 5013748577069544913, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: m_RootOrder
       value: 16
