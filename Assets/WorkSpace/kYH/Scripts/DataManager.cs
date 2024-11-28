@@ -115,14 +115,14 @@ public class DataManager : MonoBehaviour
             }
         });
 
-        _levelRef.ValueChanged += LevelRef_ValueChanged;
+        //_levelRef.ValueChanged += LevelRef_ValueChanged;
         /*_curExpRef.ValueChanged += CurEXPRef_ValueChanged;
         _maxExpRef.ValueChanged += MaxEXPRef_ValueChanged;*/
     }
 
     private void OnDisable()
     {
-        _levelRef.ValueChanged -= LevelRef_ValueChanged;
+        //_levelRef.ValueChanged -= LevelRef_ValueChanged;
         _onlineRef.ValueChanged -= IsOnlineHasChanged;
         /*_curExpRef.ValueChanged -= CurEXPRef_ValueChanged;
         _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
