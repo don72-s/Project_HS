@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RunnerController))]
 public class FormChanger : MonoBehaviourPunCallbacks, 
     IFormChangeable
 {
@@ -11,6 +12,8 @@ public class FormChanger : MonoBehaviourPunCallbacks,
     ChangeUIBinder changeCanvasPrefab;
 
     ChangeUIBinder changeCanvas;
+
+    bool isAlive = true;
 
     [Header("Base body Object")]
     [SerializeField]
@@ -24,6 +27,8 @@ public class FormChanger : MonoBehaviourPunCallbacks,
 
         objArr = StageData.Instance.ChangeableSO.ChangeableObjArr;
         StageData.Instance.AddChangeableObj(this);
+
+        GetComponent<RunnerController>().OnDeadEvent.AddListener(OnDead);
     }
 
 
@@ -33,8 +38,33 @@ public class FormChanger : MonoBehaviourPunCallbacks,
 
     }
 
+    void OnDead() {
+
+        //TODO : 유령 활성화.
+        photonView.RPC("OnDeadRpc", RpcTarget.All);
+
+    }
+
+    [PunRPC]
+    void OnDeadRpc() {
+
+        StageData.Instance.RemoveChangeableObj(this);
+        isAlive = false;
+
+        if (curBodyObject != null)
+        {
+            Destroy(curBodyObject);
+        }
+
+    }
+
     [PunRPC]
     void StartFormChangeRpc() {
+
+        if (!isAlive) {
+            Debug.Log("이미 죽음");
+            return;
+        }
 
         if (photonView.IsMine)
         {
@@ -47,6 +77,13 @@ public class FormChanger : MonoBehaviourPunCallbacks,
     {
         if (!photonView.IsMine)
             return;
+
+        if (!isAlive)
+        {
+            Debug.Log("이미 죽음");
+            return;
+        }
+
         photonView.RPC("ChangeFormRpc", RpcTarget.AllViaServer, objIdx);
     }
 
@@ -58,6 +95,7 @@ public class FormChanger : MonoBehaviourPunCallbacks,
     [PunRPC]
     public void ChangeFormRpc(int destObjidx)
     {
+
         //TODO : 플레이어 회전값? 고정 회전값?
         GameObject tmpObj = Instantiate(objArr[destObjidx], transform);
 
