@@ -14,10 +14,10 @@ public class RoomUpdate : MonoBehaviour
 
     private void OnEnable()
     {
-        UpdatePlayers();
         PlayerNumbering.OnPlayerNumberingChanged += UpdatePlayers;
         PhotonNetwork.LocalPlayer.SetReady(false);
         PhotonNetwork.LocalPlayer.SetLoad(false);
+        UpdatePlayers();
     }
 
     private void OnDisable()
@@ -86,7 +86,7 @@ public class RoomUpdate : MonoBehaviour
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel("GameScene");
+        //PhotonNetwork.LoadLevel("GameScene");
         PhotonNetwork.CurrentRoom.IsOpen = false;
     }
 

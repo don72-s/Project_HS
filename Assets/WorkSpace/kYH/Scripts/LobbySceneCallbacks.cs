@@ -71,7 +71,6 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         //SetActivePanel(Panel.Room);
         //PhotonNetwork.LoadLevel("Test_RoomScene");
         PhotonNetwork.LoadLevel("GameScene_Test_KYH");
-        
     }
 
     
@@ -103,7 +102,6 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     {
         Debug.Log("Left Room Success!");
         SetActivePanel(Panel.Lobby);
-        PhotonNetwork.LocalPlayer.SetReady(false);
     }
 
     // 랜덤매칭 실패 시 실패 사유가 적힌 로그 출력
