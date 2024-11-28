@@ -52,6 +52,8 @@ public class BackendManager : MonoBehaviour
                 auth = FirebaseAuth.DefaultInstance;
                 database = FirebaseDatabase.DefaultInstance;
 
+                BackendManager.Database.SetPersistenceEnabled(false);
+
                 Debug.Log("Firebase 의존성 체크 성공!!!!!!!!!");
 
                 DatabaseReference root = BackendManager.Database.RootReference;

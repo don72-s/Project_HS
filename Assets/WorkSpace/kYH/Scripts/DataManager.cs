@@ -8,6 +8,7 @@ using Firebase.Extensions;
 using Photon.Realtime;
 using System;
 using Photon.Pun;
+using TMPro;
 
 public class DataManager : MonoBehaviour
 {
@@ -61,6 +62,8 @@ public class DataManager : MonoBehaviour
         _curExpRef = _userDataRef.Child("_curExp");
         _maxExpRef = _userDataRef.Child("_maxExp");
 
+        _onlineRef.KeepSynced(true);
+
         _onlineRef.ValueChanged -= IsOnlineHasChanged;
 
         _userDataRef.GetValueAsync().ContinueWithOnMainThread(task =>
@@ -69,18 +72,20 @@ public class DataManager : MonoBehaviour
             if (task.IsCanceled)
             {
                 Debug.LogWarning("Getting Value Fail!");
+                _onlineRef.KeepSynced(false);
                 return;
             }
             // 값 읽기를 실패한 경우
             if (task.IsFaulted)
             {
                 Debug.LogWarning($"Getting Value Fail! : {task.Exception.Message}");
+                _onlineRef.KeepSynced(false);
                 return;
             }
 
             Debug.Log("Getting Value Success!");
             DataSnapshot snapshot = task.Result;    // 값 읽기 성공
-
+            //
             if (snapshot.Value == null)
             {
                 // 초기값으로 세팅
@@ -98,6 +103,8 @@ public class DataManager : MonoBehaviour
 
                 string json = JsonUtility.ToJson(userData);
                 _userDataRef.SetRawJsonValueAsync(json);
+
+                _onlineRef.KeepSynced(false);
 
                 PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.DisplayName;
                 PhotonNetwork.ConnectUsingSettings();
@@ -128,14 +135,45 @@ public class DataManager : MonoBehaviour
         _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
     }
 
+    [SerializeField]
+    TextMeshProUGUI text;
+    int cnt = 0;
+
+    void Ch(object sender, ValueChangedEventArgs e)
+    {
+        cnt++;
+        text.text += (bool)e.Snapshot.Value + " / " + cnt.ToString() + "\n";
+    }
+
     IEnumerator WaitingRoutine(DatabaseReference onlineRef)
     {
+        cnt = 0;
+        onlineRef.ValueChanged += Ch;
         onlineRef.SetValueAsync(false);
 
         yield return new WaitForSeconds(3f);
 
+        _onlineRef.KeepSynced(false);
+        BackendManager.Database.SetPersistenceEnabled(true);
 
-        onlineRef.GetValueAsync().ContinueWithOnMainThread(t => {
+
+        if (cnt >= 3)
+        {
+            Debug.Log("접속 불가");
+            Debug.LogWarning("안된다고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            BackendManager.Auth.SignOut();
+        }
+        else {
+            Debug.Log("접속!");
+
+            _onlineRef.ValueChanged += IsOnlineHasChanged;
+
+            PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.DisplayName;
+            PhotonNetwork.ConnectUsingSettings();
+        }
+
+/*        onlineRef.GetValueAsync().ContinueWithOnMainThread(t =>
+        {
 
 
             Debug.Log(t.Result.Value);
@@ -153,10 +191,12 @@ public class DataManager : MonoBehaviour
             PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.DisplayName;
             PhotonNetwork.ConnectUsingSettings();
 
-        });
+        });*/
 
-     
+
     }
+
+
 
     void IsOnlineHasChanged(object sender, ValueChangedEventArgs e) {
 
