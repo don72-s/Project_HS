@@ -34,6 +34,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     GameObject myRoomPlayer;
     GameObject myIngamePlayer;
 
+    // 룸플레이어 프리팹
+    public GameObject[] ghostPrefabs; 
+
+    private List<int> ghostIndex = new List<int>();
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -46,13 +51,29 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
 
+        for (int i = 0; i < ghostPrefabs.Length; i++)
+        {
+            ghostIndex.Add(i);
+        }
+
         StartCoroutine(WaitCO(2));
     }
 
     IEnumerator WaitCO(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        myRoomPlayer = PhotonNetwork.Instantiate("WaitPlayer", Vector3.zero, Quaternion.identity);
+        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5));
+
+        if (ghostIndex.Count > 0)
+        {
+            int randomIndex = Random.Range(0, ghostIndex.Count);
+
+            GameObject selectedGhost = ghostPrefabs[ghostIndex[randomIndex]];
+
+            myRoomPlayer = PhotonNetwork.Instantiate(selectedGhost.name, randomPos, Quaternion.identity);
+
+            ghostIndex.RemoveAt(randomIndex);
+        }
     }
 
     private void Update()
