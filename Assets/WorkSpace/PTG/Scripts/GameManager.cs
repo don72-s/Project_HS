@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     GameObject myIngamePlayer;
 
     // 룸플레이어 프리팹
-    public GameObject[] ghostPrefabs; 
+    public GameObject[] ghostPrefabs;
 
     private List<int> ghostIndex = new List<int>();
 
@@ -63,7 +63,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(waitTime);
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5));
-
         if (ghostIndex.Count > 0)
         {
             int randomIndex = Random.Range(0, ghostIndex.Count);
@@ -73,6 +72,29 @@ public class GameManager : MonoBehaviourPunCallbacks
             myRoomPlayer = PhotonNetwork.Instantiate(selectedGhost.name, randomPos, Quaternion.identity);
 
             ghostIndex.RemoveAt(randomIndex);
+        }
+
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(ghostIndex.Count);
+            foreach (var index in ghostIndex)
+            {
+                stream.SendNext(index);
+            }
+        }
+        else
+        {
+
+            int count = (int)stream.ReceiveNext();
+            ghostIndex.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                ghostIndex.Add((int)stream.ReceiveNext());
+            }
         }
     }
 
