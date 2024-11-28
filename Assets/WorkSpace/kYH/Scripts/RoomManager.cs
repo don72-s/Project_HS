@@ -31,7 +31,7 @@ public class RoomManager : BaseUI
     private void Start()
     {
         AddEvent("BackToLobbyButton", EventType.Click, BackToLobby);
-        AddEvent("StartButton", EventType.Click, StartGame);
+        _startButton.onClick.AddListener(StartGame);
     }
 
     public void BackToLobby(PointerEventData eventData)
@@ -39,9 +39,9 @@ public class RoomManager : BaseUI
         PhotonNetwork.LeaveRoom();
     }
 
-    public void StartGame(PointerEventData eventData)
+    public void StartGame()
     {
-        _roomManager.SetActive(false);
         _gameManager.TestGameStart();
     }
+
 }

@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private List<int> ghostIndex = new List<int>();
 
+    [SerializeField]
+    RoomManager roomManager;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -298,6 +301,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
             myIngamePlayer = runner;
         }
+
     }
 
     [PunRPC]
@@ -309,6 +313,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.value = gameDuration;
         timeSlider.gameObject.SetActive(true);
         Debug.Log("Game Start");
+
+        roomManager.gameObject.SetActive(false);
     }
 
     private void EndGame(string message)
@@ -336,7 +342,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private IEnumerator ReturnToLobby()
     {
 
-        yield return new WaitForSeconds(30f);
+        yield return new WaitForSeconds(3f);
 
         currentState = GameState.Waiting;
 
@@ -353,6 +359,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         Camera.main.GetComponent<CameraController>().FollowTarget = null;
 
         PhotonNetwork.LocalPlayer.SetAlive(true);
+
+        roomManager.gameObject.SetActive(true);
 
     }
 
