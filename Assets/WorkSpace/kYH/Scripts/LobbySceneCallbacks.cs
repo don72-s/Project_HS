@@ -70,7 +70,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         Debug.Log("Room Enter Success!");
         //SetActivePanel(Panel.Room);
         //PhotonNetwork.LoadLevel("Test_RoomScene");
-        PhotonNetwork.LoadLevel("GameScene_Test_KYH");
+        PhotonNetwork.LoadLevel("GameScene_Seeker_Blind");
         PhotonNetwork.LocalPlayer.SetReady(false);
     }
 
