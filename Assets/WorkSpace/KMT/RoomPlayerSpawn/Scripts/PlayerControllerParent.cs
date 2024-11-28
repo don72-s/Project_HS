@@ -17,6 +17,9 @@ public class PlayerControllerParent : MonoBehaviourPun
         speaker = SpeakerList.Instance.GetSpeaker(PlayerNumberingExtensions.GetPlayerNumber(
             GetComponent<PhotonView>().Owner));
 
+        Debug.Log(PlayerNumberingExtensions.GetPlayerNumber(
+            GetComponent<PhotonView>().Owner));
+
         speaker.transform.SetParent(transform);
         speaker.transform.localPosition = Vector3.zero;
         speaker.GetComponent<AudioSource>().spatialBlend = 1;
