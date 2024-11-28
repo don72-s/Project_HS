@@ -1,11 +1,11 @@
+using Photon.Pun;
+using Photon.Realtime;
 using Photon.Voice.Unity;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Recorder))]
-public class VoiceManager : MonoBehaviour
+public class VoiceManager : MonoBehaviourPunCallbacks
 {
 
     Recorder recorder;
@@ -25,10 +25,32 @@ public class VoiceManager : MonoBehaviour
         micImg.sprite = micSprite;
     }
 
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (targetPlayer == PhotonNetwork.LocalPlayer && changedProps.ContainsKey(CustomProperties.ALIVE))
+        {
+            bool isAlive = (bool)changedProps[CustomProperties.ALIVE];
+
+            if (!isAlive)
+            {
+                recorder.TransmitEnabled = false;
+                micImg.sprite = micMuteSprite;
+            }
+            else {
+                recorder.TransmitEnabled = true;
+                micImg.sprite = micSprite;
+            }
+        }
+    }
+
     private void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.T))
+        if (!PhotonNetwork.LocalPlayer.GetAlive()) {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.T) && PhotonNetwork.LocalPlayer.GetAlive())
         {
 
             if (recorder.TransmitEnabled)
@@ -36,7 +58,7 @@ public class VoiceManager : MonoBehaviour
                 recorder.TransmitEnabled = false;
                 micImg.sprite = micMuteSprite;
             }
-            else 
+            else
             {
                 recorder.TransmitEnabled = true;
                 micImg.sprite = micSprite;
