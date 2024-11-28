@@ -105,8 +105,6 @@ protected override void Start()
             PhotonNetwork.LocalPlayer.SetAlive(false);
             hp = 0;
             //gameObject.SetActive(false);
-            curBodyRenderer = changer.curBodyObject.GetComponent<Renderer>();
-            curBodyRenderer.enabled = false;
             return;
         }
 

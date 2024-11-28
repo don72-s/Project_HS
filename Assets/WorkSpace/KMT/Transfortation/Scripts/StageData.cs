@@ -32,7 +32,10 @@ public class StageData : MonoBehaviour
 
     public void RemoveChangeableObj(IFormChangeable obj)
     {
-        changeableObjList.Remove(obj);
+        if (changeableObjList.Contains(obj))
+        {
+            changeableObjList.Remove(obj);
+        }
     }
 
     [ContextMenu("StartChange")]
