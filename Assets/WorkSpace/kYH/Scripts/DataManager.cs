@@ -50,6 +50,8 @@ public class DataManager : MonoBehaviour
     }
 
     public void CheckLoginPhotonFriend() {
+        //
+        Debug.Log("¿©±â¿È");
 
         PhotonNetwork.AuthValues = new AuthenticationValues();
         PhotonNetwork.AuthValues.UserId = FriendChecker.CheckName;

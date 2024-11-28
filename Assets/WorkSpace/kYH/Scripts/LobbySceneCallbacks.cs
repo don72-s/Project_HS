@@ -39,8 +39,15 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     // 로그인 성공 시 MenuPanel로 전환
     public override void OnConnectedToMaster()
     {
-        if (PhotonNetwork.AuthValues.UserId == FriendChecker.CheckName)
+
+        Debug.Log("called");
+
+        if (PhotonNetwork.AuthValues.UserId == FriendChecker.CheckName) {
+
+            Debug.LogWarning("체크시작");
+            PhotonNetwork.FindFriends(new string[] { PhotonNetwork.LocalPlayer.NickName });
             return;
+        }
 
         Debug.Log("Login Success!");
         _dataManager.SetActive(true);
@@ -48,10 +55,34 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
+    public override void OnFriendListUpdate(List<FriendInfo> friendList)
+    {
+        if (PhotonNetwork.AuthValues.UserId == FriendChecker.CheckName && friendList.Count > 0 && !friendList[0].IsOnline)
+        {
+            Debug.LogWarning("접속하자");
+            PhotonNetwork.Disconnect();
+        }
+        else
+        {
+            Debug.LogWarning("ㅋㅋ중복");
+
+        }
+    }
+
     // 로그아웃 시 LoginPanel로 전환
     // 로그로 로그아웃 사유 표시
     public override void OnDisconnected(DisconnectCause cause)
     {
+        if (PhotonNetwork.AuthValues.UserId == FriendChecker.CheckName)
+        {
+            Debug.LogWarning("다시 체크 시작");
+            PhotonNetwork.AuthValues = new AuthenticationValues();
+            PhotonNetwork.AuthValues.UserId = PhotonNetwork.LocalPlayer.NickName;
+            PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.DisplayName;
+            PhotonNetwork.ConnectUsingSettings();
+            return;
+        }
+
         Debug.Log($"Logout! (Cause : {cause})");
         SetActivePanel(Panel.Login);
         PhotonNetwork.LeaveLobby();
