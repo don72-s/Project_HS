@@ -141,12 +141,12 @@ public class DataManager : MonoBehaviour
             Debug.Log(t.Result.Value);
             Debug.Log("가져온값...");
 
-            if ((bool)t.Result.Value == true)
+/*            if ((bool)t.Result.Value == true)
             {
                 Debug.LogWarning("안된다고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 BackendManager.Auth.SignOut();
                 return;
-            }
+            }*/
 
             _onlineRef.ValueChanged += IsOnlineHasChanged;
 
