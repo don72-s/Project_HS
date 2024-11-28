@@ -14,11 +14,8 @@ public class RoomUpdate : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("llllllllllllllllllllllllll");
         UpdatePlayers();
-        Debug.Log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
         PlayerNumbering.OnPlayerNumberingChanged += UpdatePlayers;
-        Debug.Log("kkkkkkkkkkkkkkkkkkkkkkkk");
         PhotonNetwork.LocalPlayer.SetReady(false);
         PhotonNetwork.LocalPlayer.SetLoad(false);
     }
@@ -32,18 +29,14 @@ public class RoomUpdate : MonoBehaviour
     {
         foreach (PlayerEntry entry in _playerEntries)
         {
-            Debug.Log("tttttttttttttttttt");
             entry.SetEmpty();
         }
 
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            Debug.Log("eeeeeeeeeeeeeeeeeeeeeeee");
             if (player.GetPlayerNumber() == -1)
                 continue;
-            Debug.Log("qqqqqqqqqqqqqqqqqqqqqqqqqqq");
             int num = player.GetPlayerNumber();
-            Debug.Log("uuuuuuuuuuuuuuuuuuuuuuu");
             _playerEntries[num].SetPlayer(player);
         }
 
