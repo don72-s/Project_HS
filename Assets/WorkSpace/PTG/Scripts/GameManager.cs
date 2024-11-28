@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     public const string RoomName = "TestRoomPTK";
 
+    public const string STAGE_MAP_NAME = "lsy_GameScene_Clone";
+
     public static GameManager Instance;
 
     // 상태
@@ -231,13 +233,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void LoadSceneAdditive()
     {
-        AsyncOperation op = SceneManager.LoadSceneAsync("lsy_GameScene_Additive", LoadSceneMode.Additive);
+        AsyncOperation op = SceneManager.LoadSceneAsync(STAGE_MAP_NAME, LoadSceneMode.Additive);
         op.completed += (_op) => { Debug.Log("완료!"); photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient); };
     }
 
     void UnLoadScene()
     {
-        SceneManager.UnloadSceneAsync("lsy_GameScene_Additive");
+        SceneManager.UnloadSceneAsync(STAGE_MAP_NAME);
     }
 
     [PunRPC]
