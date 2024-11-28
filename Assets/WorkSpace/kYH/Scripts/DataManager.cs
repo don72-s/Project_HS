@@ -132,7 +132,9 @@ public class DataManager : MonoBehaviour
     {
         onlineRef.SetValueAsync(false);
 
-        yield return new WaitForSeconds(3f);
+
+        yield return null;
+        //yield return new WaitForSeconds(3f);
 
 
         onlineRef.GetValueAsync().ContinueWithOnMainThread(t => {

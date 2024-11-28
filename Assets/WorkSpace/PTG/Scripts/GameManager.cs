@@ -186,6 +186,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
             photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
 
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+
             LoadStage();
         }
     }
@@ -361,6 +363,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.SetAlive(true);
 
         roomManager.gameObject.SetActive(true);
+
+        if (PhotonNetwork.IsMasterClient) {
+            PhotonNetwork.CurrentRoom.IsOpen = true;
+
+        }
 
     }
 
