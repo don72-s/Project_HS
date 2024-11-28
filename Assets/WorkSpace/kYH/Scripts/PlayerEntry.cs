@@ -46,6 +46,7 @@ public class PlayerEntry : BaseUI
         else
         {
             _nameText.text = player.NickName;
+            _nameText.color = Color.black;
         }
 
         if (PhotonNetwork.LocalPlayer.NickName == _nameText.text)
