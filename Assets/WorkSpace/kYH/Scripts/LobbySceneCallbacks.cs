@@ -14,7 +14,6 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _loginPanel;
     [SerializeField] private GameObject _roomPanel;
     [SerializeField] private GameObject _lobbyPanel;
-    [SerializeField] private GameObject _dataManager;
 
     private void Start()
     {
@@ -40,7 +39,6 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Login Success!");
-        _dataManager.SetActive(true);
         SetActivePanel(Panel.Lobby);
         PhotonNetwork.JoinLobby();
     }
@@ -72,20 +70,11 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         Debug.Log("Room Enter Success!");
         //SetActivePanel(Panel.Room);
         //PhotonNetwork.LoadLevel("Test_RoomScene");
-        PhotonNetwork.LoadLevel("GameScene_Test");
+        PhotonNetwork.LoadLevel("GameScene_Test_KYH");
+        PhotonNetwork.LocalPlayer.SetReady(false);
     }
 
-    // 방에 입장 시 RoomPanel의 EnterPlayer을 입장한 플레이어에게 실행
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        _roomUpdate.EnterPlayer(newPlayer);
-    }
-
-    // 방에서 퇴장 시 RoomPanel의 ExitPlayer을 퇴장한 플레이어에게 실행
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        _roomUpdate.ExitPlayer(otherPlayer);
-    }
+    
 
     // 방에 입장한 플레이어의 프로퍼티를 변경
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)

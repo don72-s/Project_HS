@@ -115,15 +115,15 @@ public class DataManager : MonoBehaviour
             }
         });
 
-        _levelRef.ValueChanged += LevelRef_ValueChanged;
+        //_levelRef.ValueChanged += LevelRef_ValueChanged;
         /*_curExpRef.ValueChanged += CurEXPRef_ValueChanged;
         _maxExpRef.ValueChanged += MaxEXPRef_ValueChanged;*/
     }
 
     private void OnDisable()
     {
-        _levelRef.ValueChanged -= LevelRef_ValueChanged;
-        _onlineRef.ValueChanged -= IsOnlineHasChanged;
+        //_levelRef.ValueChanged -= LevelRef_ValueChanged;
+        //_onlineRef.ValueChanged -= IsOnlineHasChanged;
         /*_curExpRef.ValueChanged -= CurEXPRef_ValueChanged;
         _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
     }
@@ -132,7 +132,9 @@ public class DataManager : MonoBehaviour
     {
         onlineRef.SetValueAsync(false);
 
-        yield return new WaitForSeconds(3f);
+
+        yield return null;
+        //yield return new WaitForSeconds(3f);
 
 
         onlineRef.GetValueAsync().ContinueWithOnMainThread(t => {

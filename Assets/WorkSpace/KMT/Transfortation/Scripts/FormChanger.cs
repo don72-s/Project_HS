@@ -9,6 +9,9 @@ public class FormChanger : MonoBehaviourPunCallbacks,
     GameObject[] objArr;
 
     [SerializeField]
+    GameObject ghostObj;
+
+    [SerializeField]
     ChangeUIBinder changeCanvasPrefab;
 
     ChangeUIBinder changeCanvas;
@@ -40,7 +43,6 @@ public class FormChanger : MonoBehaviourPunCallbacks,
 
     void OnDead() {
 
-        //TODO : 유령 활성화.
         photonView.RPC("OnDeadRpc", RpcTarget.All);
 
     }
@@ -50,6 +52,14 @@ public class FormChanger : MonoBehaviourPunCallbacks,
 
         StageData.Instance.RemoveChangeableObj(this);
         isAlive = false;
+
+        if (photonView.IsMine)
+        {
+            ghostObj.SetActive(true);
+        }
+        else {
+            gameObject.SetActive(false);
+        }
 
         if (curBodyObject != null)
         {

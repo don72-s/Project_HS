@@ -35,9 +35,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     GameObject myIngamePlayer;
 
     // 룸플레이어 프리팹
-    public GameObject[] ghostPrefabs; 
+    public GameObject[] ghostPrefabs;
 
     private List<int> ghostIndex = new List<int>();
+
+    [SerializeField]
+    RoomManager roomManager;
 
     private void Awake()
     {
@@ -63,7 +66,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(waitTime);
         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5));
-
         if (ghostIndex.Count > 0)
         {
             int randomIndex = Random.Range(0, ghostIndex.Count);
@@ -73,6 +75,29 @@ public class GameManager : MonoBehaviourPunCallbacks
             myRoomPlayer = PhotonNetwork.Instantiate(selectedGhost.name, randomPos, Quaternion.identity);
 
             ghostIndex.RemoveAt(randomIndex);
+        }
+
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(ghostIndex.Count);
+            foreach (var index in ghostIndex)
+            {
+                stream.SendNext(index);
+            }
+        }
+        else
+        {
+
+            int count = (int)stream.ReceiveNext();
+            ghostIndex.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                ghostIndex.Add((int)stream.ReceiveNext());
+            }
         }
     }
 
@@ -160,6 +185,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
             photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
+
+            PhotonNetwork.CurrentRoom.IsOpen = false;
 
             LoadStage();
         }
@@ -276,6 +303,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
             myIngamePlayer = runner;
         }
+
     }
 
     [PunRPC]
@@ -287,6 +315,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.value = gameDuration;
         timeSlider.gameObject.SetActive(true);
         Debug.Log("Game Start");
+
+        roomManager.gameObject.SetActive(false);
     }
 
     private void EndGame(string message)
@@ -332,11 +362,20 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.LocalPlayer.SetAlive(true);
 
+        roomManager.gameObject.SetActive(true);
+
+        if (PhotonNetwork.IsMasterClient) {
+            PhotonNetwork.CurrentRoom.IsOpen = true;
+
+        }
+
     }
 
     public override void OnLeftRoom()
     {
         Debug.Log("LeftRoom");
+        SceneManager.LoadSceneAsync("KYH_LobbyScene");
+        PhotonNetwork.JoinLobby();
         //PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 복귀
     }
 
