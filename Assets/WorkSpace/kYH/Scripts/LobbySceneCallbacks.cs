@@ -71,6 +71,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         //SetActivePanel(Panel.Room);
         //PhotonNetwork.LoadLevel("Test_RoomScene");
         PhotonNetwork.LoadLevel("GameScene_Test_KYH");
+        PhotonNetwork.LocalPlayer.SetReady(false);
     }
 
     
