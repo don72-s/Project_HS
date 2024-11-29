@@ -176,7 +176,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     IEnumerator WaitPlayerSpawnCO()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         StageData.Instance.StartChangeFormSlot();
     }
 
@@ -198,8 +198,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void LoadStage()
     {
-        Coroutine waitLoadStageCoroudine = StartCoroutine(WaitLoadStageCO());
+        photonView.RPC("WaitLoading", RpcTarget.All);
         photonView.RPC("LoadSceneAdditive", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void WaitLoading() {
+        StartCoroutine(WaitLoadStageCO());
     }
 
     int inLoadingPlayer;
@@ -208,11 +213,16 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         float waitTime = 0;
         inLoadingPlayer = PhotonNetwork.PlayerList.Length;
-        while (waitTime < 30f && inLoadingPlayer > 0)
+        while (waitTime < 20f && inLoadingPlayer > 0)
         {
 
             yield return null;
             waitTime += Time.deltaTime;
+        }
+
+        if (!PhotonNetwork.IsMasterClient || currentState == GameState.Playing) 
+        {
+            yield break;
         }
 
         if (inLoadingPlayer == 0)
@@ -229,6 +239,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
         {
             Debug.Log("로딩 시간 초과...");
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            photonView.RPC("CancelPlayGame", RpcTarget.All);
         }
     }
 
@@ -238,10 +250,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         AsyncOperation op = SceneManager.LoadSceneAsync(STAGE_MAP_NAME, LoadSceneMode.Additive);
         op.completed += (_op) => { Debug.Log("완료!"); photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient); };
     }
+    //
+    [PunRPC]
+    void CancelPlayGame() 
+    {
+        if (SceneManager.GetSceneByName(STAGE_MAP_NAME).isLoaded)
+        {
+            SceneManager.UnloadSceneAsync(STAGE_MAP_NAME);
+        }
+    }
 
     void UnLoadScene()
     {
-        SceneManager.UnloadSceneAsync(STAGE_MAP_NAME);
+        if (SceneManager.GetSceneByName(STAGE_MAP_NAME).isLoaded)
+        {
+            SceneManager.UnloadSceneAsync(STAGE_MAP_NAME);
+        }
     }
 
     [PunRPC]
