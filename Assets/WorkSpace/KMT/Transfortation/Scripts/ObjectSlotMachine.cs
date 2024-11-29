@@ -48,7 +48,8 @@ public class ObjectSlotMachine : MonoBehaviour
 
     public void InitObjArr() {
 
-        ChangeableObjsSO soData = StageData.Instance.GetStageChangeableObj(StageData.StageType.STAGE1);
+        ChangeableObjsSO soData = StageData.Instance.GetStageChangeableObj(
+            PhotonNetwork.CurrentRoom.GetStage());
         if (soData == null)
         {
             Debug.LogError("대응되는 데이터정보가 없음!!!");

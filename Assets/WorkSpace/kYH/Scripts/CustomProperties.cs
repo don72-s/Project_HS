@@ -86,4 +86,28 @@ public static class CustomProperties
         }
     }
 
+    //·ë ÇÁ·ÎÆÛÆ¼
+
+    public const string STAGE = "Stage";
+
+    public static void SetStage(this Room room, StageData.StageType stage)
+    {
+        customProperty.Clear();
+        customProperty[STAGE] = (int)stage;
+        room.SetCustomProperties(customProperty);
+    }
+
+    public static StageData.StageType GetStage(this Room room)
+    {
+        PhotonHashtable customProperty = room.CustomProperties;
+        if (customProperty.ContainsKey(STAGE))
+        {
+            return (StageData.StageType)(int)customProperty[STAGE];
+        }
+        else
+        {
+            return (StageData.StageType)(-1);
+        }
+    }
+
 }
