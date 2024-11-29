@@ -135,11 +135,22 @@ public class DataManager : MonoBehaviour
         _maxExpRef.ValueChanged -= MaxEXPRef_ValueChanged;*/
     }
 
+    [Header("Check Multiple Login")]
+    [SerializeField]
+    bool CheckMultiple;
+
     void CheckMultipleLogin()
     {
-        PhotonNetwork.AuthValues = new AuthenticationValues();
-        PhotonNetwork.AuthValues.UserId = FriendCheck.CheckName;
-        PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.UserId;
+        if (CheckMultiple)
+        {
+            PhotonNetwork.AuthValues = new AuthenticationValues();
+            PhotonNetwork.AuthValues.UserId = FriendCheck.CheckName;
+            PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.UserId;
+        }
+        else 
+        {
+            PhotonNetwork.LocalPlayer.NickName = BackendManager.Auth.CurrentUser.DisplayName;
+        }
         PhotonNetwork.ConnectUsingSettings();
     }
 
