@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Pun.Demo.Procedural;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using Photon.Voice.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     // 시간 설정
     public float gameDuration = 10f;
 
+    public float freezeTime = 5f;
+
     private float timer;
 
     // 승리 조건
@@ -34,6 +37,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Text resultText;
     public Slider timeSlider;
     public Image blind;
+
+    public Text freezeTimer;
 
     GameObject myRoomPlayer;
     GameObject myIngamePlayer;
@@ -168,12 +173,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    IEnumerator StartDelayRoutine()
-    {
-        yield return new WaitForSeconds(1f);
-        TestGameStart();
-    }
-
     IEnumerator WaitPlayerSpawnCO()
     {
         yield return new WaitForSeconds(3f);
@@ -256,24 +255,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         inLoadingPlayer--;
     }
 
-    [PunRPC]
-    private void PlayerSpawn(int ranNumber)
-    {
-        myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
-
-        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
-        {
-            myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
-        }
-        else
-        {
-            GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
-            runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
-            myIngamePlayer = runner;
-        }
-    }
-
     private void SetTeamsAndSpwan()
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
@@ -300,7 +281,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log("You are Seeker");
             myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
 
-            photonView.RPC("SeekerFreeze", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, 5f); // 술래 멈추기
+            photonView.RPC("SeekerFreeze", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, freezeTime); // 술래 멈추기
         }
         else
         {
@@ -427,24 +408,49 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void SeekerFreeze(int seekerActorNumber, float freezeDuration)
     {
-        if (PhotonNetwork.LocalPlayer.ActorNumber == seekerActorNumber)
-        {
-            GameObject seeker = myIngamePlayer;
+        GameObject seeker = myIngamePlayer;
 
+        if (PhotonNetwork.LocalPlayer.ActorNumber == seekerActorNumber)
+        {       
             seeker.GetComponent<PlayerController>().enabled = false;
 
             blind.gameObject.SetActive(true);
-
-            StartCoroutine(UnfreezeSeeker(seeker, freezeDuration));
         }
+
+        photonView.RPC("UpdateFreezeTimer", RpcTarget.All, freezeDuration);
+        StartCoroutine(UnfreezeSeeker(seeker, freezeDuration));
     }
 
     private IEnumerator UnfreezeSeeker(GameObject seeker, float freezeDuration)
     {
         yield return new WaitForSeconds(freezeDuration);
 
-        seeker.GetComponent<PlayerController>().enabled = true;
+        if (PhotonNetwork.LocalPlayer.ActorNumber == currentSeeker.ActorNumber)
+        {
+            seeker.GetComponent<PlayerController>().enabled = true;
 
-        blind.gameObject.SetActive(false);
+            blind.gameObject.SetActive(false);
+        }    
+    }
+
+    [PunRPC]
+    private void UpdateFreezeTimer(float freezeDuration)
+    {
+        StartCoroutine(CountdownFreezeTimer(freezeDuration));
+    }
+
+    private IEnumerator CountdownFreezeTimer(float freezeDuration)
+    {
+        freezeTimer.gameObject.SetActive(true);
+
+        while (freezeDuration > 0)
+        {
+            freezeTimer.text = $"{Mathf.CeilToInt(freezeDuration)}";
+            yield return new WaitForSeconds(1f);
+            freezeDuration--;
+        }
+
+        freezeTimer.text = "";
+        freezeTimer.gameObject.SetActive(false);
     }
 }
