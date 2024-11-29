@@ -6,13 +6,12 @@ using ExitGames.Client.Photon;
 
 public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
 {
-    public enum Panel { Login, Lobby, Room }      // 각 패널을 열거형으로 분류
+    public enum Panel { Login, Lobby }      // 각 패널을 열거형으로 분류
 
     // 각 패널 클래스
     [SerializeField] private RoomUpdate _roomUpdate;
     [SerializeField] private LobbySceneManager _manager;
     [SerializeField] private GameObject _loginPanel;
-    [SerializeField] private GameObject _roomPanel;
     [SerializeField] private GameObject _lobbyPanel;
 
     private void Start()
@@ -21,11 +20,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
 
         // 각 상태에 따라 자동으로 전환할 패널 설정
-        if (PhotonNetwork.InRoom == true)
-        {
-            SetActivePanel(Panel.Room);
-        }
-        else if (PhotonNetwork.IsConnected)
+        if (PhotonNetwork.IsConnected)
         {
             SetActivePanel(Panel.Lobby);
         }
@@ -96,16 +91,6 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         _roomUpdate.UpdatePlayerProperty(targetPlayer, changedProps);
     }
 
-    //public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
-    //{
-    //    
-    //}
-
-    //public override void OnMasterClientSwitched(Player newMasterClient)
-    //{
-    //    PhotonNetwork.SetMasterClient(newMasterClient);
-    //}
-
     // 방 입장 실패 시 실패 사유가 적힌 로그 출력
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
@@ -157,7 +142,6 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     private void SetActivePanel(Panel panel)
     {
         _loginPanel.SetActive(panel == Panel.Login);
-        _roomPanel.SetActive(panel == Panel.Room);
         _lobbyPanel.SetActive(panel == Panel.Lobby);
     }
 }
