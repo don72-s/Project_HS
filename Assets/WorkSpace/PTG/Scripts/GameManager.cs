@@ -387,6 +387,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void OnPlayerCatch()
     {
+        if (currentState == GameState.Finished)
+        {
+            Debug.LogWarning("Game is finished.");
+            return;
+        }
+
         photonView.RPC("OnPlayerCatchRpc", RpcTarget.MasterClient);
     }
 
@@ -395,6 +401,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            if (currentState == GameState.Finished)
+            {
+                Debug.LogWarning("Game is finished.");
+                return;
+            }
+
             photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
 
             if (runnersRemaining <= 0)
