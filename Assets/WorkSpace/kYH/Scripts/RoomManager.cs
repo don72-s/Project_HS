@@ -21,24 +21,20 @@ using UnityEngine.SceneManagement;
 public class RoomManager : BaseUI
 {
     [SerializeField] private GameObject _roomManager;
+    [SerializeField] private Button _backLobbyButton;
     [SerializeField] private Button _startButton;
     [SerializeField] private GameManager _gameManager;
+    //[SerializeField] private PlayerEntry _playerEntry;
 
-    [SerializeField]
-    GameObject voice;
-
-    private void Awake()
-    {
-        BindAll();
-    }
+    [SerializeField] private GameObject voice;
 
     private void Start()
     {
-        AddEvent("BackToLobbyButton", EventType.Click, BackToLobby);
+        _backLobbyButton.onClick.AddListener(BackToLobby);
         _startButton.onClick.AddListener(StartGame);
     }
 
-    public void BackToLobby(PointerEventData eventData)
+    public void BackToLobby()
     {
         if (voice != null)
             Destroy(voice);
@@ -50,5 +46,4 @@ public class RoomManager : BaseUI
     {
         _gameManager.TestGameStart();
     }
-
 }

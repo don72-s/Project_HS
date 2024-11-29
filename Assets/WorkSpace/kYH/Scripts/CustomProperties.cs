@@ -33,6 +33,15 @@ public static class CustomProperties
         }
     }
 
+    public static bool ReadyCheck(Player player)
+    {
+        if (player.CustomProperties.TryGetValue(READY, out object isReady))
+        {
+            return (bool)isReady;
+        }
+        return false;
+    }
+
     public const string LOAD = "Load";
 
     public static void SetLoad(this Player player, bool load)

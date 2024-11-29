@@ -447,6 +447,8 @@ MonoBehaviour:
   _readyText: {fileID: 977428933}
   _nameText: {fileID: 1279128049}
   _readyButton: {fileID: 1463081460}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &153620893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,6 +723,8 @@ MonoBehaviour:
   _readyText: {fileID: 1496863569}
   _nameText: {fileID: 1638219157}
   _readyButton: {fileID: 2038366031}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &286548346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -951,6 +955,8 @@ MonoBehaviour:
   _readyText: {fileID: 2114655024}
   _nameText: {fileID: 1277611014}
   _readyButton: {fileID: 1461696359}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &318574204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1181,6 +1187,8 @@ MonoBehaviour:
   _readyText: {fileID: 226670780}
   _nameText: {fileID: 1103170441}
   _readyButton: {fileID: 688951903}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &415821304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3571,6 +3579,8 @@ MonoBehaviour:
   _readyText: {fileID: 991166661}
   _nameText: {fileID: 1684860666}
   _readyButton: {fileID: 2083767974}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &919083062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4396,6 +4406,8 @@ MonoBehaviour:
   _readyText: {fileID: 1368860099}
   _nameText: {fileID: 1631559391}
   _readyButton: {fileID: 455225441}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &1047419954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5255,6 +5267,8 @@ MonoBehaviour:
   _readyText: {fileID: 1136862154}
   _nameText: {fileID: 880066930}
   _readyButton: {fileID: 1471668353}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &1238591186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5980,6 +5994,8 @@ MonoBehaviour:
   _readyText: {fileID: 993727348}
   _nameText: {fileID: 1926654067}
   _readyButton: {fileID: 1530097299}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &1457796245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6791,6 +6807,8 @@ MonoBehaviour:
   _readyText: {fileID: 1052036857}
   _nameText: {fileID: 767143349}
   _readyButton: {fileID: 58205574}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &1532788538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7756,6 +7774,8 @@ MonoBehaviour:
   _readyText: {fileID: 1003665321}
   _nameText: {fileID: 1768243542}
   _readyButton: {fileID: 862118301}
+  _backLobbyButton: {fileID: 811605766}
+  _isReady: 0
 --- !u!114 &1688133638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8893,6 +8913,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roomManager: {fileID: 2063862188}
+  _backLobbyButton: {fileID: 811605766}
   _startButton: {fileID: 1103698867}
   _gameManager: {fileID: 1627490623}
   voice: {fileID: 1543667916}
@@ -8925,6 +8946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roomUpdate: {fileID: 1112506917}
+  _backLobbyButton: {fileID: 811605766}
 --- !u!1 &2078065099
 GameObject:
   m_ObjectHideFlags: 0
