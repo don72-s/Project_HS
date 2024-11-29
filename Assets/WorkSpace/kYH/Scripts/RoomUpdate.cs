@@ -1,9 +1,12 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using System.Linq;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
@@ -53,14 +56,30 @@ public class RoomUpdate : MonoBehaviour
             _playerEntries[num].SetPlayer(player);
         }
 
-        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        if (PhotonNetwork.LocalPlayer.IsMasterClient && CheckAllReady())
         {
-            _startButton.interactable = CheckAllReady();
+            StartCoroutine(StartCountdownCO());
         }
-        else
+    }
+
+    IEnumerator StartCountdownCO()
+    {
+
+        float cnt = 5;
+        WaitForSeconds delay = new WaitForSeconds(1);
+
+        while (cnt > 0)
         {
-            _startButton.interactable = false;
+            if (!CheckAllReady())
+                yield break;
+
+            yield return null;
+            cnt -= Time.deltaTime;
+            Debug.Log(cnt);
         }
+
+        GameManager.Instance.TestGameStart();
+
     }
 
     public void EnterPlayer(Player newPlayer)
