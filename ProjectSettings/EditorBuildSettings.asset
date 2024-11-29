@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ProjectHS/Scenes/TestScene/GameScene_Seeker_Blind.unity
     guid: 76460e3b52289234a88167c30dccc254
+  - enabled: 1
+    path: Assets/WorkSpace/KMT/Read_Exit_Area/Scenes/GameScene_ReadyExit.unity
+    guid: 914460815eb22804287dcc5f52ff7510
   m_configObjects: {}
