@@ -49,7 +49,7 @@ MonoBehaviour:
   _exp: 0
   _curExp: 0
   _maxExp: 0
-  CheckMultiple: 1
+  CheckMultiple: 0
 --- !u!114 &3429629070743573875
 MonoBehaviour:
   m_ObjectHideFlags: 0
