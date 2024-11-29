@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a53ce2318161e6846bf75e4c5c0d5f10, type: 3}
   m_Name: ChangeableObjs_stage1
   m_EditorClassIdentifier: 
+  <stage>k__BackingField: 0
   ChangeableObjArr:
-  - {fileID: 2092558875539140737, guid: 6d99fe7157190374995611275c238de8, type: 3}
-  - {fileID: 1573117774132190, guid: b762b04c7fe35704cbdbf1806a638bf1, type: 3}
-  - {fileID: 4228638966643171970, guid: 7ade998a75360c54ca6e55373981e604, type: 3}
-  - {fileID: 436181208997811857, guid: 94e4c3350f88fe94ba5e156103abcf1c, type: 3}
-  - {fileID: 1743156886038142, guid: 99a0f1488ea2c1d47b7e9f7190961e40, type: 3}
-  - {fileID: 7607658426802268550, guid: b6051831735950e45a12422235f03581, type: 3}
+  - {fileID: 9002643421021962609, guid: ede09d6ea4a3f6743a75e3f325b1cbe6, type: 3}
+  - {fileID: 772654632762704299, guid: 6086a308bd5fb6648b19aed0e5eaa946, type: 3}
+  - {fileID: 7375680664145242244, guid: b5263aa173ff0f34d8828efb328b4ea3, type: 3}
+  - {fileID: 3076989400595160577, guid: c7e73ae697394a1488ce369cc1ab5e2a, type: 3}
+  - {fileID: 8794139327734011471, guid: a0ad46d3e0fdef94e88d7395634c8307, type: 3}
+  - {fileID: 4215476285558458600, guid: 7f22973fc33081f4c929ded02eb2674d, type: 3}
