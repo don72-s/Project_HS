@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     IEnumerator WaitCO(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5));
+        Vector3 randomPos = new Vector3(-1000 + Random.Range(-5f, 5f), 1000, Random.Range(-5, 5));
         if (ghostIndex.Count > 0)
         {
             int randomIndex = Random.Range(0, ghostIndex.Count);
@@ -381,7 +381,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         resultText.gameObject.SetActive(false);
 
         PhotonNetwork.Destroy(myIngamePlayer);
-        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+        myRoomPlayer.transform.position = new Vector3(-1000 + Random.Range(-5f, 5f), 1000, Random.Range(-5, 5f));
         myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
         UnLoadScene();
 
