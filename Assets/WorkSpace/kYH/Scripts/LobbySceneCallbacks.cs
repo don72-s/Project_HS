@@ -6,9 +6,9 @@ using ExitGames.Client.Photon;
 
 public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
 {
-    public enum Panel { Login, Lobby, Room }      // °¢ ÆĞ³ÎÀ» ¿­°ÅÇüÀ¸·Î ºĞ·ù
+    public enum Panel { Login, Lobby, Room }      // ê° íŒ¨ë„ì„ ì—´ê±°í˜•ìœ¼ë¡œ ë¶„ë¥˜
 
-    // °¢ ÆĞ³Î Å¬·¡½º
+    // ê° íŒ¨ë„ í´ë˜ìŠ¤
     [SerializeField] private RoomUpdate _roomUpdate;
     [SerializeField] private LobbySceneManager _manager;
     [SerializeField] private GameObject _loginPanel;
@@ -17,10 +17,10 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        // °¢ »óÅÂ¿¡ µû¶ó ÀÚµ¿À¸·Î ÆĞ³Î ÀüÈ¯
+        // ê° ìƒíƒœì— ë”°ë¼ ìë™ìœ¼ë¡œ íŒ¨ë„ ì „í™˜
         PhotonNetwork.AutomaticallySyncScene = true;
 
-        // °¢ »óÅÂ¿¡ µû¶ó ÀÚµ¿À¸·Î ÀüÈ¯ÇÒ ÆĞ³Î ¼³Á¤
+        // ê° ìƒíƒœì— ë”°ë¼ ìë™ìœ¼ë¡œ ì „í™˜í•  íŒ¨ë„ ì„¤ì •
         if (PhotonNetwork.InRoom == true)
         {
             SetActivePanel(Panel.Room);
@@ -35,47 +35,64 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         }
     }
 
-    // ·Î±×ÀÎ ¼º°ø ½Ã MenuPanel·Î ÀüÈ¯
+    // ë¡œê·¸ì¸ ì„±ê³µ ì‹œ MenuPanelë¡œ ì „í™˜
     public override void OnConnectedToMaster()
     {
+        Debug.Log("<color=yellow>ë©”ì¸ë°©ë©´ ì—°ê²° ì½œë°±</color>");
+
+        if (PhotonNetwork.AuthValues.UserId == FriendCheck.CheckName) 
+        {
+            Debug.Log("í…ŒìŠ¤íŠ¸ ì‹œë„ìš© ì ‘ì†ì…ë‹ˆë‹¤.<color=red>[main callback]</color>");
+            return;
+        }
+
         Debug.Log("Login Success!");
         SetActivePanel(Panel.Lobby);
         PhotonNetwork.JoinLobby();
     }
 
-    // ·Î±×¾Æ¿ô ½Ã LoginPanel·Î ÀüÈ¯
-    // ·Î±×·Î ·Î±×¾Æ¿ô »çÀ¯ Ç¥½Ã
+    // ë¡œê·¸ì•„ì›ƒ ì‹œ LoginPanelë¡œ ì „í™˜
+    // ë¡œê·¸ë¡œ ë¡œê·¸ì•„ì›ƒ ì‚¬ìœ  í‘œì‹œ
     public override void OnDisconnected(DisconnectCause cause)
     {
+
+        Debug.Log("<color=yellow>ë©”ì¸ë°©ë©´ ì—°ê²° í•´ì œ ì½œë°±</color>");
+
+        if (PhotonNetwork.AuthValues.UserId == FriendCheck.CheckName)
+        {
+            Debug.Log("í…ŒìŠ¤íŠ¸ ì‹œë„ìš© ì ‘ì† í•´ì œì…ë‹ˆë‹¤.<color=red>[main logout callback]</color>");
+            return;
+        }
+
         Debug.Log($"Logout! (Cause : {cause})");
         SetActivePanel(Panel.Login);
         PhotonNetwork.LeaveLobby();
     }
 
-    // ¹æ»ı¼º ¼º°ø ·Î±× Ãâ·Â
+    // ë°©ìƒì„± ì„±ê³µ ë¡œê·¸ ì¶œë ¥
     public override void OnCreatedRoom()
     {
         Debug.Log("Create Room complete!");
     }
 
-    // ¹æ »ı¼º ½ÇÆĞ ½ÇÆĞ »çÀ¯°¡ ÀûÈù ·Î±× Ãâ·Â
+    // ë°© ìƒì„± ì‹¤íŒ¨ ì‹¤íŒ¨ ì‚¬ìœ ê°€ ì íŒ ë¡œê·¸ ì¶œë ¥
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.LogWarning($"Create Room Failed! (Cause : {message}");
     }
 
-    // ¹æ Âü¿©¿¡ ¼º°øÇßÀ» ¶§ RoomPanel·Î ÀüÈ¯
+    // ë°© ì°¸ì—¬ì— ì„±ê³µí–ˆì„ ë•Œ RoomPanelë¡œ ì „í™˜
     public override void OnJoinedRoom()
     {
         Debug.Log("Room Enter Success!");
         //SetActivePanel(Panel.Room);
         //PhotonNetwork.LoadLevel("Test_RoomScene");
-        PhotonNetwork.LoadLevel("GameScene_Test_KYH");
+        PhotonNetwork.LoadLevel("GameScene_Seeker_Blind");
     }
 
     
 
-    // ¹æ¿¡ ÀÔÀåÇÑ ÇÃ·¹ÀÌ¾îÀÇ ÇÁ·ÎÆÛÆ¼¸¦ º¯°æ
+    // ë°©ì— ì…ì¥í•œ í”Œë ˆì´ì–´ì˜ í”„ë¡œí¼í‹°ë¥¼ ë³€ê²½
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         _roomUpdate.UpdatePlayerProperty(targetPlayer, changedProps);
@@ -91,20 +108,20 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     //    PhotonNetwork.SetMasterClient(newMasterClient);
     //}
 
-    // ¹æ ÀÔÀå ½ÇÆĞ ½Ã ½ÇÆĞ »çÀ¯°¡ ÀûÈù ·Î±× Ãâ·Â
+    // ë°© ì…ì¥ ì‹¤íŒ¨ ì‹œ ì‹¤íŒ¨ ì‚¬ìœ ê°€ ì íŒ ë¡œê·¸ ì¶œë ¥
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.LogWarning($"Room Enter Failed! (Cause : {message}");
     }
 
-    // ¹æ¿¡¼­ ÅğÀå ½Ã MenuPanel·Î ÀüÈ¯
+    // ë°©ì—ì„œ í‡´ì¥ ì‹œ MenuPanelë¡œ ì „í™˜
     public override void OnLeftRoom()
     {
         Debug.Log("Left Room Success!");
         SetActivePanel(Panel.Lobby);
     }
 
-    // ·£´ı¸ÅÄª ½ÇÆĞ ½Ã ½ÇÆĞ »çÀ¯°¡ ÀûÈù ·Î±× Ãâ·Â
+    // ëœë¤ë§¤ì¹­ ì‹¤íŒ¨ ì‹œ ì‹¤íŒ¨ ì‚¬ìœ ê°€ ì íŒ ë¡œê·¸ ì¶œë ¥
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.LogWarning($"Random Match Failed! (Cause : {message}");
@@ -121,18 +138,18 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         SetActivePanel(Panel.Login);
     }
 
-    // ¹æ ¸ñ·Ï ¾÷µ¥ÀÌÆ® ÇÔ¼ö
+    // ë°© ëª©ë¡ ì—…ë°ì´íŠ¸ í•¨ìˆ˜
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        // ¹æÀÇ ¸ñ·Ï¿¡ º¯°æÀÌ ÀÖ´Â °æ¿ì ¼­¹ö¿¡¼­ º¸³»´Â Á¤º¸µé
+        // ë°©ì˜ ëª©ë¡ì— ë³€ê²½ì´ ìˆëŠ” ê²½ìš° ì„œë²„ì—ì„œ ë³´ë‚´ëŠ” ì •ë³´ë“¤
 
-        // <ÁÖÀÇ»çÇ×>
-        // 1. Ã³À½ ·Îºñ ÀÔÀå ½Ã : ¸ğµç ¹æ ¸ñ·ÏÀ» Àü´Ş
-        // 2. ÀÔÀå Áß ¹æ ¸ñ·ÏÀÌ º¯°æµÇ´Â °æ¿ì : º¯°æµÈ ¹æ ¸ñ·Ï¸¸ Àü´Ş
+        // <ì£¼ì˜ì‚¬í•­>
+        // 1. ì²˜ìŒ ë¡œë¹„ ì…ì¥ ì‹œ : ëª¨ë“  ë°© ëª©ë¡ì„ ì „ë‹¬
+        // 2. ì…ì¥ ì¤‘ ë°© ëª©ë¡ì´ ë³€ê²½ë˜ëŠ” ê²½ìš° : ë³€ê²½ëœ ë°© ëª©ë¡ë§Œ ì „ë‹¬
         _manager.UpdateRoomList(roomList);
     }
 
-    // °¢ »óÅÂ¿¡ ¸Â´Â ÆĞ³Î ÀüÈ¯ ±â´É
+    // ê° ìƒíƒœì— ë§ëŠ” íŒ¨ë„ ì „í™˜ ê¸°ëŠ¥
     private void SetActivePanel(Panel panel)
     {
         _loginPanel.SetActive(panel == Panel.Login);
