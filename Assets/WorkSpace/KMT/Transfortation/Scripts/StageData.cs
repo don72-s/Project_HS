@@ -5,8 +5,10 @@ public class StageData : MonoBehaviour
 {
     public static StageData Instance = null;
 
+    public enum StageType { STAGE1,  STAGE2 }
+
     [field: SerializeField]
-    public ChangeableObjsSO ChangeableSO { get; private set; }
+    public ChangeableObjsSO[] ChangeableSOArr { get; private set; }
 
     List<IFormChangeable> changeableObjList = new List<IFormChangeable>();
 
@@ -26,6 +28,26 @@ public class StageData : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 제공받은 스테이지에 대응하는 변신물체 목록 반환
+    /// </summary>
+    /// <param name="stage">스테이지 타입</param>
+    /// <returns>물체 so데이터 반환, 없을경우 null 반환</returns>
+    public ChangeableObjsSO GetStageChangeableObj(StageType stage)
+    {
+
+        foreach(ChangeableObjsSO soData in ChangeableSOArr)
+        {
+            if (soData.stage == stage)
+            {
+                return soData;
+            }
+        }
+
+        return null;
+
+    }
+
     public void AddChangeableObj(IFormChangeable obj) { 
         changeableObjList.Add(obj);
     }
@@ -41,7 +63,6 @@ public class StageData : MonoBehaviour
     [ContextMenu("StartChange")]
     public void StartChangeFormSlot() {
 
-        //TODO : 마스터 클라이언트만 호출 가능하도록 제한.
         foreach (IFormChangeable runner in changeableObjList)
         {
             runner.StartFormChange();
