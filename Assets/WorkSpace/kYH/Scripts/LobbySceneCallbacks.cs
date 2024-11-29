@@ -90,8 +90,6 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel("GameScene_Seeker_Blind");
     }
 
-    
-
     // 방에 입장한 플레이어의 프로퍼티를 변경
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
@@ -112,6 +110,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.LogWarning($"Room Enter Failed! (Cause : {message}");
+
     }
 
     // 방에서 퇴장 시 MenuPanel로 전환
@@ -125,6 +124,11 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.LogWarning($"Random Match Failed! (Cause : {message}");
+
+        string name = $"Room {Random.Range(1000, 10000)}";                              // 방 이름을 랜덤으로 설정
+        RoomOptions options = new RoomOptions() { MaxPlayers = 10 };                     // 방 최대 인원 수를 8로 설정
+        PhotonNetwork.CreateRoom(name, options);
+
     }
 
     public override void OnJoinedLobby()

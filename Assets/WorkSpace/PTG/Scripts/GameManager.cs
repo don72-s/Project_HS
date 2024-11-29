@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     IEnumerator WaitCO(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5));
+        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 2, Random.Range(-5, 5));
         if (ghostIndex.Count > 0)
         {
             int randomIndex = Random.Range(0, ghostIndex.Count);
@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     IEnumerator WaitPlayerSpawnCO()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         StageData.Instance.StartChangeFormSlot();
     }
 
@@ -197,8 +197,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void LoadStage()
     {
-        Coroutine waitLoadStageCoroudine = StartCoroutine(WaitLoadStageCO());
+        photonView.RPC("WaitLoading", RpcTarget.All);
         photonView.RPC("LoadSceneAdditive", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void WaitLoading() {
+        StartCoroutine(WaitLoadStageCO());
     }
 
     int inLoadingPlayer;
@@ -207,11 +212,16 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         float waitTime = 0;
         inLoadingPlayer = PhotonNetwork.PlayerList.Length;
-        while (waitTime < 30f && inLoadingPlayer > 0)
+        while (waitTime < 20f && inLoadingPlayer > 0)
         {
 
             yield return null;
             waitTime += Time.deltaTime;
+        }
+
+        if (!PhotonNetwork.IsMasterClient || currentState == GameState.Playing) 
+        {
+            yield break;
         }
 
         if (inLoadingPlayer == 0)
@@ -228,6 +238,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
         {
             Debug.Log("로딩 시간 초과...");
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            photonView.RPC("CancelPlayGame", RpcTarget.All);
         }
     }
 
@@ -237,10 +249,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         AsyncOperation op = SceneManager.LoadSceneAsync(STAGE_MAP_NAME, LoadSceneMode.Additive);
         op.completed += (_op) => { Debug.Log("완료!"); photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient); };
     }
+    //
+    [PunRPC]
+    void CancelPlayGame() 
+    {
+        if (SceneManager.GetSceneByName(STAGE_MAP_NAME).isLoaded)
+        {
+            SceneManager.UnloadSceneAsync(STAGE_MAP_NAME);
+        }
+    }
 
     void UnLoadScene()
     {
-        SceneManager.UnloadSceneAsync(STAGE_MAP_NAME);
+        if (SceneManager.GetSceneByName(STAGE_MAP_NAME).isLoaded)
+        {
+            SceneManager.UnloadSceneAsync(STAGE_MAP_NAME);
+        }
     }
 
     [PunRPC]
@@ -254,6 +278,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         inLoadingPlayer--;
     }
+
+
+   /* [PunRPC]
+    private void PlayerSpawn(int ranNumber)
+    {
+        myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
+
+        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
+        {
+            myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+        }
+        else
+        {
+            GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+            runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
+            myIngamePlayer = runner;
+        }
+    }*/
 
     private void SetTeamsAndSpwan()
     {
@@ -272,7 +315,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void RPC_SetSeeker(int seekerActorNumber)
     {
         currentSeeker = PhotonNetwork.CurrentRoom.GetPlayer(seekerActorNumber);
-        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 1000, Random.Range(-5, 5f));
 
         myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
 
@@ -338,7 +381,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         resultText.gameObject.SetActive(false);
 
         PhotonNetwork.Destroy(myIngamePlayer);
-        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 2, Random.Range(-5, 5f));
         myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
         UnLoadScene();
 

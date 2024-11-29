@@ -33,6 +33,15 @@ public static class CustomProperties
         }
     }
 
+    public static bool ReadyCheck(Player player)
+    {
+        if (player.CustomProperties.TryGetValue(READY, out object isReady))
+        {
+            return (bool)isReady;
+        }
+        return false;
+    }
+
     public const string LOAD = "Load";
 
     public static void SetLoad(this Player player, bool load)
@@ -74,6 +83,30 @@ public static class CustomProperties
         else
         {
             return false;
+        }
+    }
+
+    //·ë ÇÁ·ÎÆÛÆ¼
+
+    public const string STAGE = "Stage";
+
+    public static void SetStage(this Room room, StageData.StageType stage)
+    {
+        customProperty.Clear();
+        customProperty[STAGE] = (int)stage;
+        room.SetCustomProperties(customProperty);
+    }
+
+    public static StageData.StageType GetStage(this Room room)
+    {
+        PhotonHashtable customProperty = room.CustomProperties;
+        if (customProperty.ContainsKey(STAGE))
+        {
+            return (StageData.StageType)(int)customProperty[STAGE];
+        }
+        else
+        {
+            return (StageData.StageType)(-1);
         }
     }
 

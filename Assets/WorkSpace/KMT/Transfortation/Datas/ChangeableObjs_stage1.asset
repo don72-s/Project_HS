@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ChangeableObjs_stage1
   m_EditorClassIdentifier: 
   ChangeableObjArr:
-  - {fileID: 8324779444928826991, guid: f68540202f1b92447b0fa148b39e9c26, type: 3}
-  - {fileID: 90034362916899510, guid: a0edb67111379804da476b9b6247f057, type: 3}
-  - {fileID: 2635509126402371355, guid: a7d3bd273a1461640afb180ce726a92e, type: 3}
-  - {fileID: 8324779444928826991, guid: 8626654b9547731448cefde4a3d40b96, type: 3}
-  - {fileID: 8324779444928826991, guid: 2b94c39d2dd8bab4784667cb26afb857, type: 3}
-  - {fileID: 8324779444928826991, guid: b65271efbd456d84fa77fd84a3a874f1, type: 3}
+  - {fileID: 2092558875539140737, guid: 6d99fe7157190374995611275c238de8, type: 3}
+  - {fileID: 1573117774132190, guid: b762b04c7fe35704cbdbf1806a638bf1, type: 3}
+  - {fileID: 4228638966643171970, guid: 7ade998a75360c54ca6e55373981e604, type: 3}
+  - {fileID: 436181208997811857, guid: 94e4c3350f88fe94ba5e156103abcf1c, type: 3}
+  - {fileID: 1743156886038142, guid: 99a0f1488ea2c1d47b7e9f7190961e40, type: 3}
+  - {fileID: 7607658426802268550, guid: b6051831735950e45a12422235f03581, type: 3}
