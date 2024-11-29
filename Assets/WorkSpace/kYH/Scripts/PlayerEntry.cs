@@ -18,21 +18,9 @@ public class PlayerEntry : BaseUI
 
     private void Update()
     {
-        if (_isCheck && Input.GetKeyDown(KeyCode.F5))
+        if (_isCheck == true && Input.GetKeyDown(KeyCode.F5))
         {
-            Debug.Log("레디!!!!!!!!!!!!!!!!!!!!!!");
-            bool ready = PhotonNetwork.LocalPlayer.GetReady();
-
-            if (ready)
-            {
-                Debug.Log("레디풀어라");
-                PhotonNetwork.LocalPlayer.SetReady(false);
-            }
-            else
-            {
-                Debug.Log("레디해라");
-                PhotonNetwork.LocalPlayer.SetReady(true);
-            }
+            Ready();
         }
     }
 
