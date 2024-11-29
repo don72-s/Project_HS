@@ -195,6 +195,7 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         {
             playerAni.SetBool("Move", false);
             gunAni.SetBool("Move", false);
+            rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
             return;
         }
 

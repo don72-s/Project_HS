@@ -171,7 +171,11 @@ protected override void Start()
 
     private void SetPosition(float input)
     {
-        if (input == 0) return;
+        if (input == 0)
+        {
+            rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+            return;
+        }
 
         Vector3 moveDirection = transform.forward * input;
         rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
