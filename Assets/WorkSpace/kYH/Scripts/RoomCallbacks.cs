@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
@@ -6,9 +8,13 @@ using ExitGames.Client.Photon;
 
 public class RoomCallbacks : MonoBehaviourPunCallbacks
 {
-    public enum Panel { Login, Lobby, Room }
-
     [SerializeField] private RoomUpdate _roomUpdate;
+    [SerializeField] private Button _backLobbyButton;
+
+    private void Start()
+    {
+        UpdateBackToLobbyButton();
+    }
 
     // 방에 입장 시 RoomPanel의 EnterPlayer을 입장한 플레이어에게 실행
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -25,5 +31,17 @@ public class RoomCallbacks : MonoBehaviourPunCallbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         _roomUpdate.UpdatePlayerProperty(targetPlayer, changedProps);
+
+        if (targetPlayer == PhotonNetwork.LocalPlayer &&  changedProps.ContainsKey("Ready"))
+        {
+            UpdateBackToLobbyButton();
+        }
+    }
+
+    private void UpdateBackToLobbyButton()
+    {
+        bool isReady = CustomProperties.ReadyCheck(PhotonNetwork.LocalPlayer);
+
+        _backLobbyButton.interactable = !isReady;
     }
 }
