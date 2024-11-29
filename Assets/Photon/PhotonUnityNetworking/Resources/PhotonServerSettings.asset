@@ -66,6 +66,7 @@ MonoBehaviour:
   - SeekerFreeze
   - WaitLoading
   - CancelPlayGame
+  - UpdateFreezeTimer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
