@@ -16,6 +16,8 @@ public class RoomPlayerController : PlayerControllerParent, IPunObservable
     [SerializeField] private float mouseX = 5f;
     [SerializeField] private float mouseY = 5f;
 
+    public LayerMask collisionLayer;
+
     private bool isJumped;
     private Rigidbody rb;
     private float yRotation = 0f;
@@ -123,10 +125,14 @@ public class RoomPlayerController : PlayerControllerParent, IPunObservable
 
     private void SetPosition(float input)
     {
-        if (input == 0) return;
+        if (input == 0) 
+        {
+            rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+            return;
+        }
 
         Vector3 moveDirection = transform.forward * input;
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
     }
 
     private void Rotate(int direction)
@@ -147,7 +153,24 @@ public class RoomPlayerController : PlayerControllerParent, IPunObservable
         xRotation = Mathf.Clamp(xRotation, 0, 60);
 
         Camera.main.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        Camera.main.transform.position = transform.position - Camera.main.transform.forward * 5f + Vector3.up;
+
+        // 카메라 위치
+        Vector3 targetPosition = transform.position - Camera.main.transform.forward * 2f + Vector3.up;
+
+        // 카메라와 플레이어 사이의 벡터값
+        Vector3 rayDir = targetPosition - transform.position;
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position + new Vector3(0, 0.3f, 0), rayDir, out hit, 3f, collisionLayer))
+        {
+            Camera.main.transform.position = hit.point - rayDir.normalized * 0.3f;
+            Debug.Log(hit.collider.name);
+        }
+        else
+        {
+            Camera.main.transform.position = targetPosition;
+        }
     }
 
 }
