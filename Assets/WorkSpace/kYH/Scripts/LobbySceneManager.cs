@@ -238,9 +238,12 @@ public class LobbySceneManager : BaseUI
 
     public void MatchRandom(PointerEventData eventData)
     {
-        string name = $"Room {Random.Range(1000, 10000)}";                              // 방 이름을 랜덤으로 설정
+        //코드 콜백으로 옮겼습니다!
+        /*string name = $"Room {Random.Range(1000, 10000)}";                              // 방 이름을 랜덤으로 설정
         RoomOptions options = new RoomOptions() { MaxPlayers = 10 };                     // 방 최대 인원 수를 8로 설정
-        PhotonNetwork.JoinRandomOrCreateRoom(roomName: name, roomOptions: options);
+        PhotonNetwork.JoinRandomOrCreateRoom(roomName: name, roomOptions: options);*/
+
+        PhotonNetwork.JoinRandomRoom();
     }
 
     public void LogOut(PointerEventData eventData)
