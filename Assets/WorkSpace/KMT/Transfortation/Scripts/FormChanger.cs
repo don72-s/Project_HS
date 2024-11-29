@@ -6,7 +6,6 @@ using UnityEngine;
 public class FormChanger : MonoBehaviourPunCallbacks, 
     IFormChangeable
 {
-    GameObject[] objArr;
 
     [SerializeField]
     GameObject ghostObj;
@@ -28,7 +27,6 @@ public class FormChanger : MonoBehaviourPunCallbacks,
         changeCanvas.gameObject.SetActive(false);
         changeCanvas.GetComponent<ObjectSlotMachine>().SetChangeable(this);
 
-        objArr = StageData.Instance.ChangeableSO.ChangeableObjArr;
         StageData.Instance.AddChangeableObj(this);
 
         GetComponent<RunnerController>().OnDeadEvent.AddListener(OnDead);
@@ -105,6 +103,16 @@ public class FormChanger : MonoBehaviourPunCallbacks,
     [PunRPC]
     public void ChangeFormRpc(int destObjidx)
     {
+
+        ChangeableObjsSO soData = StageData.Instance.GetStageChangeableObj(
+            PhotonNetwork.CurrentRoom.GetStage());
+        if (soData == null)
+        {
+            Debug.LogError("대응되는 데이터정보가 없음!!!");
+            return;
+        }
+
+        GameObject[] objArr = soData.ChangeableObjArr;
 
         //TODO : 플레이어 회전값? 고정 회전값?
         GameObject tmpObj = Instantiate(objArr[destObjidx], transform);

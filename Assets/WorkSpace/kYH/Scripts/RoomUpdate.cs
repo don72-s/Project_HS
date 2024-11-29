@@ -2,6 +2,7 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,14 +16,26 @@ public class RoomUpdate : MonoBehaviour
     private void OnEnable()
     {
         PlayerNumbering.OnPlayerNumberingChanged += UpdatePlayers;
-        PhotonNetwork.LocalPlayer.SetReady(false);
-        PhotonNetwork.LocalPlayer.SetLoad(false);
+        //PhotonNetwork.LocalPlayer.SetReady(false);
+        StartCoroutine(WaitForJoinCO());
+        //PhotonNetwork.LocalPlayer.SetLoad(false);
         UpdatePlayers();
     }
 
     private void OnDisable()
     {
         PlayerNumbering.OnPlayerNumberingChanged -= UpdatePlayers;
+    }
+
+    IEnumerator WaitForJoinCO() 
+    {
+        while (PhotonNetwork.NetworkClientState != ClientState.Joined)
+        {
+            yield return null;
+        }
+
+        PhotonNetwork.LocalPlayer.SetReady(false);
+
     }
 
     public void UpdatePlayers()
@@ -62,7 +75,7 @@ public class RoomUpdate : MonoBehaviour
         UpdatePlayers();
     }
 
-    public void UpdatePlayerProperty(Player targetPlayer, Hashtable properties)
+    public void UpdatePlayerProperty(Player targetPlayer, ExitGames.Client.Photon.Hashtable properties)
     {
         Debug.Log($"{targetPlayer.NickName} Update!");
 

@@ -1,4 +1,5 @@
 using ExitGames.Client.Photon.StructWrapping;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using UnityEngine.UI;
 
 public class ObjectSlotMachine : MonoBehaviour
 {
-
+ 
     [SerializeField]
     int countdownSec;
 
@@ -29,7 +30,7 @@ public class ObjectSlotMachine : MonoBehaviour
     private void Awake()
     {
         changeUIBinder = GetComponent<ChangeUIBinder>();
-
+        
         buttons.Add(changeUIBinder.GetUI<Button>("ChangeButton1"));
         buttons.Add(changeUIBinder.GetUI<Button>("ChangeButton2"));
         buttons.Add(changeUIBinder.GetUI<Button>("ChangeButton3"));
@@ -47,8 +48,15 @@ public class ObjectSlotMachine : MonoBehaviour
 
     public void InitObjArr() {
 
-        if(objectArr == null)
-            objectArr = StageData.Instance.ChangeableSO.ChangeableObjArr;
+        ChangeableObjsSO soData = StageData.Instance.GetStageChangeableObj(
+            PhotonNetwork.CurrentRoom.GetStage());
+        if (soData == null)
+        {
+            Debug.LogError("대응되는 데이터정보가 없음!!!");
+            return;
+        }
+
+        objectArr = soData.ChangeableObjArr;
 
     }
 
