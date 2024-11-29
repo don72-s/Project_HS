@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.Demo.Procedural;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
@@ -10,6 +11,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviourPunCallbacks
 {
     public const string RoomName = "TestRoomPTK";
+
+    public const string STAGE_MAP_NAME = "lsy_GameScene_Clone";
 
     public static GameManager Instance;
 
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Text resultText;
     public Slider timeSlider;
+    public Image blind;
 
     GameObject myRoomPlayer;
     GameObject myIngamePlayer;
@@ -231,13 +235,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void LoadSceneAdditive()
     {
-        AsyncOperation op = SceneManager.LoadSceneAsync("lsy_GameScene_Additive", LoadSceneMode.Additive);
+        AsyncOperation op = SceneManager.LoadSceneAsync(STAGE_MAP_NAME, LoadSceneMode.Additive);
         op.completed += (_op) => { Debug.Log("완료!"); photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient); };
     }
 
     void UnLoadScene()
     {
-        SceneManager.UnloadSceneAsync("lsy_GameScene_Additive");
+        SceneManager.UnloadSceneAsync(STAGE_MAP_NAME);
     }
 
     [PunRPC]
@@ -295,6 +299,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("You are Seeker");
             myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+
+            photonView.RPC("SeekerFreeze", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, 5f); // 술래 멈추기
         }
         else
         {
@@ -404,5 +410,29 @@ public class GameManager : MonoBehaviourPunCallbacks
         runnersRemaining = Runners;
 
         Debug.LogWarning("Remaining runners : " + runnersRemaining);
+    }
+
+    [PunRPC]
+    private void SeekerFreeze(int seekerActorNumber, float freezeDuration)
+    {
+        if (PhotonNetwork.LocalPlayer.ActorNumber == seekerActorNumber)
+        {
+            GameObject seeker = myIngamePlayer;
+
+            seeker.GetComponent<PlayerController>().enabled = false;
+
+            blind.gameObject.SetActive(true);
+
+            StartCoroutine(UnfreezeSeeker(seeker, freezeDuration));
+        }
+    }
+
+    private IEnumerator UnfreezeSeeker(GameObject seeker, float freezeDuration)
+    {
+        yield return new WaitForSeconds(freezeDuration);
+
+        seeker.GetComponent<PlayerController>().enabled = true;
+
+        blind.gameObject.SetActive(false);
     }
 }
