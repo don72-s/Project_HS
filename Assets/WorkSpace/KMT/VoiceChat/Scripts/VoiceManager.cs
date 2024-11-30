@@ -36,10 +36,6 @@ public class VoiceManager : MonoBehaviourPunCallbacks
                 recorder.TransmitEnabled = false;
                 micImg.sprite = micMuteSprite;
             }
-            else {
-                recorder.TransmitEnabled = true;
-                micImg.sprite = micSprite;
-            }
         }
     }
 

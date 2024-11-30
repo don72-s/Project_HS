@@ -66,7 +66,11 @@ public class RoomUpdate : MonoBehaviour
     {
 
         float cnt = 5;
-        WaitForSeconds delay = new WaitForSeconds(1);
+        int displayeVal = 5;
+
+        if (GameManager.Instance.currentState == GameManager.GameState.InLoading ||
+           GameManager.Instance.currentState == GameManager.GameState.Playing)
+            yield break;
 
         while (cnt > 0)
         {
@@ -75,6 +79,11 @@ public class RoomUpdate : MonoBehaviour
 
             yield return null;
             cnt -= Time.deltaTime;
+            if (displayeVal > cnt)
+            {
+                GameManager.Instance.photonView.RPC("PlayCountdownRpc", RpcTarget.All, displayeVal);
+                displayeVal--;
+            }
             Debug.Log(cnt);
         }
 

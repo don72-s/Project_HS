@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static GameManager Instance;
 
     // 상태
-    public enum GameState { Waiting, Playing, Finished }
+    public enum GameState { Waiting, Playing, Finished, InLoading }
 
     public GameState currentState = GameState.Waiting;
 
@@ -50,6 +50,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [SerializeField]
     RoomManager roomManager;
+
+    [SerializeField]
+    CountdownAni countdownAni;
 
     private void Awake()
     {
@@ -124,13 +127,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
 
-        if (currentState == GameState.Waiting)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                TestGameStart();
-            }
-        }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -182,6 +178,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     //TODO : 게임 중복시작 무시 예외처리 필요. 임시 해결
     public void TestGameStart()
     {
+        if (currentState == GameState.Playing || currentState == GameState.InLoading)
+            return;
+
+        currentState = GameState.InLoading;
+
         if (PhotonNetwork.IsMasterClient)
         {
             List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
@@ -368,6 +369,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         resultText.gameObject.SetActive(true);
         timeSlider.gameObject.SetActive(false);
 
+        PhotonNetwork.LocalPlayer.SetReady(false);
+        //
         StartCoroutine(ReturnToLobby());
     }
 
@@ -496,4 +499,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         freezeTimer.text = "";
         freezeTimer.gameObject.SetActive(false);
     }
+
+    [PunRPC]
+    void PlayCountdownRpc(int count)
+    {
+        if (currentState == GameState.Playing)
+            return;
+
+        countdownAni.PlayCountdown(count);
+    }
+
 }
