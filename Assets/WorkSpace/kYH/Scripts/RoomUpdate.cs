@@ -84,7 +84,6 @@ public class RoomUpdate : MonoBehaviour
                 GameManager.Instance.photonView.RPC("PlayCountdownRpc", RpcTarget.All, displayeVal);
                 displayeVal--;
             }
-            Debug.Log(cnt);
         }
 
         GameManager.Instance.TestGameStart();

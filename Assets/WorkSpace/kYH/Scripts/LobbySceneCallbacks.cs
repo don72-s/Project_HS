@@ -82,7 +82,7 @@ public class LobbySceneCallbacks : MonoBehaviourPunCallbacks
         Debug.Log("Room Enter Success!");
         //SetActivePanel(Panel.Room);
         //PhotonNetwork.LoadLevel("Test_RoomScene");
-        PhotonNetwork.LoadLevel("GameScene_ReadyExit");
+        PhotonNetwork.LoadLevel("GameScene_Seeker_Blind");
     }
 
     // 방에 입장한 플레이어의 프로퍼티를 변경
