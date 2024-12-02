@@ -27,20 +27,8 @@ public class RoomCallbacks : MonoBehaviourPunCallbacks
         _roomUpdate.ExitPlayer(otherPlayer);
     }
 
-    /*public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         _roomUpdate.UpdatePlayerProperty(targetPlayer, changedProps);
-
-        if (targetPlayer == PhotonNetwork.LocalPlayer &&  changedProps.ContainsKey("Ready"))
-        {
-            UpdateBackToLobbyButton();
-        }
-    }*/
-
-    /*private void UpdateBackToLobbyButton()
-    {
-        bool isReady = CustomProperties.ReadyCheck(PhotonNetwork.LocalPlayer);
-
-        _backLobbyButton.interactable = !isReady;
-    }*/
+    }
 }

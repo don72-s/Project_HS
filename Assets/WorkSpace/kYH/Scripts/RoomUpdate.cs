@@ -114,6 +114,9 @@ public class RoomUpdate : MonoBehaviour
 
     private bool CheckAllReady()
     {
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
+            return false;
+
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             if (player.GetReady() == false)

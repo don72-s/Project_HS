@@ -37,10 +37,12 @@ public class RoomManager : BaseUI
         _startButton.onClick.AddListener(StartGame);
     }*/
 
-    private void Update()
+    private void OnEnable()
     {
-        StartCoroutine(Changeroutine());
+        StartCoroutine(RunnerTutorialCO());
+        StartCoroutine(SeekerTutorialCO());
     }
+
 
     public void BackToLobby()
     {
@@ -55,30 +57,58 @@ public class RoomManager : BaseUI
         _gameManager.TestGameStart();
     }
 
-    IEnumerator Changeroutine()
+    IEnumerator RunnerTutorialCO()
     {
-        yield return new WaitForSeconds(5.0f);
+        int i = 0;
 
-        for (int i = 0; i < _runnerTutorials.Length; i++)
+        while (true)
         {
-            if (i == _runnerTutorials.Length - 1)
+
+            foreach (GameObject obj in _runnerTutorials)
+            { 
+                obj.SetActive(false);
+            }
+
+            if (i >= _runnerTutorials.Length)
             {
                 i = 0;
             }
 
-            _runnerTutorials[i].SetActive(false);
-            _runnerTutorials[i + 1].SetActive(true);
+            _runnerTutorials[i].SetActive(true);
+
+            yield return new WaitForSeconds(5.0f);
+
+            i++;
+
         }
 
-        for (int i = 0; i < _seekerTutorials.Length; i++)
+    }
+
+    IEnumerator SeekerTutorialCO()
+    {
+        int i = 0;
+
+        while (true)
         {
-            if (i == _seekerTutorials.Length - 1)
+
+            foreach (GameObject obj in _seekerTutorials)
+            {
+                obj.SetActive(false);
+            }
+
+            if (i >= _seekerTutorials.Length)
             {
                 i = 0;
             }
 
-            _seekerTutorials[i].SetActive(false);
-            _seekerTutorials[i + 1].SetActive(true);
+            _seekerTutorials[i].SetActive(true);
+
+            yield return new WaitForSeconds(5.0f);
+
+            i++;
+
         }
     }
+
+
 }
