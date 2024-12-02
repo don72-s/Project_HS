@@ -132,10 +132,16 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         if (Input.GetKeyDown(KeyCode.Space) && !isJumped)
         {
             isJumped = true;
-            playerAni.SetTrigger("Jump1");
+            photonView.RPC("JumpTrigger", RpcTarget.AllViaServer);
             photonView.RPC("PlayJumpSound", RpcTarget.AllViaServer);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+    }
+
+    [PunRPC]
+    void JumpTrigger()
+    {
+        playerAni.SetTrigger("Jump1");
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class ExitArea : AreaTrigger
@@ -15,6 +16,8 @@ public class ExitArea : AreaTrigger
         if (voice != null)
             Destroy(voice);
 
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         PhotonNetwork.LeaveRoom();
 
     }

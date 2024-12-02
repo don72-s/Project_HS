@@ -1094,7 +1094,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 3129392246571992233}
   - {fileID: 7691471762253708528}
-  - {fileID: 4711173189743448921}
+  - {fileID: 7775337609766058784}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -2141,7 +2141,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1981860918171908, guid: c266c61b42ce56a4ca7e9190ef1209e3, type: 3}
   m_PrefabInstance: {fileID: 3252042002281736444}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4711173189743448921
+--- !u!114 &7775337609766058784
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2157,13 +2157,10 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Jump1
-  - Type: 1
-    SynchronizeType: 2
-    Name: Move
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Aim
   - Type: 4
     SynchronizeType: 2
@@ -2171,6 +2168,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 2
     Name: RightTurn
+  - Type: 4
+    SynchronizeType: 2
+    Name: Move
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0

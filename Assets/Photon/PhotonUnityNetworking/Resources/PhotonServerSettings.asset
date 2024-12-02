@@ -67,6 +67,8 @@ MonoBehaviour:
   - WaitLoading
   - CancelPlayGame
   - UpdateFreezeTimer
+  - PlayCountdownRpc
+  - JumpTrigger
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

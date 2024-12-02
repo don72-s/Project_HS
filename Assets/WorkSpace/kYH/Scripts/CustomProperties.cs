@@ -26,7 +26,7 @@ public static class CustomProperties
             Debug.Log("제발 되라 좀!!!!!!!!!!!!!!!!!");
             return (bool)customProperty[READY];
         }
-        else
+        else//
         {
             Debug.Log("왜 안되냐고!!!!!!!!!!!!!!!!!");
             return false;
