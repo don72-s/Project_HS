@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -42,6 +43,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
 
     public LayerMask collisionLayer;
 
+    bool isLocking = false;
 protected override void Start()
 {
     base.Start();
@@ -80,8 +82,33 @@ protected override void Start()
             return;
         }
 
+        CheckLock();
         Jump();
         Move();
+    }
+
+    private void CheckLock()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            photonView.RPC("LockingRpc", RpcTarget.AllViaServer);
+        }
+
+    }
+
+    [PunRPC]
+    private void LockingRpc()
+    {
+        if (isLocking)//«∞
+        {
+            isLocking = false;
+            rb.useGravity = true;
+        }
+        else //¿·±›
+        {
+            isLocking = true;
+            rb.useGravity = false;
+        }
     }
 
     private void LateUpdate()
@@ -171,6 +198,12 @@ protected override void Start()
 
     private void SetPosition(float input)
     {
+        if (isLocking)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
         if (input == 0)
         {
             rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
