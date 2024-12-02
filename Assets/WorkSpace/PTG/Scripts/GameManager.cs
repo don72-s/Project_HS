@@ -80,6 +80,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         toggle120.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle120, isOn));
         toggle180.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle180, isOn));
 
+        UpdateTimeBasedOnToggle();
+
         resultText.gameObject.SetActive(false);
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
@@ -155,16 +157,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log(runnersRemaining);
         }
     }
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        base.OnPlayerEnteredRoom(newPlayer);
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            photonView.RPC("RPC_UpdateToggleState", newPlayer, currentState == GameState.Waiting);
-        }
-    }
-
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
@@ -592,6 +584,30 @@ public class GameManager : MonoBehaviourPunCallbacks
                 timer = gameDuration;
                 timeSlider.value = gameDuration;
             }
+
+            photonView.RPC("UpdateGameDuration", RpcTarget.Others, gameDuration);
         }
+    }
+
+    [PunRPC]
+    private void UpdateGameDuration(float newDuration)
+    {
+        gameDuration = newDuration; 
+        if (currentState == GameState.Playing)
+        {
+            timer = gameDuration;
+            timeSlider.value = gameDuration;
+        }
+    }
+
+    private void UpdateTimeBasedOnToggle()
+    {
+        // 초기 상태에 맞는 토글 활성화
+        if (gameDuration == 60f)
+            toggle60.isOn = true;
+        else if (gameDuration == 120f)
+            toggle120.isOn = true;
+        else if (gameDuration == 180f)
+            toggle180.isOn = true;
     }
 }
