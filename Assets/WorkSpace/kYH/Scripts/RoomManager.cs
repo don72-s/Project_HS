@@ -37,9 +37,10 @@ public class RoomManager : BaseUI
         _startButton.onClick.AddListener(StartGame);
     }*/
 
-    private void Update()
+    private void Start()
     {
-        StartCoroutine(Changeroutine());
+        StartCoroutine(RunnerTutorialCO());
+        StartCoroutine(SeekerTutorialCO());
     }
 
     public void BackToLobby()
@@ -55,10 +56,8 @@ public class RoomManager : BaseUI
         _gameManager.TestGameStart();
     }
 
-    IEnumerator Changeroutine()
+    IEnumerator RunnerTutorialCO()
     {
-        yield return new WaitForSeconds(5.0f);
-
         for (int i = 0; i < _runnerTutorials.Length; i++)
         {
             if (i == _runnerTutorials.Length - 1)
@@ -68,8 +67,15 @@ public class RoomManager : BaseUI
 
             _runnerTutorials[i].SetActive(false);
             _runnerTutorials[i + 1].SetActive(true);
+
+            yield return new WaitForSeconds(5.0f);
+
         }
 
+    }
+
+    IEnumerator SeekerTutorialCO()
+    {
         for (int i = 0; i < _seekerTutorials.Length; i++)
         {
             if (i == _seekerTutorials.Length - 1)
@@ -79,6 +85,11 @@ public class RoomManager : BaseUI
 
             _seekerTutorials[i].SetActive(false);
             _seekerTutorials[i + 1].SetActive(true);
+
+            yield return new WaitForSeconds(5.0f);
+
         }
     }
+
+
 }
