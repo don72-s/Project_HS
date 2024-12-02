@@ -384,6 +384,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.SetReady(false);
 
         StartCoroutine(ReturnToLobby());
+        StartCoroutine(DelayBGM());
     }
 
     private IEnumerator ReturnToLobby()
@@ -420,7 +421,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("LeftRoom");
         SceneManager.LoadSceneAsync("KYH_LobbyScene");
         PhotonNetwork.JoinLobby();
-        AudioManager.instance.PlayBGMScene("Robby");
         //PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 복귀
     }
 
