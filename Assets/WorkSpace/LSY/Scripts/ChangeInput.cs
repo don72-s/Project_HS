@@ -36,16 +36,5 @@ public class ChangeInput : MonoBehaviour
                 next.Select();
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Return))
-        {
-            Button next = system.currentSelectedGameObject.GetComponent<Button>();
-            if (next != null)
-            {
-                if (next != null)
-                {
-                    next.onClick.Invoke();
-                }
-            }
-        }
     }
 }
