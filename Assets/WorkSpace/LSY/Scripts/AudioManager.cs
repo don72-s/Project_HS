@@ -19,21 +19,26 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        DataManager.Instance.OptionDataParams.bgmValueChanged += (val) => 
+        { 
+            GetComponent<AudioSource>().volume = val;
+        };
+    }
+
     public void PlayBGMScene(string sceneName)
     {
         switch (sceneName)
         {
             case "Lobby":
                 audioSource.clip = bgmClips[0];
-                audioSource.volume = 0.8f;
                 break;
             case "Room":
                 audioSource.clip = bgmClips[1];
-                audioSource.volume = 0.8f;
                 break;
             case "Game":
                 audioSource.clip = bgmClips[2];
-                audioSource.volume = 0.2f;
                 break;
             default:
                 audioSource.clip = bgmClips[0];

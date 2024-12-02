@@ -117,6 +117,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6157669253827040755}
   - component: {fileID: 4551769558512538187}
+  - component: {fileID: 1786244955907000494}
   m_Layer: 6
   m_Name: Shoot
   m_TagString: Untagged
@@ -235,6 +236,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1786244955907000494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2435206174208940160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b98aaf02155c404b90e23c27590d29e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2463011902179038297
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,6 +478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1126659190434839225}
   - component: {fileID: 6860453639571538765}
+  - component: {fileID: 8155518531071283889}
   m_Layer: 6
   m_Name: Reload
   m_TagString: Untagged
@@ -583,6 +597,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8155518531071283889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3540003942266483962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b98aaf02155c404b90e23c27590d29e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4535904680282006142
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,6 +775,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8124716469676621210}
   - component: {fileID: 2175716105038946151}
+  - component: {fileID: 4703530685581082701}
   m_Layer: 6
   m_Name: Jump
   m_TagString: Untagged
@@ -867,6 +894,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4703530685581082701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6891340154009806140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b98aaf02155c404b90e23c27590d29e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7286058515983779287
 GameObject:
   m_ObjectHideFlags: 0
@@ -1346,6 +1385,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2368862702298609456}
   - component: {fileID: 8995145585118610363}
+  - component: {fileID: 5203950441424580206}
   m_Layer: 6
   m_Name: Walk
   m_TagString: Untagged
@@ -1464,6 +1504,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5203950441424580206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8365735467806601333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b98aaf02155c404b90e23c27590d29e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8372490500169899838
 GameObject:
   m_ObjectHideFlags: 0

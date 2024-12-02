@@ -37,12 +37,15 @@ public class DataManager : MonoBehaviour
 
     public static DataManager Instance { get; private set; } = null;
 
+    public OptionDataParams OptionDataParams {  get; private set; }
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            OptionDataParams = GetComponent<OptionDataParams>();
         }
         else {
             Destroy(gameObject);

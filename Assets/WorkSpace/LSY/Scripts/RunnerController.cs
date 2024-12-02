@@ -194,8 +194,8 @@ protected override void Start()
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
-        yRotation += mouseX * this.mouseX;
-        xRotation -= mouseY * this.mouseY;
+        yRotation += mouseX * this.mouseX * DataManager.Instance.OptionDataParams.MouseSensitivity;
+        xRotation -= mouseY * this.mouseY * DataManager.Instance.OptionDataParams.MouseSensitivity;
 
         xRotation = Mathf.Clamp(xRotation, 0, 60);
 
