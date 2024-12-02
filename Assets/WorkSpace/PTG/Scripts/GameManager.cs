@@ -23,11 +23,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameState currentState = GameState.Waiting;
 
     // 시간 설정
-    public float gameDuration = 10f;
+    public float gameDuration = 120f;
 
     public float freezeTime = 5f;
 
     private float timer;
+
+    public Toggle toggle60;
+    public Toggle toggle120;
+    public Toggle toggle180;
 
     // 승리 조건
     private int runnersRemaining;
@@ -62,6 +66,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        if (PhotonNetwork.IsMasterClient) EnableToggles(true);
+        else EnableToggles(false);
+
         resultText.gameObject.SetActive(false);
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
@@ -137,6 +144,16 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log(runnersRemaining);
         }
     }
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("RPC_UpdateToggleState", newPlayer, currentState == GameState.Waiting);
+        }
+    }
+
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
@@ -207,7 +224,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void WaitLoading() {
+    void WaitLoading()
+    {
         StartCoroutine(WaitLoadStageCO());
     }
 
@@ -224,7 +242,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             waitTime += Time.deltaTime;
         }
 
-        if (!PhotonNetwork.IsMasterClient || currentState == GameState.Playing) 
+        if (!PhotonNetwork.IsMasterClient || currentState == GameState.Playing)
         {
             yield break;
         }
@@ -257,7 +275,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     //
     [PunRPC]
-    void CancelPlayGame() 
+    void CancelPlayGame()
     {
         if (SceneManager.GetSceneByName(STAGE_MAP_NAME).isLoaded)
         {
@@ -286,23 +304,23 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-   /* [PunRPC]
-    private void PlayerSpawn(int ranNumber)
-    {
-        myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
+    /* [PunRPC]
+     private void PlayerSpawn(int ranNumber)
+     {
+         myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
 
-        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
-        if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
-        {
-            myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
-        }
-        else
-        {
-            GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
-            runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
-            myIngamePlayer = runner;
-        }
-    }*/
+         Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5, 5f));
+         if (PhotonNetwork.LocalPlayer.GetPlayerNumber() == ranNumber)
+         {
+             myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
+         }
+         else
+         {
+             GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
+             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
+             myIngamePlayer = runner;
+         }
+     }*/
 
     private void SetTeamsAndSpwan()
     {
@@ -350,6 +368,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
         timeSlider.gameObject.SetActive(true);
+
+        photonView.RPC("RPC_UpdateToggleState", RpcTarget.All, false);
+
         Debug.Log("Game Start");
 
         roomManager.gameObject.SetActive(false);
@@ -380,7 +401,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         resultText.gameObject.SetActive(true);
         timeSlider.gameObject.SetActive(false);
-        
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("RPC_UpdateToggleState", RpcTarget.All, true);
+        }
+
         PhotonNetwork.LocalPlayer.SetReady(false);
 
         StartCoroutine(ReturnToLobby());
@@ -410,7 +436,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         roomManager.gameObject.SetActive(true);
 
-        if (PhotonNetwork.IsMasterClient) {
+        if (PhotonNetwork.IsMasterClient)
+        {
             PhotonNetwork.CurrentRoom.IsOpen = true;
         }
 
@@ -470,7 +497,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         GameObject seeker = myIngamePlayer;
 
         if (PhotonNetwork.LocalPlayer.ActorNumber == seekerActorNumber)
-        {       
+        {
             seeker.GetComponent<PlayerController>().enabled = false;
 
             blind.gameObject.SetActive(true);
@@ -489,7 +516,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             seeker.GetComponent<PlayerController>().enabled = true;
 
             blind.gameObject.SetActive(false);
-        }    
+        }
     }
 
     [PunRPC]
@@ -522,4 +549,37 @@ public class GameManager : MonoBehaviourPunCallbacks
         countdownAni.PlayCountdown(count);
     }
 
+    private void OnToggleChanged(Toggle changedToggle)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (changedToggle.isOn)
+        {
+            if (changedToggle == toggle60) gameDuration = 60f;
+            else if (changedToggle == toggle120) gameDuration = 120f;
+            else if (changedToggle == toggle180) gameDuration = 180f;
+
+            if (changedToggle != toggle60) toggle60.isOn = false;
+            if (changedToggle != toggle120) toggle120.isOn = false;
+            if (changedToggle != toggle180) toggle180.isOn = false;
+        }
+    }
+
+    public void UpdateToggleState()
+    {
+        EnableToggles(currentState == GameState.Waiting && PhotonNetwork.IsMasterClient);
+    }
+
+    private void EnableToggles(bool enable)
+    {
+        toggle60.interactable = enable;
+        toggle120.interactable = enable;
+        toggle180.interactable = enable;
+    }
+
+    [PunRPC]
+    private void RPC_UpdateToggleState(bool enable)
+    {
+        EnableToggles(enable);
+    }
 }
