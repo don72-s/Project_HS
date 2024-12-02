@@ -13,8 +13,6 @@ public class PlayerEntry : BaseUI
 {
     [SerializeField] private TMP_Text _readyText;
     [SerializeField] private TMP_Text _nameText;
-    [SerializeField] private Button _readyButton;
-    [SerializeField] private Button _backLobbyButton;
     private bool _isCheck;
     public bool _isReady;
 
@@ -43,8 +41,8 @@ public class PlayerEntry : BaseUI
         {
             _isCheck = true;
         }
-        _readyButton.gameObject.SetActive(true);
-        _readyButton.interactable = player == PhotonNetwork.LocalPlayer;
+        /*_readyButton.gameObject.SetActive(true);
+        _readyButton.interactable = player == PhotonNetwork.LocalPlayer;*/
 
         if (player.GetReady())
         {
@@ -60,7 +58,6 @@ public class PlayerEntry : BaseUI
     {
         _nameText.text = "";
         _readyText.text = "";
-        _readyButton.gameObject.SetActive(false);
     }
 
     public void Ready()

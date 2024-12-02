@@ -9,12 +9,11 @@ using ExitGames.Client.Photon;
 public class RoomCallbacks : MonoBehaviourPunCallbacks
 {
     [SerializeField] private RoomUpdate _roomUpdate;
-    [SerializeField] private Button _backLobbyButton;
 
-    private void Start()
+    /*private void Start()
     {
         UpdateBackToLobbyButton();
-    }
+    }*/
 
     // 방에 입장 시 RoomPanel의 EnterPlayer을 입장한 플레이어에게 실행
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -28,7 +27,7 @@ public class RoomCallbacks : MonoBehaviourPunCallbacks
         _roomUpdate.ExitPlayer(otherPlayer);
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    /*public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         _roomUpdate.UpdatePlayerProperty(targetPlayer, changedProps);
 
@@ -36,12 +35,12 @@ public class RoomCallbacks : MonoBehaviourPunCallbacks
         {
             UpdateBackToLobbyButton();
         }
-    }
+    }*/
 
-    private void UpdateBackToLobbyButton()
+    /*private void UpdateBackToLobbyButton()
     {
         bool isReady = CustomProperties.ReadyCheck(PhotonNetwork.LocalPlayer);
 
         _backLobbyButton.interactable = !isReady;
-    }
+    }*/
 }

@@ -21,23 +21,21 @@ using UnityEngine.SceneManagement;
 public class RoomManager : BaseUI
 {
     [SerializeField] private GameObject _roomManager;
-    [SerializeField] private Button _backLobbyButton;
-    [SerializeField] private Button _startButton;
+    /*[SerializeField] private Button _backLobbyButton;
+    [SerializeField] private Button _startButton;*/
     [SerializeField] private GameManager _gameManager;
 
     [SerializeField] private GameObject voice;
 
-    [Header("Runner Tutorial")]
+    [Header("Tutorial Page")]
     [SerializeField] GameObject[] _runnerTutorials;
-
-    [Header("Seeker Tutorial")]
     [SerializeField] GameObject[] _seekerTutorials;
 
-    private void Start()
+    /*private void Start()
     {
         _backLobbyButton.onClick.AddListener(BackToLobby);
         _startButton.onClick.AddListener(StartGame);
-    }
+    }*/
 
     private void Update()
     {
@@ -72,7 +70,7 @@ public class RoomManager : BaseUI
             _runnerTutorials[i + 1].SetActive(true);
         }
 
-        /*for (int i = 0; i < _seekerTutorials.Length; i++)
+        for (int i = 0; i < _seekerTutorials.Length; i++)
         {
             if (i == _seekerTutorials.Length - 1)
             {
@@ -81,6 +79,6 @@ public class RoomManager : BaseUI
 
             _seekerTutorials[i].SetActive(false);
             _seekerTutorials[i + 1].SetActive(true);
-        }*/
+        }
     }
 }
