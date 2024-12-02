@@ -112,10 +112,12 @@ public class FormChanger : MonoBehaviourPunCallbacks,
             return;
         }
 
-        GameObject[] objArr = soData.ChangeableObjArr;
+        ObjArr[] objArr = soData.ChangeableObjs;
+
+        Debug.LogWarning(destObjidx);
 
         //TODO : 플레이어 회전값? 고정 회전값?
-        GameObject tmpObj = Instantiate(objArr[destObjidx], transform);
+        GameObject tmpObj = Instantiate(objArr[destObjidx].changeableObj, transform);
 
         //이미 몸체가 있으면 제거
         if (curBodyObject != null)

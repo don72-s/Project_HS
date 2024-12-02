@@ -15386,8 +15386,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <ChangeableSOArr>k__BackingField:
-  - {fileID: 11400000, guid: 73d2ecb5b307d2a48aab8fc7777773f1, type: 2}
   - {fileID: 11400000, guid: 0b8f6205ebfb30f40affe0be0fc8f3ac, type: 2}
+  - {fileID: 11400000, guid: 73d2ecb5b307d2a48aab8fc7777773f1, type: 2}
 --- !u!4 &1348925909
 Transform:
   m_ObjectHideFlags: 0
@@ -23849,6 +23849,8 @@ MonoBehaviour:
   _startButton: {fileID: 1103698867}
   _gameManager: {fileID: 1627490623}
   voice: {fileID: 1543667916}
+  _runnerTutorials: []
+  _seekerTutorials: []
 --- !u!4 &2063862190
 Transform:
   m_ObjectHideFlags: 0

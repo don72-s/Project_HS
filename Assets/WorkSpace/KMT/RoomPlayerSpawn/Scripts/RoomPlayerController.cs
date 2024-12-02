@@ -165,7 +165,7 @@ public class RoomPlayerController : PlayerControllerParent, IPunObservable
         if (Physics.Raycast(transform.position + new Vector3(0, 0.3f, 0), rayDir, out hit, 3f, collisionLayer))
         {
             Camera.main.transform.position = hit.point - rayDir.normalized * 0.3f;
-            Debug.Log(hit.collider.name);
+            //Debug.Log(hit.collider.name);
         }
         else
         {
