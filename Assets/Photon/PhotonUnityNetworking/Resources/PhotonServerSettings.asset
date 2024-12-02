@@ -71,6 +71,7 @@ MonoBehaviour:
   - JumpTrigger
   - RPC_UpdateToggleState
   - UpdateGameDuration
+  - SyncGameDuration
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

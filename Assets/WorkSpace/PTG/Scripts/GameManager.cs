@@ -93,6 +93,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         StartCoroutine(WaitCO(2));
+
+        if (toggle60.isOn) toggle60.interactable = false;
+        else if (toggle120.isOn) toggle120.interactable = false;
+        else if (toggle180.isOn) toggle180.interactable = false;
     }
 
     IEnumerator WaitCO(float waitTime)
@@ -148,6 +152,74 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private bool isMasterClientSet = false; // 방장이 설정된 여부를 확인하는 변수
+    private float previousGameDuration = 120; // 방장이 설정한 이전 게임 시간 저장
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+
+        // 방장이 설정되었으면 더 이상 변경되지 않도록 합니다.
+        if (!isMasterClientSet)
+        {
+            // 새 방장이 될 경우, 이전 방장의 설정을 반영
+            if (PhotonNetwork.IsMasterClient)
+            {
+                // 방장이 선택한 시간에 맞게 토글 상태 설정
+                if (previousGameDuration == 60f)
+                {
+                    toggle60.isOn = true;
+                    toggle120.interactable = true;
+                    toggle180.interactable = true;
+                    toggle60.interactable = false; // 방장은 다시 선택할 수 없도록
+                }
+                else if (previousGameDuration == 120f)
+                {
+                    toggle120.isOn = true;
+                    toggle60.interactable = true;
+                    toggle180.interactable = true;
+                    toggle120.interactable = false; // 방장은 다시 선택할 수 없도록
+                }
+                else if (previousGameDuration == 180f)
+                {
+                    toggle180.isOn = true;
+                    toggle60.interactable = true;
+                    toggle120.interactable = true;
+                    toggle180.interactable = false; // 방장은 다시 선택할 수 없도록
+                }
+            }
+            else
+            {
+                // 다른 클라이언트는 방장이 설정한 게임 시간을 그대로 반영
+                if (previousGameDuration == 60f)
+                {
+                    toggle60.isOn = true;
+                }
+                else if (previousGameDuration == 120f)
+                {
+                    toggle120.isOn = true;
+                }
+                else if (previousGameDuration == 180f)
+                {
+                    toggle180.isOn = true;
+                }
+            }
+
+            // 방장이 설정한 후에는 더 이상 설정을 변경하지 않도록 플래그 설정
+            isMasterClientSet = true;
+        }
+        else
+        {
+            // 방장이 이미 설정된 경우, 새 방장이 설정한 값을 갱신
+            if (PhotonNetwork.IsMasterClient)
+            {
+                // 새 방장이 선택한 시간을 이전 값으로 저장
+                if (toggle60.isOn) previousGameDuration = 60f;
+                if (toggle120.isOn) previousGameDuration = 120f;
+                if (toggle180.isOn) previousGameDuration = 180f;
+            }
+        }
+    }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
@@ -543,9 +615,15 @@ public class GameManager : MonoBehaviourPunCallbacks
                 gameDuration = 180f;
             }
 
-            if (changedToggle != toggle60) toggle60.isOn = false;
-            if (changedToggle != toggle120) toggle120.isOn = false;
-            if (changedToggle != toggle180) toggle180.isOn = false;
+            if (toggle60 != changedToggle) toggle60.interactable = true;
+            if (toggle120 != changedToggle) toggle120.interactable = true;
+            if (toggle180 != changedToggle) toggle180.interactable = true;
+
+            if (changedToggle != toggle60 && toggle60.isOn) toggle60.isOn = false;
+            if (changedToggle != toggle120 && toggle120.isOn) toggle120.isOn = false;
+            if (changedToggle != toggle180 && toggle180.isOn) toggle180.isOn = false;
+
+            changedToggle.interactable = false;
 
             if (currentState == GameState.Playing)
             {
