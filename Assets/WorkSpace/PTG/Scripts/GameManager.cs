@@ -75,8 +75,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             EnableToggles(false);
         }
 
-        UpdateToggleInteractivity();
-
         toggle60.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle60, isOn));
         toggle120.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle120, isOn));
         toggle180.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle180, isOn));
@@ -343,6 +341,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.value = gameDuration;
         timeSlider.gameObject.SetActive(true);
 
+        toggle60.gameObject.SetActive(false);
+        toggle120.gameObject.SetActive(false);
+        toggle180.gameObject.SetActive(false);
+
         Debug.Log("Game Start");
 
         roomManager.gameObject.SetActive(false);
@@ -373,6 +375,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         resultText.gameObject.SetActive(true);
         timeSlider.gameObject.SetActive(false);
+
+        toggle60.gameObject.SetActive(true);
+        toggle120.gameObject.SetActive(true);
+        toggle180.gameObject.SetActive(true);
 
         PhotonNetwork.LocalPlayer.SetReady(false);
 
@@ -570,20 +576,5 @@ public class GameManager : MonoBehaviourPunCallbacks
             toggle120.isOn = true;
         else if (gameDuration == 180f)
             toggle180.isOn = true;
-    }
-
-    private void UpdateToggleInteractivity()
-    {
-        bool isGamePlaying = currentState == GameState.Playing;
-        bool isMasterClient = PhotonNetwork.IsMasterClient;
-
-        if (isGamePlaying)
-        {
-            EnableToggles(false);
-        }
-        else
-        {
-            EnableToggles(isMasterClient);
-        }
     }
 }
