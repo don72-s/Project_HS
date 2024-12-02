@@ -34,43 +34,36 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - CancelPlayGame
   - CantHearYou
   - ChangeColour
+  - ChangeFormRpc
   - ClickRpc
   - DestroyRpc
-  - HeresWhy
-  - ChangeFormRpc
   - DestroySpaceship
   - Fire
-  - RespawnSpaceship
-  - ChangeFormRpc
-  - RPC_EndGame
-  - RPC_StartGame
-  - RPC_SetSeeker
-  - StartFormChangeRpc
-  - TakeDamageRpc
-  - PlayerSpawn
+  - HeresWhy
+  - JumpTrigger
+  - LoadSceneAdditive
+  - LoadSceneFinished
+  - OnDeadRpc
   - OnPlayerCatchRpc
-  - SetActiveToRpc
+  - PlayCountdownRpc
   - PlayJumpSound
-  - PlayWalkSound
   - PlayReloadSound
   - PlayShootSound
-  - LoadSceneAdditive
-  - LoadSceneComplete
-  - LoadSceneFinished
-  - UnLoadScene
-  - AlertRunnersRemaining
-  - UpdateRunnersRemaining
-  - OnDeadRpc
+  - PlayWalkSound
+  - RespawnSpaceship
+  - RPC_EndGame
+  - RPC_SetSeeker
+  - RPC_StartGame
   - SeekerFreeze
-  - WaitLoading
-  - CancelPlayGame
+  - SetActiveToRpc
+  - StartFormChangeRpc
+  - TakeDamageRpc
   - UpdateFreezeTimer
-  - PlayCountdownRpc
-  - JumpTrigger
-  - LockingRpc
-  - SetGravity
+  - UpdateRunnersRemaining
+  - WaitLoading
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
