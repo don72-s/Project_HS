@@ -420,6 +420,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("LeftRoom");
         SceneManager.LoadSceneAsync("KYH_LobbyScene");
+        AudioManager.instance.PlayBGMScene("Robby");
         PhotonNetwork.JoinLobby();
         //PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 복귀
     }

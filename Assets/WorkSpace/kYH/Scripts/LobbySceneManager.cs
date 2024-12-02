@@ -54,19 +54,19 @@ public class LobbySceneManager : BaseUI
     private void Start()
     {
         //AddEvent("LoginButton", EventType.Click, Login);
-        AddEvent("SignupButton_01", EventType.Click, SignUp_01);
+        //AddEvent("SignupButton_01", EventType.Click, SignUp_01);
         AddEvent("SettingButton", EventType.Click, Settings);
         //AddEvent("QuitGameButton", EventType.Click, QuitGame);
-        AddEvent("SignupButton_02", EventType.Click, SignUp_02);
-        AddEvent("CancelButton_01", EventType.Click, Cancel_01);
+        //AddEvent("SignupButton_02", EventType.Click, SignUp_02);
+        //AddEvent("CancelButton_01", EventType.Click, Cancel_01);
         AddEvent("CancelButton_02", EventType.Click, Cancel_02);
-        AddEvent("CheckButton", EventType.Click, CheckNickname);
-        AddEvent("CancelButton_03", EventType.Click, Cancel_03);
+        //AddEvent("CheckButton", EventType.Click, CheckNickname);
+        //AddEvent("CancelButton_03", EventType.Click, Cancel_03);
         AddEvent("CreateRoomButton", EventType.Click, CreateRoom);
         AddEvent("RandomMatchButton", EventType.Click, MatchRandom);
         AddEvent("LogOutButton", EventType.Click, LogOut);
-        AddEvent("CreateButton", EventType.Click, MakeRoom);
-        AddEvent("CancelButton_04", EventType.Click, Cancel_04);
+        //AddEvent("CreateButton", EventType.Click, MakeRoom);
+        //AddEvent("CancelButton_04", EventType.Click, Cancel_04);
     }
 
     #region Login UI
@@ -109,7 +109,7 @@ public class LobbySceneManager : BaseUI
         });
     }
 
-    public void SignUp_01(PointerEventData eventData)
+    public void SignUp_01()
     {
         _signupPanel.SetActive(true);
     }
@@ -130,7 +130,7 @@ public class LobbySceneManager : BaseUI
     #endregion
 
     #region Sign Up UI
-    public void SignUp_02(PointerEventData eventData)
+    public void SignUp_02()
     {
         string email = _emailSignupInput.text;
         string password = _passwordSignupInput.text;
@@ -168,7 +168,7 @@ public class LobbySceneManager : BaseUI
         });
     }
 
-    public void Cancel_01(PointerEventData eventData)
+    public void Cancel_01()
     {
         _signupPanel.SetActive(false);
     }
@@ -182,7 +182,7 @@ public class LobbySceneManager : BaseUI
     #endregion
 
     #region Nickname UI
-    public void CheckNickname(PointerEventData eventData)
+    public void CheckNickname()
     {
         string nickname = _nicknameInput.text;
 
@@ -224,7 +224,7 @@ public class LobbySceneManager : BaseUI
         });
     }
 
-    public void Cancel_03(PointerEventData eventData)
+    public void Cancel_03()
     {
         _nicknamePanel.SetActive(false);
     }
@@ -254,7 +254,7 @@ public class LobbySceneManager : BaseUI
     #endregion
 
     #region Create Room UI
-    public void MakeRoom(PointerEventData eventData)
+    public void MakeRoom()
     {
         string roomName = _roomNameInput.text;
         int maxPlayer = int.Parse(_maxPlayerInput.text);
@@ -274,7 +274,7 @@ public class LobbySceneManager : BaseUI
         PhotonNetwork.CreateRoom(roomName, options);
     }
 
-    public void Cancel_04(PointerEventData eventData)
+    public void Cancel_04()
     {
         _createRoomPanel.SetActive(false);
     }
