@@ -18,10 +18,10 @@ public class ObjectSlotMachine : MonoBehaviour
 
     ChangeUIBinder changeUIBinder;
     List<Button> buttons = new List<Button>();
-    List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
+    List<Image> imgs = new List<Image>();
     TextMeshProUGUI countdownText;
 
-    GameObject[] objectArr = null;
+    ObjArr[] objectArr = null;
     int[] idxArr;
 
     Coroutine countdownCoroutine = null;
@@ -37,9 +37,9 @@ public class ObjectSlotMachine : MonoBehaviour
 
         SetButtonsEnable(false);
 
-        texts.Add(changeUIBinder.GetUI<TextMeshProUGUI>("ObjectText1"));
-        texts.Add(changeUIBinder.GetUI<TextMeshProUGUI>("ObjectText2"));
-        texts.Add(changeUIBinder.GetUI<TextMeshProUGUI>("ObjectText3"));
+        imgs.Add(changeUIBinder.GetUI<Image>("ObjectImg1"));
+        imgs.Add(changeUIBinder.GetUI<Image>("ObjectImg2"));
+        imgs.Add(changeUIBinder.GetUI<Image>("ObjectImg3"));
 
         countdownText = changeUIBinder.GetUI<TextMeshProUGUI>("CountdownText");
 
@@ -56,7 +56,7 @@ public class ObjectSlotMachine : MonoBehaviour
             return;
         }
 
-        objectArr = soData.ChangeableObjArr;
+        objectArr = soData.ChangeableObjs;
 
     }
 
@@ -102,9 +102,9 @@ public class ObjectSlotMachine : MonoBehaviour
 
         for (int i = 0; i < idxArr.Length; i++)
         {
-
-            texts[i].text = objectArr[idxArr[i]].name;
-
+            Debug.LogWarning(idxArr[i]);
+            imgs[i].sprite = objectArr[idxArr[i]].objSprite;
+            //
         }
 
         countdownCoroutine = StartCoroutine(CountdownCO());
@@ -119,7 +119,7 @@ public class ObjectSlotMachine : MonoBehaviour
     public void ChangeObjButton2() {
         changeableObj.ChangeForm(idxArr[1]);
         CloseWindow();
-    }
+    }//
     public void ChangeObjButton3() {
         changeableObj.ChangeForm(idxArr[2]);
         CloseWindow();

@@ -9,6 +9,16 @@ public class ChangeableObjsSO : ScriptableObject
     public StageData.StageType stage {  get; private set; }
 
     [SerializeField]
-    public GameObject[] ChangeableObjArr;
+    public ObjArr[] ChangeableObjs;
+
+}
+
+[System.Serializable]
+public struct ObjArr {
+
+    [field: SerializeField]
+    public GameObject changeableObj { get; private set; }
+    [field: SerializeField]
+    public Sprite objSprite { get; private set; }
 
 }
