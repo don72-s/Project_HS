@@ -32,13 +32,13 @@ public class StageDisplayer : MonoBehaviourPunCallbacks
 
     }
 
-    private void Update()
+/*    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
             PhotonNetwork.CurrentRoom.SetStage(StageData.StageType.STAGE2);
         }
-    }
+    }*/
 
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
