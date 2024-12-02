@@ -14,7 +14,6 @@ using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 public class RoomUpdate : MonoBehaviour
 {
     [SerializeField] private PlayerEntry[] _playerEntries;
-    [SerializeField] private Button _startButton;
 
     private void OnEnable()
     {

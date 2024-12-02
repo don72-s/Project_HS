@@ -21,8 +21,8 @@ using UnityEngine.SceneManagement;
 public class RoomManager : BaseUI
 {
     [SerializeField] private GameObject _roomManager;
-    [SerializeField] private Button _backLobbyButton;
-    [SerializeField] private Button _startButton;
+    /*[SerializeField] private Button _backLobbyButton;
+    [SerializeField] private Button _startButton;*/
     [SerializeField] private GameManager _gameManager;
 
     [SerializeField] private GameObject voice;
@@ -31,11 +31,11 @@ public class RoomManager : BaseUI
     [SerializeField] GameObject[] _runnerTutorials;
     [SerializeField] GameObject[] _seekerTutorials;
 
-    private void Start()
+    /*private void Start()
     {
         _backLobbyButton.onClick.AddListener(BackToLobby);
         _startButton.onClick.AddListener(StartGame);
-    }
+    }*/
 
     private void Update()
     {
