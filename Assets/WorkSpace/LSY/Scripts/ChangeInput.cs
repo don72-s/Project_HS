@@ -20,6 +20,11 @@ public class ChangeInput : MonoBehaviour
 
     private void Update()
     {
+        if (system.currentSelectedGameObject == null)
+        {
+            return; 
+        }
+
         if (Input.GetKeyDown(KeyCode.Tab) && Input.GetKey(KeyCode.LeftShift))
         {
             Selectable next = system.currentSelectedGameObject.GetComponent<Selectable>().FindSelectableOnUp();

@@ -34,5 +34,3 @@ MonoBehaviour:
     <objSprite>k__BackingField: {fileID: 21300000, guid: d6b1bc37626a45d47bd0d8064e219b27, type: 3}
   - <changeableObj>k__BackingField: {fileID: 4215476285558458600, guid: 7f22973fc33081f4c929ded02eb2674d, type: 3}
     <objSprite>k__BackingField: {fileID: 21300000, guid: f9a458682046a264ebf6b713f9782d31, type: 3}
-  - <changeableObj>k__BackingField: {fileID: 2863302079168127680, guid: a8cb0913f4b9307419188ec7bb08e808, type: 3}
-    <objSprite>k__BackingField: {fileID: 21300000, guid: 8ab52bbe51c61d847bcdb12f3ac01f01, type: 3}
