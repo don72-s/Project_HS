@@ -56,6 +56,9 @@ public class Gun : MonoBehaviourPun
 
     public void Fire()
     {
+        if (Cursor.visible == true)
+            return;
+
         if (bullet <= 0)
         {
             bullet = 0;
