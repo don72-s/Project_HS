@@ -66,8 +66,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if (PhotonNetwork.IsMasterClient) EnableToggles(true);
-        else EnableToggles(false);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            EnableToggles(true);
+        }
+        else
+        {
+            EnableToggles(false);
+        }
+            
 
         toggle60.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle60, isOn));
         toggle120.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle120, isOn));
@@ -561,12 +568,30 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void OnToggleChanged(Toggle changedToggle, bool isOn)
     {
-        // 활성화된 토글 이외의 토글을 끔
         if (isOn)
         {
+            if (changedToggle == toggle60)
+            {
+                gameDuration = 60f;
+            }
+            else if (changedToggle == toggle120)
+            {
+                gameDuration = 120f;
+            }
+            else if (changedToggle == toggle180)
+            {
+                gameDuration = 180f;
+            }
+
             if (changedToggle != toggle60) toggle60.isOn = false;
             if (changedToggle != toggle120) toggle120.isOn = false;
             if (changedToggle != toggle180) toggle180.isOn = false;
+
+            if (currentState == GameState.Playing)
+            {
+                timer = gameDuration;
+                timeSlider.value = gameDuration;
+            }
         }
     }
 }
