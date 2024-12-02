@@ -69,6 +69,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient) EnableToggles(true);
         else EnableToggles(false);
 
+        toggle60.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle60, isOn));
+        toggle120.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle120, isOn));
+        toggle180.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle180, isOn));
+
         resultText.gameObject.SetActive(false);
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
@@ -369,8 +373,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.value = gameDuration;
         timeSlider.gameObject.SetActive(true);
 
-        photonView.RPC("RPC_UpdateToggleState", RpcTarget.All, false);
-
         Debug.Log("Game Start");
 
         roomManager.gameObject.SetActive(false);
@@ -401,11 +403,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         resultText.gameObject.SetActive(true);
         timeSlider.gameObject.SetActive(false);
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            photonView.RPC("RPC_UpdateToggleState", RpcTarget.All, true);
-        }
 
         PhotonNetwork.LocalPlayer.SetReady(false);
 
@@ -549,27 +546,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         countdownAni.PlayCountdown(count);
     }
 
-    private void OnToggleChanged(Toggle changedToggle)
-    {
-        if (!PhotonNetwork.IsMasterClient) return;
-
-        if (changedToggle.isOn)
-        {
-            if (changedToggle == toggle60) gameDuration = 60f;
-            else if (changedToggle == toggle120) gameDuration = 120f;
-            else if (changedToggle == toggle180) gameDuration = 180f;
-
-            if (changedToggle != toggle60) toggle60.isOn = false;
-            if (changedToggle != toggle120) toggle120.isOn = false;
-            if (changedToggle != toggle180) toggle180.isOn = false;
-        }
-    }
-
-    public void UpdateToggleState()
-    {
-        EnableToggles(currentState == GameState.Waiting && PhotonNetwork.IsMasterClient);
-    }
-
     private void EnableToggles(bool enable)
     {
         toggle60.interactable = enable;
@@ -581,5 +557,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void RPC_UpdateToggleState(bool enable)
     {
         EnableToggles(enable);
+    }
+
+    private void OnToggleChanged(Toggle changedToggle, bool isOn)
+    {
+        // 활성화된 토글 이외의 토글을 끔
+        if (isOn)
+        {
+            if (changedToggle != toggle60) toggle60.isOn = false;
+            if (changedToggle != toggle120) toggle120.isOn = false;
+            if (changedToggle != toggle180) toggle180.isOn = false;
+        }
     }
 }
