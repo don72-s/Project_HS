@@ -5427,7 +5427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &613906524
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17657,10 +17657,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6367101161342414699, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6367101161345664830, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -17684,10 +17680,6 @@ PrefabInstance:
     - target: {fileID: 6367101161860282343, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
       propertyPath: m_Name
       value: VoiceContorlPanelCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 6367101161860282346, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
-      propertyPath: m_SortingOrder
-      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6367101161860282347, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
       propertyPath: m_Pivot.x
@@ -17773,16 +17765,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6367101162597971442, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
-      propertyPath: m_Value
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6367101162770799909, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6367101162770799909, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -22602,7 +22586,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2063862188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 188, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
