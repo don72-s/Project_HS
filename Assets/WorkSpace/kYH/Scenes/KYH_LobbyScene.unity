@@ -6466,6 +6466,7 @@ MonoBehaviour:
   _roomTransform: {fileID: 518659184}
   _roomNameInput: {fileID: 541605595}
   _maxPlayerInput: {fileID: 1924833663}
+  _emailPopup: {fileID: 8702244741201660317, guid: b864cc94a4af4c04f97f9c2561ae45cb, type: 3}
 --- !u!4 &1061976819
 Transform:
   m_ObjectHideFlags: 0
