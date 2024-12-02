@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         timeSlider.maxValue = gameDuration;
         timeSlider.value = gameDuration;
 
+        AudioManager.instance.PlayBGMScene("Room");
+
         for (int i = 0; i < ghostPrefabs.Length; i++)
         {
             ghostIndex.Add(i);
@@ -88,6 +90,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             ghostIndex.RemoveAt(randomIndex);
         }
+
+
 
     }
 
@@ -247,6 +251,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void LoadSceneAdditive()
     {
+        AudioManager.instance.PlayBGMScene("Game");
         AsyncOperation op = SceneManager.LoadSceneAsync(STAGE_MAP_NAME, LoadSceneMode.Additive);
         op.completed += (_op) => { Debug.Log("완료!"); photonView.RPC("LoadSceneFinished", RpcTarget.MasterClient); };
     }
@@ -356,6 +361,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC("RPC_EndGame", RpcTarget.All, message);
         }
+        StartCoroutine(DelayBGM());
+    }
+
+    IEnumerator DelayBGM()
+    {
+        yield return new WaitForSeconds(3f);
+        AudioManager.instance.PlayBGMScene("Room");
     }
 
     [PunRPC]
@@ -368,9 +380,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         resultText.gameObject.SetActive(true);
         timeSlider.gameObject.SetActive(false);
-
+        
         PhotonNetwork.LocalPlayer.SetReady(false);
-        //
+
         StartCoroutine(ReturnToLobby());
     }
 
@@ -399,7 +411,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient) {
             PhotonNetwork.CurrentRoom.IsOpen = true;
-
         }
 
     }
@@ -409,6 +420,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("LeftRoom");
         SceneManager.LoadSceneAsync("KYH_LobbyScene");
         PhotonNetwork.JoinLobby();
+        AudioManager.instance.PlayBGMScene("Robby");
         //PhotonNetwork.LoadLevel("LobbyScene"); // 로비 씬으로 복귀
     }
 

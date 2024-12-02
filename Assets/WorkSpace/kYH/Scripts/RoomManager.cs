@@ -24,14 +24,24 @@ public class RoomManager : BaseUI
     [SerializeField] private Button _backLobbyButton;
     [SerializeField] private Button _startButton;
     [SerializeField] private GameManager _gameManager;
-    //[SerializeField] private PlayerEntry _playerEntry;
 
     [SerializeField] private GameObject voice;
+
+    [Header("Runner Tutorial")]
+    [SerializeField] GameObject[] _runnerTutorials;
+
+    [Header("Seeker Tutorial")]
+    [SerializeField] GameObject[] _seekerTutorials;
 
     private void Start()
     {
         _backLobbyButton.onClick.AddListener(BackToLobby);
         _startButton.onClick.AddListener(StartGame);
+    }
+
+    private void Update()
+    {
+        StartCoroutine(Changeroutine());
     }
 
     public void BackToLobby()
@@ -45,5 +55,32 @@ public class RoomManager : BaseUI
     public void StartGame()
     {
         _gameManager.TestGameStart();
+    }
+
+    IEnumerator Changeroutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+
+        for (int i = 0; i < _runnerTutorials.Length; i++)
+        {
+            if (i == _runnerTutorials.Length - 1)
+            {
+                i = 0;
+            }
+
+            _runnerTutorials[i].SetActive(false);
+            _runnerTutorials[i + 1].SetActive(true);
+        }
+
+        /*for (int i = 0; i < _seekerTutorials.Length; i++)
+        {
+            if (i == _seekerTutorials.Length - 1)
+            {
+                i = 0;
+            }
+
+            _seekerTutorials[i].SetActive(false);
+            _seekerTutorials[i + 1].SetActive(true);
+        }*/
     }
 }
