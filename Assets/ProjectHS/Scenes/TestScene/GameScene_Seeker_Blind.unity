@@ -20330,7 +20330,7 @@ PrefabInstance:
     - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: roomManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 386921426}
     - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: countdownAni
       value: 
