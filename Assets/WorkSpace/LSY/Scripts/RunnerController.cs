@@ -1,10 +1,6 @@
 using Photon.Pun;
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class RunnerController : PlayerControllerParent, IPunObservable
 {
@@ -14,7 +10,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
     [SerializeField] float jumpForce;
 
     [Header("플레이어 카메라")]
-    [SerializeField] private float mouseX = 5f;  
+    [SerializeField] private float mouseX = 5f;
     [SerializeField] private float mouseY = 5f;
     [SerializeField] Camera runnerCamera;
 
@@ -44,33 +40,36 @@ public class RunnerController : PlayerControllerParent, IPunObservable
     public LayerMask collisionLayer;
 
     bool isLocking = false;
-protected override void Start()
-{
-    base.Start();
-
-    hp = 3;
-
-    // 자신의 플레이어일 경우만 카메라 활성화
-    if (photonView.IsMine)
+    protected override void Start()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
-        isJumped = false;
+        base.Start();
 
-        networkPosition = transform.position;
-        networkRotation = transform.rotation;
+        hp = 3;
 
-        // 카메라 활성화 (플레이어 자신의 카메라만 활성화)
-        runnerCamera.gameObject.SetActive(true);
-        runnerCamera.transform.LookAt(transform.position);
+        // 자신의 플레이어일 경우만 카메라 활성화
+        if (photonView.IsMine)
+        {
+            rb = gameObject.GetComponent<Rigidbody>();
+            isJumped = false;
 
-        hpPanel.gameObject.SetActive(true);
+            networkPosition = transform.position;
+            networkRotation = transform.rotation;
+
+            // 카메라 활성화 (플레이어 자신의 카메라만 활성화)
+            runnerCamera.gameObject.SetActive(true);
+            runnerCamera.transform.LookAt(transform.position);
+
+            hpPanel.gameObject.SetActive(true);
+
+            rb.useGravity = true;
+
+        }
+        else
+        {
+            // 다른 플레이어의 카메라는 비활성화
+            runnerCamera.gameObject.SetActive(false);
+        }
     }
-    else
-    {
-        // 다른 플레이어의 카메라는 비활성화
-        runnerCamera.gameObject.SetActive(false);
-    }
-}
 
 
     private void Update()
@@ -91,24 +90,20 @@ protected override void Start()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            photonView.RPC("LockingRpc", RpcTarget.AllViaServer);
+
+            if (isLocking)//품
+            {
+                isLocking = false;
+                rb.useGravity = true;
+            }//
+            else //잠금
+            {
+                isLocking = true;
+                rb.useGravity = false;
+            }
+
         }
 
-    }
-
-    [PunRPC]
-    private void LockingRpc()
-    {
-        if (isLocking)//품
-        {
-            isLocking = false;
-            rb.useGravity = true;
-        }
-        else //잠금
-        {
-            isLocking = true;
-            rb.useGravity = false;
-        }
     }
 
     private void LateUpdate()
@@ -122,7 +117,7 @@ protected override void Start()
     public void TakeDamageRpc(int damage)
     {
         hp -= damage;
-        hpImages[hp+1].gameObject.SetActive(false);
+        hpImages[hp + 1].gameObject.SetActive(false);
 
         //TODO : 시체샷 처리 + HP 인덱스 에러 수정 필요
         if (hp <= 0)
@@ -188,7 +183,7 @@ protected override void Start()
 
         if (Input.GetKey(KeyCode.A))
         {
-            Rotate(-1); 
+            Rotate(-1);
         }
         else if (Input.GetKey(KeyCode.D))
         {
@@ -253,18 +248,18 @@ protected override void Start()
         }
     }
 
-/*    private void RotateCamera()
-    {
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
+    /*    private void RotateCamera()
+        {
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
 
-        yRotation += mouseX * this.mouseX;
-        xRotation -= mouseY * this.mouseY;
+            yRotation += mouseX * this.mouseX;
+            xRotation -= mouseY * this.mouseY;
 
-        xRotation = Mathf.Clamp(xRotation, 0, 60);
+            xRotation = Mathf.Clamp(xRotation, 0, 60);
 
-        runnerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        runnerCamera.transform.position = transform.position - runnerCamera.transform.forward * 2f + Vector3.up;
-    }*/
+            runnerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+            runnerCamera.transform.position = transform.position - runnerCamera.transform.forward * 2f + Vector3.up;
+        }*/
 
 }

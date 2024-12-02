@@ -69,6 +69,8 @@ MonoBehaviour:
   - UpdateFreezeTimer
   - PlayCountdownRpc
   - JumpTrigger
+  - LockingRpc
+  - SetGravity
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
