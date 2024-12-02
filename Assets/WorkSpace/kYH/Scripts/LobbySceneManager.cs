@@ -53,10 +53,10 @@ public class LobbySceneManager : BaseUI
 
     private void Start()
     {
-        AddEvent("LoginButton", EventType.Click, Login);
+        //AddEvent("LoginButton", EventType.Click, Login);
         AddEvent("SignupButton_01", EventType.Click, SignUp_01);
         AddEvent("SettingButton", EventType.Click, Settings);
-        AddEvent("QuitGameButton", EventType.Click, QuitGame);
+        //AddEvent("QuitGameButton", EventType.Click, QuitGame);
         AddEvent("SignupButton_02", EventType.Click, SignUp_02);
         AddEvent("CancelButton_01", EventType.Click, Cancel_01);
         AddEvent("CancelButton_02", EventType.Click, Cancel_02);
@@ -70,7 +70,7 @@ public class LobbySceneManager : BaseUI
     }
 
     #region Login UI
-    public void Login(PointerEventData eventData)
+    public void Login()
     {
         string email = _emailInput.text;
         string password = _passwordInput.text;
@@ -119,7 +119,7 @@ public class LobbySceneManager : BaseUI
         // TODO : 설정 패널 활성화
     }
 
-    public void QuitGame(PointerEventData eventData)
+    public void QuitGame()
     {
         #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
