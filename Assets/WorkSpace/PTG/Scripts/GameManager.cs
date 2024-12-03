@@ -247,9 +247,12 @@ public class GameManager : MonoBehaviourPunCallbacks
                     }
                 }*/
 
-        toggle60.interactable = true;
-        toggle120.interactable = true;
-        toggle180.interactable = true;
+        if (PhotonNetwork.LocalPlayer == newMasterClient)
+        {
+            toggle60.interactable = true;
+            toggle120.interactable = true;
+            toggle180.interactable = true;
+        }
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
