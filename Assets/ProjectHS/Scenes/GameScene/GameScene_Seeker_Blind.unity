@@ -12052,7 +12052,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!224 &931599726
 RectTransform:
@@ -20889,6 +20889,10 @@ PrefabInstance:
     - target: {fileID: 6367101161860282343, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6367101161860282346, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
+      propertyPath: m_SortingOrder
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6367101161860282347, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
       propertyPath: m_Pivot.x
