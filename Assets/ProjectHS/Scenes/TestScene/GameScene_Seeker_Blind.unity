@@ -18683,6 +18683,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1544138357 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1493347839409052962, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
+  m_PrefabInstance: {fileID: 1574641069}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1544138358 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5401412343996293390, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
+  m_PrefabInstance: {fileID: 1574641069}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1544138359 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 592909933582460067, guid: a430b5b1ba0fa7844a0924139536fee8, type: 3}
+  m_PrefabInstance: {fileID: 1574641069}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1548898888
 GameObject:
   m_ObjectHideFlags: 0
@@ -20290,15 +20323,15 @@ PrefabInstance:
     - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: toggle60
       value: 
-      objectReference: {fileID: 1574641072}
+      objectReference: {fileID: 1544138359}
     - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: toggle120
       value: 
-      objectReference: {fileID: 1574641071}
+      objectReference: {fileID: 1544138358}
     - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: toggle180
       value: 
-      objectReference: {fileID: 1574641070}
+      objectReference: {fileID: 1544138357}
     - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: resultText
       value: 
