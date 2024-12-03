@@ -504,6 +504,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         StartCoroutine(CountdownFreezeTimer(freezeDuration));
     }
 
+    [PunRPC]
+    void PlayCountdownRpc(int count)
+    {
+        if (currentState == GameState.Playing)
+            return;
+
+        countdownAni.PlayCountdown(count);
+    }
+
     private IEnumerator CountdownFreezeTimer(float freezeDuration)
     {
         freezeTimer.gameObject.SetActive(true);
