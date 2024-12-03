@@ -5,6 +5,7 @@ using Photon.Realtime;
 using Photon.Voice.Unity;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -38,11 +39,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private Player currentSeeker;
 
-    public Text resultText;
+    public TextMeshProUGUI resultText;
     public Slider timeSlider;
     public Image blind;
 
-    public Text freezeTimer;
+    public TextMeshProUGUI freezeTimer;
 
     GameObject myRoomPlayer;
     GameObject myIngamePlayer;
