@@ -20288,6 +20288,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1913244979}
     - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
+      propertyPath: toggle60
+      value: 
+      objectReference: {fileID: 1574641072}
+    - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
+      propertyPath: toggle120
+      value: 
+      objectReference: {fileID: 1574641071}
+    - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
+      propertyPath: toggle180
+      value: 
+      objectReference: {fileID: 1574641070}
+    - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: resultText
       value: 
       objectReference: {fileID: 688578841}
@@ -20307,6 +20319,10 @@ PrefabInstance:
       propertyPath: countdownAni
       value: 
       objectReference: {fileID: 2031756134}
+    - target: {fileID: 5013748577069544912, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
+      propertyPath: gameDuration
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 5013748577069544913, guid: a65c9c906b307ce4a99d24c96edd180e, type: 3}
       propertyPath: m_RootOrder
       value: 6
