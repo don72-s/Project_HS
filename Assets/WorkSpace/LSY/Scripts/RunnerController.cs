@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -120,7 +121,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
     }
 
     [PunRPC]
-    public void TakeDamageRpc(int damage)
+    public void TakeDamageRpc(int damage, Player player)
     {
         hp -= damage;
         hpImages[hp + 1].gameObject.SetActive(false);
@@ -130,8 +131,9 @@ public class RunnerController : PlayerControllerParent, IPunObservable
         {
             Debug.Log("player die");
             OnDeadEvent?.Invoke();
-            PhotonNetwork.LocalPlayer.SetAlive(false);
             hp = 0;
+            if(player == PhotonNetwork.LocalPlayer)
+                PhotonNetwork.LocalPlayer.SetAlive(false);
             //gameObject.SetActive(false);
             return;
         }
@@ -141,7 +143,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
 
     public void TakeDamage(int damage)
     {
-        photonView.RPC("TakeDamageRpc", RpcTarget.AllViaServer, damage);
+        photonView.RPC("TakeDamageRpc", RpcTarget.AllViaServer, damage, photonView.Owner);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

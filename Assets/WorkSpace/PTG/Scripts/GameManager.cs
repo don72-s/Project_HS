@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // 시간 설정
     public float gameDuration = 120f;
 
-    public float freezeTime = 5f;
+    public float freezeTime = 15f;
 
     private float timer;
 

@@ -29,10 +29,12 @@ public class VoiceManager : MonoBehaviourPunCallbacks
     {
         if (targetPlayer == PhotonNetwork.LocalPlayer && changedProps.ContainsKey(CustomProperties.ALIVE))
         {
+            Debug.Log(PhotonNetwork.LocalPlayer.GetAlive());
             bool isAlive = (bool)changedProps[CustomProperties.ALIVE];
 
             if (!isAlive)
             {
+                Debug.Log("¹ÂÆ®");
                 recorder.TransmitEnabled = false;
                 micImg.sprite = micMuteSprite;
             }
