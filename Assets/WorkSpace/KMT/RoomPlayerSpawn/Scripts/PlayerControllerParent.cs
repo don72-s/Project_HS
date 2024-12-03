@@ -22,7 +22,6 @@ public class PlayerControllerParent : MonoBehaviourPun
 
         speaker.transform.SetParent(transform);
         speaker.transform.localPosition = Vector3.zero;
-        speaker.GetComponent<AudioSource>().spatialBlend = 1;
         speaker.RestartPlayback();
     }
 
@@ -40,7 +39,6 @@ public class PlayerControllerParent : MonoBehaviourPun
                 }
             }
 
-            speaker.GetComponent<AudioSource>().spatialBlend = 0;
             speaker.RestartPlayback();
         }
     }
