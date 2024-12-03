@@ -1,6 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class RunnerController : PlayerControllerParent, IPunObservable
 {
@@ -20,6 +21,8 @@ public class RunnerController : PlayerControllerParent, IPunObservable
     [SerializeField] GameObject hpPanel;
 
     [SerializeField] FormChanger changer;
+
+    [SerializeField] Image lockImage;
 
     private bool isJumped;
     private Rigidbody rb;
@@ -60,6 +63,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
             runnerCamera.transform.LookAt(transform.position);
 
             hpPanel.gameObject.SetActive(true);
+            lockImage.gameObject.SetActive(false);
 
             rb.useGravity = true;
 
@@ -95,11 +99,13 @@ public class RunnerController : PlayerControllerParent, IPunObservable
             {
                 isLocking = false;
                 rb.useGravity = true;
+                lockImage.gameObject.SetActive(false);
             }//
             else //¿·±›
             {
                 isLocking = true;
                 rb.useGravity = false;
+                lockImage.gameObject.SetActive(true);
             }
 
         }
