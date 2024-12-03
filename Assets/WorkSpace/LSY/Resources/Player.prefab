@@ -1215,6 +1215,7 @@ MonoBehaviour:
   bullet: 0
   MaxBullet: 6
   bulletText: {fileID: 6831060789946580466}
+  bloodEffect: {fileID: 1013274939826982, guid: ffbf169ab9dcfdc45ae14010bc82a6b2, type: 3}
   playerController: {fileID: 3129392246571992233}
   gunAni: {fileID: 4260246478326281609}
   uiAni: {fileID: 7569158781834271189}
