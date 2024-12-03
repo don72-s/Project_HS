@@ -8,6 +8,7 @@ public class RoomCallback : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         PhotonNetwork.CurrentRoom.SetStage(StageData.StageType.STAGE1);
+        PhotonNetwork.CurrentRoom.SetTimeIdx(1);
     }
 
 }
