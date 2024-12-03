@@ -10,7 +10,7 @@ public class ObjHider : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient) 
         {
-            photonView.RPC("ToActiveRpc", RpcTarget.All, Random.Range(0, 2) == 0);
+            photonView.RPC("ToActiveRpc", RpcTarget.AllBuffered, Random.Range(0, 2) == 0);
         }
     }
     
