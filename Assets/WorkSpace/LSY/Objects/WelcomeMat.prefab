@@ -43,6 +43,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WelcomeMat_01
       objectReference: {fileID: 0}
+    - target: {fileID: 4228638966643171970, guid: 7ade998a75360c54ca6e55373981e604, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6070489090118878978, guid: 7ade998a75360c54ca6e55373981e604, type: 3}
       propertyPath: m_Size.y
       value: 0.015758827
