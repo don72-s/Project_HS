@@ -43,6 +43,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameController_Apt_01_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1284543554339077860, guid: 94e4c3350f88fe94ba5e156103abcf1c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 6ea42f388efa7164bb59362fa0460702, type: 2}
+    - target: {fileID: 3302677406321257870, guid: 94e4c3350f88fe94ba5e156103abcf1c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 6ea42f388efa7164bb59362fa0460702, type: 2}
+    - target: {fileID: 5066116935448375921, guid: 94e4c3350f88fe94ba5e156103abcf1c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 6ea42f388efa7164bb59362fa0460702, type: 2}
     - target: {fileID: 6100920615187496226, guid: 94e4c3350f88fe94ba5e156103abcf1c, type: 3}
       propertyPath: m_RootOrder
       value: 0

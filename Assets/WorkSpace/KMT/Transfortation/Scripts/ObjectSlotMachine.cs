@@ -44,6 +44,8 @@ public class ObjectSlotMachine : MonoBehaviour
         countdownText = changeUIBinder.GetUI<TextMeshProUGUI>("CountdownText");
 
         countdownDelay = new WaitForSeconds(1);
+
+        MouseLocker.Instance.MouseRealease();
     }
 
     public void InitObjArr() {
@@ -104,7 +106,6 @@ public class ObjectSlotMachine : MonoBehaviour
         {
             Debug.LogWarning(idxArr[i]);
             imgs[i].sprite = objectArr[idxArr[i]].objSprite;
-            //
         }
 
         countdownCoroutine = StartCoroutine(CountdownCO());
@@ -119,7 +120,7 @@ public class ObjectSlotMachine : MonoBehaviour
     public void ChangeObjButton2() {
         changeableObj.ChangeForm(idxArr[1]);
         CloseWindow();
-    }//
+    }
     public void ChangeObjButton3() {
         changeableObj.ChangeForm(idxArr[2]);
         CloseWindow();

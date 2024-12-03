@@ -64,8 +64,8 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         CameraController cam = mainCamera.GetComponent<CameraController>();
         cam.FollowTarget = cameraPoint;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+/*        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;*/
 
         targetPointImage.SetActive(true);
         mainCamera.gameObject.SetActive(true);
@@ -183,12 +183,12 @@ public class PlayerController : PlayerControllerParent, IPunObservable
                 playerAni.SetBool("RightTurn", true);
                 playerAni.SetBool("LeftTurn", false);
             }
-            transform.Rotate(Vector3.up, input.x * rotateSpeed * Time.deltaTime);
+            transform.Rotate(Vector3.up, input.x * rotateSpeed * DataManager.Instance.OptionDataParams.MouseSensitivity * Time.deltaTime);
         }
 
         if (input.y != 0)
         {
-            yRotation = yRotation + -input.y * rotateSpeed * Time.deltaTime;
+            yRotation = yRotation + -input.y * rotateSpeed * DataManager.Instance.OptionDataParams.MouseSensitivity * Time.deltaTime;
             yRotation = Mathf.Clamp(yRotation, -yRotationRange, yRotationRange);
 
             mainCamera.transform.localRotation = Quaternion.Euler(yRotation, 0f, 0f);

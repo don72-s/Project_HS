@@ -39,6 +39,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1378594573587310627}
     m_Modifications:
+    - target: {fileID: 71758430076362757, guid: e0a309163f5d1ef4e81367371dba0804, type: 3}
+      propertyPath: m_Size.x
+      value: 0.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 71758430076362757, guid: e0a309163f5d1ef4e81367371dba0804, type: 3}
+      propertyPath: m_Center.x
+      value: -0.07
+      objectReference: {fileID: 0}
     - target: {fileID: 4934079345739507868, guid: e0a309163f5d1ef4e81367371dba0804, type: 3}
       propertyPath: m_Layer
       value: 7

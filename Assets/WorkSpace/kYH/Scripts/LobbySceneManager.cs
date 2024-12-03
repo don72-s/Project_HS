@@ -46,6 +46,12 @@ public class LobbySceneManager : BaseUI
     [SerializeField] private TMP_InputField _roomNameInput;
     [SerializeField] private TMP_InputField _maxPlayerInput;
 
+    [Header("Popup Window")]
+    [SerializeField] private GameObject _emailPopup;
+    /*[SerializeField] private GameObject _passwordPopup;
+    [SerializeField] private GameObject _loginFailPopup;
+    [SerializeField] private TMP_Text _loginFailtext;*/
+
     private void Awake()
     {
         BindAll();
@@ -55,7 +61,6 @@ public class LobbySceneManager : BaseUI
     {
         //AddEvent("LoginButton", EventType.Click, Login);
         //AddEvent("SignupButton_01", EventType.Click, SignUp_01);
-        AddEvent("SettingButton", EventType.Click, Settings);
         //AddEvent("QuitGameButton", EventType.Click, QuitGame);
         //AddEvent("SignupButton_02", EventType.Click, SignUp_02);
         //AddEvent("CancelButton_01", EventType.Click, Cancel_01);
@@ -77,15 +82,13 @@ public class LobbySceneManager : BaseUI
 
         if (string.IsNullOrEmpty(email))
         {
-            // TODO : 이메일 입력하라는 안내 팝업창 생성
-            Debug.LogWarning("이메일 적으라고!!!!!!!!!!!!!!!!");
+            _emailPopup.SetActive(true);
             return;
         }
 
         if (string.IsNullOrEmpty(password))
         {
-            // TODO : 비밀번호 입력하라는 안내 팝업창 생성
-            Debug.LogWarning("비밀번호 적으라고!!!!!!!!!!!!!!!!");
+            //_passwordPopup.SetActive(true);
             return;
         }
 
@@ -98,8 +101,8 @@ public class LobbySceneManager : BaseUI
             }
             if (task.IsFaulted)
             {
-                // TODO : 로그인 실패 팝업창 생성
-                Debug.LogWarning($"로그인 실패! : " + task.Exception);
+                //_loginFailPopup.SetActive(true);
+                //_loginFailtext.text = $"실패 사유 : {task.Exception}";
                 return;
             }
 
@@ -112,11 +115,6 @@ public class LobbySceneManager : BaseUI
     public void SignUp_01()
     {
         _signupPanel.SetActive(true);
-    }
-
-    public void Settings(PointerEventData eventData)
-    {
-        // TODO : 설정 패널 활성화
     }
 
     public void QuitGame()
@@ -279,19 +277,6 @@ public class LobbySceneManager : BaseUI
         _createRoomPanel.SetActive(false);
     }
     #endregion
-
-    /*#region Room UI
-    public void BackToLobby(PointerEventData eventData)
-    {
-        PhotonNetwork.LeaveRoom();
-    }
-
-    public void StartGame(PointerEventData eventData)
-    {
-        PhotonNetwork.LoadLevel("GameScene");
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-    }
-    #endregion*/
 
     private void CheckUserInfo()
     {
