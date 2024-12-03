@@ -56,7 +56,8 @@ public class Gun : MonoBehaviourPun
 
     public void Fire()
     {
-        if (Cursor.visible == true)
+
+        if (Cursor.lockState != CursorLockMode.Locked)
             return;
 
         if (bullet <= 0)
