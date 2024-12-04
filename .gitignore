@@ -72,3 +72,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /Assets/Externals
 *.json
+Assets/Plugins.meta
+/Assets/Plugins
+/Assets/Imports
+/Assets/StreamingAssets
