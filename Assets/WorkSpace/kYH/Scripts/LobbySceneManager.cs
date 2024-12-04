@@ -353,7 +353,7 @@ public class LobbySceneManager : BaseUI
                 {
                     Debug.Log("이메일 인증이 완료되었습니다!!!!!!!!!!!!!!!");
                     _verifyPanel.SetActive(false);
-                    _nicknamePanel.SetActive(true);
+                    //_nicknamePanel.SetActive(true);
                 }
             });
             yield return delay;

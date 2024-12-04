@@ -14,6 +14,7 @@ public class Gun : MonoBehaviourPun
     [SerializeField] public int bullet;
     [SerializeField] public int MaxBullet = 6;
     [SerializeField] TextMeshProUGUI bulletText;
+    [SerializeField] GameObject bloodEffect;
 
     [Header("플레이어 컨트롤러")]
     [SerializeField] PlayerController playerController;
@@ -56,7 +57,8 @@ public class Gun : MonoBehaviourPun
 
     public void Fire()
     {
-        if (Cursor.visible == true)
+
+        if (Cursor.lockState != CursorLockMode.Locked)
             return;
 
         if (bullet <= 0)
@@ -106,6 +108,7 @@ public class Gun : MonoBehaviourPun
             if (hit.collider.gameObject.GetComponentInParent<RunnerController>() != null)
             {
                 RunnerController runnerController = hit.collider.gameObject.GetComponentInParent<RunnerController>();
+                Instantiate(bloodEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 runnerController.TakeDamage(attack);
             }
         }

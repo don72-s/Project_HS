@@ -87,6 +87,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sculpture_apt_01_01
       objectReference: {fileID: 0}
+    - target: {fileID: 2092558875539140737, guid: 6d99fe7157190374995611275c238de8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7080059923466604555, guid: 6d99fe7157190374995611275c238de8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8859825884453301176, guid: 6d99fe7157190374995611275c238de8, type: 3}
+      propertyPath: m_Size.y
+      value: 0.26509294
+      objectReference: {fileID: 0}
+    - target: {fileID: 8859825884453301176, guid: 6d99fe7157190374995611275c238de8, type: 3}
+      propertyPath: m_Center.x
+      value: 5.04871e-29
+      objectReference: {fileID: 0}
+    - target: {fileID: 8859825884453301176, guid: 6d99fe7157190374995611275c238de8, type: 3}
+      propertyPath: m_Center.y
+      value: 0.13254647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8859825884453301176, guid: 6d99fe7157190374995611275c238de8, type: 3}
+      propertyPath: m_Center.z
+      value: 0.000000014901161
+      objectReference: {fileID: 0}
     - target: {fileID: 8859825884453301176, guid: 6d99fe7157190374995611275c238de8, type: 3}
       propertyPath: m_Material
       value: 

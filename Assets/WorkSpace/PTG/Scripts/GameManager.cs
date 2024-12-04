@@ -5,6 +5,7 @@ using Photon.Realtime;
 using Photon.Voice.Unity;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,7 +26,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // 시간 설정
     public float gameDuration = 120f;
 
-    public float freezeTime = 5f;
+    public float freezeTime = 15f;
 
     private float timer;
 
@@ -38,11 +39,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private Player currentSeeker;
 
-    public Text resultText;
+    public TextMeshProUGUI resultText;
     public Slider timeSlider;
     public Image blind;
 
-    public Text freezeTimer;
+    public TextMeshProUGUI freezeTimer;
+
+    float[] timerUnitArr = new float[3] { 60f, 120f, 180f };
 
     GameObject myRoomPlayer;
     GameObject myIngamePlayer;
@@ -66,20 +69,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            EnableToggles(true);
-        }
-        else
-        {
-            EnableToggles(false);
-        }
-
         toggle60.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle60, isOn));
         toggle120.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle120, isOn));
         toggle180.onValueChanged.AddListener((isOn) => OnToggleChanged(toggle180, isOn));
 
-        UpdateTimeBasedOnToggle();
+        //UpdateTimeBasedOnToggle();
 
         resultText.gameObject.SetActive(false);
         timeSlider.maxValue = gameDuration;
@@ -93,10 +87,34 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         StartCoroutine(WaitCO(2));
+        StartCoroutine(waitRoomPropertyCO());
+    }
 
-        if (toggle60.isOn) toggle60.interactable = false;
-        else if (toggle120.isOn) toggle120.interactable = false;
-        else if (toggle180.isOn) toggle180.interactable = false;
+    IEnumerator waitRoomPropertyCO()
+    {
+        while (PhotonNetwork.NetworkClientState == ClientState.Joining)
+        {
+            yield return null;
+        }
+
+        while (PhotonNetwork.CurrentRoom.GetTimeIdx() == -1)
+        {
+            yield return null;
+        }
+
+        int idx = PhotonNetwork.CurrentRoom.GetTimeIdx();
+
+        if (idx == 0) { toggle60.isOn = true; toggle120.isOn = false; toggle180.isOn = false; }
+        else if (idx == 1) { toggle60.isOn = false; toggle120.isOn = true; toggle180.isOn = false; }
+        else if( idx == 2) { toggle60.isOn = false; toggle120.isOn = false; toggle180.isOn = true; }
+
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            toggle60.interactable = false;
+            toggle120.interactable = false;
+            toggle180.interactable = false;
+        }
+
     }
 
     IEnumerator WaitCO(float waitTime)
@@ -127,7 +145,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-
             int count = (int)stream.ReceiveNext();
             ghostIndex.Clear();
             for (int i = 0; i < count; i++)
@@ -152,85 +169,26 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private bool isMasterClientSet = false; // 방장이 설정된 여부를 확인하는 변수
-    private float previousGameDuration = 120; // 방장이 설정한 이전 게임 시간 저장
-
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         base.OnMasterClientSwitched(newMasterClient);
 
-        // 방장이 설정되었으면 더 이상 변경되지 않도록 합니다.
-        if (!isMasterClientSet)
+        if (PhotonNetwork.LocalPlayer == newMasterClient)
         {
-            // 새 방장이 될 경우, 이전 방장의 설정을 반영
-            if (PhotonNetwork.IsMasterClient)
-            {
-                // 방장이 선택한 시간에 맞게 토글 상태 설정
-                if (previousGameDuration == 60f)
-                {
-                    toggle60.isOn = true;
-                    toggle120.interactable = true;
-                    toggle180.interactable = true;
-                    toggle60.interactable = false; // 방장은 다시 선택할 수 없도록
-                }
-                else if (previousGameDuration == 120f)
-                {
-                    toggle120.isOn = true;
-                    toggle60.interactable = true;
-                    toggle180.interactable = true;
-                    toggle120.interactable = false; // 방장은 다시 선택할 수 없도록
-                }
-                else if (previousGameDuration == 180f)
-                {
-                    toggle180.isOn = true;
-                    toggle60.interactable = true;
-                    toggle120.interactable = true;
-                    toggle180.interactable = false; // 방장은 다시 선택할 수 없도록
-                }
-            }
-            else
-            {
-                // 다른 클라이언트는 방장이 설정한 게임 시간을 그대로 반영
-                if (previousGameDuration == 60f)
-                {
-                    toggle60.isOn = true;
-                }
-                else if (previousGameDuration == 120f)
-                {
-                    toggle120.isOn = true;
-                }
-                else if (previousGameDuration == 180f)
-                {
-                    toggle180.isOn = true;
-                }
-            }
-
-            // 방장이 설정한 후에는 더 이상 설정을 변경하지 않도록 플래그 설정
-            isMasterClientSet = true;
-        }
-        else
-        {
-            // 방장이 이미 설정된 경우, 새 방장이 설정한 값을 갱신
-            if (PhotonNetwork.IsMasterClient)
-            {
-                // 새 방장이 선택한 시간을 이전 값으로 저장
-                if (toggle60.isOn) previousGameDuration = 60f;
-                if (toggle120.isOn) previousGameDuration = 120f;
-                if (toggle180.isOn) previousGameDuration = 180f;
-            }
+            toggle60.interactable = true;
+            toggle120.interactable = true;
+            toggle180.interactable = true;
         }
     }
+
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
-
-        Debug.Log($"Player {otherPlayer.NickName} left the room.");
 
         if (currentState == GameState.Playing)
         {
             if (otherPlayer == currentSeeker)
             {
-                Debug.Log("Seeker has left the game Runners win");
                 EndGame("Runners Win Seeker Left");
             }
             else
@@ -238,12 +196,10 @@ public class GameManager : MonoBehaviourPunCallbacks
                 if (otherPlayer.GetAlive() == false)
                 {
                     photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
-                    Debug.Log("죽은사람 탈주");
                 }
                 else
                 {
                     photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining - 1);
-                    Debug.Log("산 사람 탈주");
                 }
 
                 if (runnersRemaining <= 0)
@@ -260,7 +216,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         StageData.Instance.StartChangeFormSlot();
     }
 
-    //TODO : 게임 중복시작 무시 예외처리 필요. 임시 해결
     public void TestGameStart()
     {
         if (currentState == GameState.Playing || currentState == GameState.InLoading)
@@ -272,7 +227,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-            runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
+            runnersRemaining = allPlayers.Count - 1;
             photonView.RPC("UpdateRunnersRemaining", RpcTarget.All, runnersRemaining);
 
             PhotonNetwork.CurrentRoom.IsOpen = false;
@@ -312,18 +267,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (inLoadingPlayer == 0)
         {
-            Debug.Log("로딩 완료!!");
+            SetTeamsAndSpwan();
 
-            SetTeamsAndSpwan(); // 팀 배정 및 플레이어 스폰
-
-            //타이머 활성화
             photonView.RPC("RPC_StartGame", RpcTarget.All);
 
             StartCoroutine(WaitPlayerSpawnCO());
         }
         else
         {
-            Debug.Log("로딩 시간 초과...");
             PhotonNetwork.CurrentRoom.IsOpen = false;
             photonView.RPC("CancelPlayGame", RpcTarget.All);
         }
@@ -357,10 +308,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void LoadSceneFinished()
     {
-
         if (inLoadingPlayer <= 0)
         {
-            Debug.Log("뭔가 잘못됨.");
             return;
         }
         inLoadingPlayer--;
@@ -370,13 +319,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-        // 술래 한 명 랜덤 선택
         int randomIndex = Random.Range(0, allPlayers.Count);
         currentSeeker = allPlayers[randomIndex];
 
         photonView.RPC("RPC_SetSeeker", RpcTarget.All, currentSeeker.ActorNumber);
 
-        runnersRemaining = allPlayers.Count - 1; // 나머지는 러너
+        runnersRemaining = allPlayers.Count - 1;
     }
 
     [PunRPC]
@@ -389,35 +337,31 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.LocalPlayer == currentSeeker)
         {
-            Debug.Log("You are Seeker");
             myIngamePlayer = PhotonNetwork.Instantiate("Player", randomPos, Quaternion.identity);
 
-            photonView.RPC("SeekerFreeze", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, freezeTime); // 술래 멈추기
+            photonView.RPC("SeekerFreeze", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, freezeTime);
         }
         else
         {
-            Debug.Log("You are Runner");
             GameObject runner = PhotonNetwork.Instantiate("Runner", randomPos, Quaternion.identity);
             runner.GetComponent<RunnerController>().OnDeadEvent.AddListener(OnPlayerCatch);
             myIngamePlayer = runner;
         }
-
     }
 
     [PunRPC]
     private void RPC_StartGame()
     {
         currentState = GameState.Playing;
-        timer = gameDuration;
-        timeSlider.maxValue = gameDuration;
-        timeSlider.value = gameDuration;
+        float duration = timerUnitArr[PhotonNetwork.CurrentRoom.GetTimeIdx()];
+        timer = duration;
+        timeSlider.maxValue = duration;
+        timeSlider.value = duration;
         timeSlider.gameObject.SetActive(true);
 
         toggle60.gameObject.SetActive(false);
         toggle120.gameObject.SetActive(false);
         toggle180.gameObject.SetActive(false);
-
-        Debug.Log("Game Start");
 
         roomManager.gameObject.SetActive(false);
     }
@@ -441,7 +385,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void RPC_EndGame(string message)
     {
         currentState = GameState.Finished;
-        Debug.Log("Game Over: " + message);
 
         resultText.text = message;
 
@@ -471,8 +414,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
         UnLoadScene();
 
-        Debug.Log("LeaveRoom");
-
         Camera.main.transform.SetParent(null);
         Camera.main.GetComponent<CameraController>().FollowTarget = null;
 
@@ -498,7 +439,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (currentState == GameState.Finished)
         {
-            Debug.LogWarning("Game is finished.");
             return;
         }
 
@@ -512,7 +452,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             if (currentState == GameState.Finished)
             {
-                Debug.LogWarning("Game is finished.");
                 return;
             }
 
@@ -529,8 +468,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void UpdateRunnersRemaining(int Runners)
     {
         runnersRemaining = Runners;
-
-        Debug.LogWarning("Remaining runners : " + runnersRemaining);
     }
 
     [PunRPC]
@@ -567,6 +504,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         StartCoroutine(CountdownFreezeTimer(freezeDuration));
     }
 
+    [PunRPC]
+    void PlayCountdownRpc(int count)
+    {
+        if (currentState == GameState.Playing)
+            return;
+
+        countdownAni.PlayCountdown(count);
+    }
+
     private IEnumerator CountdownFreezeTimer(float freezeDuration)
     {
         freezeTimer.gameObject.SetActive(true);
@@ -582,77 +528,60 @@ public class GameManager : MonoBehaviourPunCallbacks
         freezeTimer.gameObject.SetActive(false);
     }
 
-    [PunRPC]
-    void PlayCountdownRpc(int count)
-    {
-        if (currentState == GameState.Playing)
-            return;
-
-        countdownAni.PlayCountdown(count);
-    }
-
-    private void EnableToggles(bool enable)
-    {
-        toggle60.interactable = enable;
-        toggle120.interactable = enable;
-        toggle180.interactable = enable;
-    }
-
+    //마스터만 접근 가능.
     private void OnToggleChanged(Toggle changedToggle, bool isOn)
     {
         if (isOn)
         {
             if (changedToggle == toggle60)
             {
-                gameDuration = 60f;
+                PhotonNetwork.CurrentRoom.SetTimeIdx(0);
             }
             else if (changedToggle == toggle120)
             {
-                gameDuration = 120f;
+                PhotonNetwork.CurrentRoom.SetTimeIdx(1);
             }
             else if (changedToggle == toggle180)
             {
-                gameDuration = 180f;
-            }
-
-            if (toggle60 != changedToggle) toggle60.interactable = true;
-            if (toggle120 != changedToggle) toggle120.interactable = true;
-            if (toggle180 != changedToggle) toggle180.interactable = true;
-
-            if (changedToggle != toggle60 && toggle60.isOn) toggle60.isOn = false;
-            if (changedToggle != toggle120 && toggle120.isOn) toggle120.isOn = false;
-            if (changedToggle != toggle180 && toggle180.isOn) toggle180.isOn = false;
-
-            changedToggle.interactable = false;
-
-            if (currentState == GameState.Playing)
-            {
-                timer = gameDuration;
-                timeSlider.value = gameDuration;
-            }
-
-            photonView.RPC("UpdateGameDuration", RpcTarget.Others, gameDuration);
+                PhotonNetwork.CurrentRoom.SetTimeIdx(2);
+            }   
         }
     }
 
-    [PunRPC]
-    private void UpdateGameDuration(float newDuration)
+    public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
-        gameDuration = newDuration; 
-        if (currentState == GameState.Playing)
+        if (propertiesThatChanged.ContainsKey(CustomProperties.TIME))
         {
-            timer = gameDuration;
-            timeSlider.value = gameDuration;
+            int idx = PhotonNetwork.CurrentRoom.GetTimeIdx();
+
+            if (idx == 0)
+            {
+                toggle60.isOn = true;
+                toggle120.isOn = false;
+                toggle180.isOn = false;
+            }
+            else if (idx == 1)
+            {
+                toggle60.isOn = false;
+                toggle120.isOn = true;
+                toggle180.isOn = false;
+            }
+            else if (idx == 2)
+            {
+                toggle60.isOn = false;
+                toggle120.isOn = false;
+                toggle180.isOn = true;
+            }
         }
     }
 
-    private void UpdateTimeBasedOnToggle()
-    {
-        if (gameDuration == 60f)
-            toggle60.isOn = true;
-        else if (gameDuration == 120f)
-            toggle120.isOn = true;
-        else if (gameDuration == 180f)
-            toggle180.isOn = true;
-    }
+    //private void UpdateTimeBasedOnToggle()
+    //{
+    //    if (gameDuration == 60f)
+    //        toggle60.isOn = true;
+    //    else if (gameDuration == 120f)
+    //        toggle120.isOn = true;
+    //    else if (gameDuration == 180f)
+    //        toggle180.isOn = true;
+    //}
 }

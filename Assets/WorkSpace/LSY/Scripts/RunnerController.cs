@@ -1,6 +1,8 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class RunnerController : PlayerControllerParent, IPunObservable
 {
@@ -20,6 +22,8 @@ public class RunnerController : PlayerControllerParent, IPunObservable
     [SerializeField] GameObject hpPanel;
 
     [SerializeField] FormChanger changer;
+
+    [SerializeField] Image lockImage;
 
     private bool isJumped;
     private Rigidbody rb;
@@ -60,6 +64,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
             runnerCamera.transform.LookAt(transform.position);
 
             hpPanel.gameObject.SetActive(true);
+            lockImage.gameObject.SetActive(false);
 
             rb.useGravity = true;
 
@@ -95,11 +100,13 @@ public class RunnerController : PlayerControllerParent, IPunObservable
             {
                 isLocking = false;
                 rb.useGravity = true;
+                lockImage.gameObject.SetActive(false);
             }//
             else //¿·±›
             {
                 isLocking = true;
                 rb.useGravity = false;
+                lockImage.gameObject.SetActive(true);
             }
 
         }
@@ -114,7 +121,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
     }
 
     [PunRPC]
-    public void TakeDamageRpc(int damage)
+    public void TakeDamageRpc(int damage, Player player)
     {
         hp -= damage;
         hpImages[hp + 1].gameObject.SetActive(false);
@@ -124,8 +131,9 @@ public class RunnerController : PlayerControllerParent, IPunObservable
         {
             Debug.Log("player die");
             OnDeadEvent?.Invoke();
-            PhotonNetwork.LocalPlayer.SetAlive(false);
             hp = 0;
+            if(player == PhotonNetwork.LocalPlayer)
+                PhotonNetwork.LocalPlayer.SetAlive(false);
             //gameObject.SetActive(false);
             return;
         }
@@ -135,7 +143,7 @@ public class RunnerController : PlayerControllerParent, IPunObservable
 
     public void TakeDamage(int damage)
     {
-        photonView.RPC("TakeDamageRpc", RpcTarget.AllViaServer, damage);
+        photonView.RPC("TakeDamageRpc", RpcTarget.AllViaServer, damage, photonView.Owner);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

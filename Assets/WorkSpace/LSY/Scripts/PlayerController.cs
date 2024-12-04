@@ -64,9 +64,8 @@ public class PlayerController : PlayerControllerParent, IPunObservable
         CameraController cam = mainCamera.GetComponent<CameraController>();
         cam.FollowTarget = cameraPoint;
 
-/*        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;*/
-
+        /*        Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;*/
         targetPointImage.SetActive(true);
         mainCamera.gameObject.SetActive(true);
         gunCamera.gameObject.SetActive(true);

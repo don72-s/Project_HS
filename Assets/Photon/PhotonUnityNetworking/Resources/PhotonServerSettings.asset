@@ -48,7 +48,6 @@ MonoBehaviour:
   - LoadSceneFinished
   - OnDeadRpc
   - OnPlayerCatchRpc
-  - PlayCountdownRpc
   - PlayJumpSound
   - PlayReloadSound
   - PlayShootSound
@@ -61,10 +60,11 @@ MonoBehaviour:
   - SetActiveToRpc
   - StartFormChangeRpc
   - TakeDamageRpc
+  - ToActiveRpc
   - UpdateFreezeTimer
   - UpdateRunnersRemaining
   - WaitLoading
-  - UpdateGameDuration
+  - PlayCountdownRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

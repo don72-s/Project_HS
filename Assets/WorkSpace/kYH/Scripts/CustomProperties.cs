@@ -110,4 +110,26 @@ public static class CustomProperties
         }
     }
 
+    public const string TIME = "Time";
+
+    public static void SetTimeIdx(this Room room, int idx)
+    {
+        customProperty.Clear();
+        customProperty[TIME] = idx;
+        room.SetCustomProperties(customProperty);
+    }
+
+    public static int GetTimeIdx(this Room room)
+    {
+        PhotonHashtable customProperty = room.CustomProperties;
+        if (customProperty.ContainsKey(TIME))
+        {
+            return (int)customProperty[TIME];
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
 }
