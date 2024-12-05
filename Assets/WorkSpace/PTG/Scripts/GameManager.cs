@@ -3,6 +3,7 @@ using Photon.Pun.Demo.Procedural;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using Photon.Voice.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public TextMeshProUGUI freezeTimer;
 
-    float[] timerUnitArr = new float[3] { 60f, 120f, 180f };
+    float[] timerUnitArr = new float[3] { 120f, 210f, 300f };
 
     GameObject myRoomPlayer;
     GameObject myIngamePlayer;
@@ -120,10 +121,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     IEnumerator WaitCO(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 2, Random.Range(-5, 5));
+        Vector3 randomPos = new Vector3(UnityEngine.Random.Range(-5f, 5f), 2, UnityEngine.Random.Range(-5, 5));
         if (ghostIndex.Count > 0)
         {
-            int randomIndex = Random.Range(0, ghostIndex.Count);
+            int randomIndex = UnityEngine.Random.Range(0, ghostIndex.Count);
 
             GameObject selectedGhost = ghostPrefabs[ghostIndex[randomIndex]];
 
@@ -161,6 +162,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             timer -= Time.deltaTime;
 
             timeSlider.value = timer;
+
+            if (slotChangeEvent != null && PhotonNetwork.IsMasterClient && timeSlider.value < 0.5f)
+            {
+                slotChangeEvent?.Invoke();
+                slotChangeEvent = null;
+            }
 
             if (timer <= 0)
             {
@@ -319,7 +326,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         List<Player> allPlayers = new List<Player>(PhotonNetwork.PlayerList);
 
-        int randomIndex = Random.Range(0, allPlayers.Count);
+        int randomIndex = UnityEngine.Random.Range(0, allPlayers.Count);
         currentSeeker = allPlayers[randomIndex];
 
         photonView.RPC("RPC_SetSeeker", RpcTarget.All, currentSeeker.ActorNumber);
@@ -331,7 +338,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void RPC_SetSeeker(int seekerActorNumber)
     {
         currentSeeker = PhotonNetwork.CurrentRoom.GetPlayer(seekerActorNumber);
-        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 1000, Random.Range(-5, 5f));
+        Vector3 randomPos = new Vector3(UnityEngine.Random.Range(-5f, 5f), 1000, UnityEngine.Random.Range(-5, 5f));
 
         myRoomPlayer.GetComponent<PlayerControllerParent>().SetActiveTo(false);
 
@@ -349,9 +356,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    Action slotChangeEvent;
+
     [PunRPC]
     private void RPC_StartGame()
     {
+        slotChangeEvent = null;
+        slotChangeEvent += StageData.Instance.StartChangeFormSlot;
+
         currentState = GameState.Playing;
         float duration = timerUnitArr[PhotonNetwork.CurrentRoom.GetTimeIdx()];
         timer = duration;
@@ -410,7 +422,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         resultText.gameObject.SetActive(false);
 
         PhotonNetwork.Destroy(myIngamePlayer);
-        myRoomPlayer.transform.position = new Vector3(Random.Range(-5f, 5f), 2, Random.Range(-5, 5f));
+        myRoomPlayer.transform.position = new Vector3(UnityEngine.Random.Range(-5f, 5f), 2, UnityEngine.Random.Range(-5, 5f));
         myRoomPlayer.GetComponent<RoomPlayerController>().SetActiveTo(true);
         UnLoadScene();
 
