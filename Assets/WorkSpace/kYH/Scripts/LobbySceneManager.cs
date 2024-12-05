@@ -52,6 +52,11 @@ public class LobbySceneManager : BaseUI
     [SerializeField] private GameObject _loginFailPopup;
     [SerializeField] private TMP_Text _loginFailtext;*/
 
+    [Header("GuestNickname Panel")]
+    [SerializeField] private GameObject _guestNicknamePanel;
+    [SerializeField] private TMP_InputField _guestnicknameInput;
+
+
     private void Awake()
     {
         BindAll();
@@ -226,6 +231,25 @@ public class LobbySceneManager : BaseUI
     {
         _nicknamePanel.SetActive(false);
     }
+    #endregion
+
+    #region Guest Nickname UI
+
+    public void CheckGuestNickname()
+    {
+        string nickname = _guestnicknameInput.text;
+
+        if (nickname == "")
+        {
+            Debug.LogWarning("닉네임 입력하라고!!!!!!!!!!!!!!!!");
+            return;
+        }
+
+        PhotonNetwork.LocalPlayer.NickName = nickname;
+        _guestNicknamePanel.SetActive(false);
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
     #endregion
 
     #region Lobby UI
