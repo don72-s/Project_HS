@@ -155,6 +155,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    float timeValue = 0;
+
     private void Update()
     {
         if (currentState == GameState.Playing)
@@ -163,7 +165,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             timeSlider.value = timer;
 
-            if (slotChangeEvent != null && PhotonNetwork.IsMasterClient && timeSlider.value < 0.5f)
+            if (slotChangeEvent != null && PhotonNetwork.IsMasterClient && timeSlider.value < timeValue)
             {
                 slotChangeEvent?.Invoke();
                 slotChangeEvent = null;
@@ -366,6 +368,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         currentState = GameState.Playing;
         float duration = timerUnitArr[PhotonNetwork.CurrentRoom.GetTimeIdx()];
+        timeValue = duration / 2;
         timer = duration;
         timeSlider.maxValue = duration;
         timeSlider.value = duration;
